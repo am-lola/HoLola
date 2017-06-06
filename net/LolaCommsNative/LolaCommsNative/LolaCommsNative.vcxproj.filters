@@ -5,6 +5,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tga;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="iface">
+      <UniqueIdentifier>{d8cb434c-7968-45cb-934d-e6855a813196}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -15,5 +18,120 @@
     <ClInclude Include="LolaCommsNative.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="iface\include\begin_pack.h">
+      <Filter>iface</Filter>
+    </ClInclude>
+    <ClInclude Include="iface\include\end_pack.h">
+      <Filter>iface</Filter>
+    </ClInclude>
+    <ClInclude Include="iface\include\iface.h">
+      <Filter>iface</Filter>
+    </ClInclude>
+    <ClInclude Include="iface\include\iface_calibration_camera.hpp">
+      <Filter>iface</Filter>
+    </ClInclude>
+    <ClInclude Include="iface\include\iface_ec_lola.hpp">
+      <Filter>iface</Filter>
+    </ClInclude>
+    <ClInclude Include="iface\include\iface_hwio_lola.hpp">
+      <Filter>iface</Filter>
+    </ClInclude>
+    <ClInclude Include="iface\include\iface_model_lola.hpp">
+      <Filter>iface</Filter>
+    </ClInclude>
+    <ClInclude Include="iface\include\iface_msg.hpp">
+      <Filter>iface</Filter>
+    </ClInclude>
+    <ClInclude Include="iface\include\iface_ports.hpp">
+      <Filter>iface</Filter>
+    </ClInclude>
+    <ClInclude Include="iface\include\iface_prio.hpp">
+      <Filter>iface</Filter>
+    </ClInclude>
+    <ClInclude Include="iface\include\iface_ps.hpp">
+      <Filter>iface</Filter>
+    </ClInclude>
+    <ClInclude Include="iface\include\iface_robot_data_video.hpp">
+      <Filter>iface</Filter>
+    </ClInclude>
+    <ClInclude Include="iface\include\iface_rtlog_lola.hpp">
+      <Filter>iface</Filter>
+    </ClInclude>
+    <ClInclude Include="iface\include\iface_rtplot.hpp">
+      <Filter>iface</Filter>
+    </ClInclude>
+    <ClInclude Include="iface\include\iface_rtview.hpp">
+      <Filter>iface</Filter>
+    </ClInclude>
+    <ClInclude Include="iface\include\iface_rtview_lola.hpp">
+      <Filter>iface</Filter>
+    </ClInclude>
+    <ClInclude Include="iface\include\iface_sig.hpp">
+      <Filter>iface</Filter>
+    </ClInclude>
+    <ClInclude Include="iface\include\iface_sig_control.hpp">
+      <Filter>iface</Filter>
+    </ClInclude>
+    <ClInclude Include="iface\include\iface_sig_debug.hpp">
+      <Filter>iface</Filter>
+    </ClInclude>
+    <ClInclude Include="iface\include\iface_sig_hw.hpp">
+      <Filter>iface</Filter>
+    </ClInclude>
+    <ClInclude Include="iface\include\iface_sig_log.hpp">
+      <Filter>iface</Filter>
+    </ClInclude>
+    <ClInclude Include="iface\include\iface_sig_model.hpp">
+      <Filter>iface</Filter>
+    </ClInclude>
+    <ClInclude Include="iface\include\iface_sig_msg.hpp">
+      <Filter>iface</Filter>
+    </ClInclude>
+    <ClInclude Include="iface\include\iface_sig_vis.hpp">
+      <Filter>iface</Filter>
+    </ClInclude>
+    <ClInclude Include="iface\include\iface_sig_wpatt.hpp">
+      <Filter>iface</Filter>
+    </ClInclude>
+    <ClInclude Include="iface\include\iface_sig_wstab_prog.hpp">
+      <Filter>iface</Filter>
+    </ClInclude>
+    <ClInclude Include="iface\include\iface_ssv.hpp">
+      <Filter>iface</Filter>
+    </ClInclude>
+    <ClInclude Include="iface\include\iface_stepseq.hpp">
+      <Filter>iface</Filter>
+    </ClInclude>
+    <ClInclude Include="iface\include\iface_tum_color.h">
+      <Filter>iface</Filter>
+    </ClInclude>
+    <ClInclude Include="iface\include\iface_vis.h">
+      <Filter>iface</Filter>
+    </ClInclude>
+    <ClInclude Include="iface\include\iface_vision_msg.hpp">
+      <Filter>iface</Filter>
+    </ClInclude>
+    <ClInclude Include="iface\include\iface_wpatt_fsm.hpp">
+      <Filter>iface</Filter>
+    </ClInclude>
+    <ClInclude Include="iface\include\iface_wpatt_lola.hpp">
+      <Filter>iface</Filter>
+    </ClInclude>
+    <ClInclude Include="iface\include\iface_wstab_to_wpatt.hpp">
+      <Filter>iface</Filter>
+    </ClInclude>
+    <ClInclude Include="iface\include\sd_LOLA_uEIDN.h">
+      <Filter>iface</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="iface\include\README.txt">
+      <Filter>iface</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="iface\include\sig_commands.i">
+      <Filter>iface</Filter>
+    </None>
   </ItemGroup>
 </Project>

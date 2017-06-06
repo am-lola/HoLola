@@ -194,6 +194,41 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="iface\include\begin_pack.h" />
+    <ClInclude Include="iface\include\end_pack.h" />
+    <ClInclude Include="iface\include\iface.h" />
+    <ClInclude Include="iface\include\iface_calibration_camera.hpp" />
+    <ClInclude Include="iface\include\iface_ec_lola.hpp" />
+    <ClInclude Include="iface\include\iface_hwio_lola.hpp" />
+    <ClInclude Include="iface\include\iface_model_lola.hpp" />
+    <ClInclude Include="iface\include\iface_msg.hpp" />
+    <ClInclude Include="iface\include\iface_ports.hpp" />
+    <ClInclude Include="iface\include\iface_prio.hpp" />
+    <ClInclude Include="iface\include\iface_ps.hpp" />
+    <ClInclude Include="iface\include\iface_robot_data_video.hpp" />
+    <ClInclude Include="iface\include\iface_rtlog_lola.hpp" />
+    <ClInclude Include="iface\include\iface_rtplot.hpp" />
+    <ClInclude Include="iface\include\iface_rtview.hpp" />
+    <ClInclude Include="iface\include\iface_rtview_lola.hpp" />
+    <ClInclude Include="iface\include\iface_sig.hpp" />
+    <ClInclude Include="iface\include\iface_sig_control.hpp" />
+    <ClInclude Include="iface\include\iface_sig_debug.hpp" />
+    <ClInclude Include="iface\include\iface_sig_hw.hpp" />
+    <ClInclude Include="iface\include\iface_sig_log.hpp" />
+    <ClInclude Include="iface\include\iface_sig_model.hpp" />
+    <ClInclude Include="iface\include\iface_sig_msg.hpp" />
+    <ClInclude Include="iface\include\iface_sig_vis.hpp" />
+    <ClInclude Include="iface\include\iface_sig_wpatt.hpp" />
+    <ClInclude Include="iface\include\iface_sig_wstab_prog.hpp" />
+    <ClInclude Include="iface\include\iface_ssv.hpp" />
+    <ClInclude Include="iface\include\iface_stepseq.hpp" />
+    <ClInclude Include="iface\include\iface_tum_color.h" />
+    <ClInclude Include="iface\include\iface_vis.h" />
+    <ClInclude Include="iface\include\iface_vision_msg.hpp" />
+    <ClInclude Include="iface\include\iface_wpatt_fsm.hpp" />
+    <ClInclude Include="iface\include\iface_wpatt_lola.hpp" />
+    <ClInclude Include="iface\include\iface_wstab_to_wpatt.hpp" />
+    <ClInclude Include="iface\include\sd_LOLA_uEIDN.h" />
     <ClInclude Include="LolaCommsNative.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="targetver.h" />
@@ -209,6 +244,12 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="iface\include\README.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="iface\include\sig_commands.i" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
