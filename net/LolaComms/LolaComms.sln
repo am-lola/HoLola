@@ -1,0 +1,48 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.12
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LolaComms", "LolaComms\LolaComms.csproj", "{770BBA8C-706C-4C15-9F9E-892FB3C824CA}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LolaCommsNative", "..\LolaCommsNative\LolaCommsNative\LolaCommsNative.vcxproj", "{999472C2-E95E-4A05-A496-4DA24E46042C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|ARM = Debug|ARM
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|ARM = Release|ARM
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{770BBA8C-706C-4C15-9F9E-892FB3C824CA}.Debug|ARM.ActiveCfg = Debug|ARM
+		{770BBA8C-706C-4C15-9F9E-892FB3C824CA}.Debug|ARM.Build.0 = Debug|ARM
+		{770BBA8C-706C-4C15-9F9E-892FB3C824CA}.Debug|x64.ActiveCfg = Debug|x64
+		{770BBA8C-706C-4C15-9F9E-892FB3C824CA}.Debug|x64.Build.0 = Debug|x64
+		{770BBA8C-706C-4C15-9F9E-892FB3C824CA}.Debug|x86.ActiveCfg = Debug|x86
+		{770BBA8C-706C-4C15-9F9E-892FB3C824CA}.Debug|x86.Build.0 = Debug|x86
+		{770BBA8C-706C-4C15-9F9E-892FB3C824CA}.Release|ARM.ActiveCfg = Release|ARM
+		{770BBA8C-706C-4C15-9F9E-892FB3C824CA}.Release|ARM.Build.0 = Release|ARM
+		{770BBA8C-706C-4C15-9F9E-892FB3C824CA}.Release|x64.ActiveCfg = Release|x64
+		{770BBA8C-706C-4C15-9F9E-892FB3C824CA}.Release|x64.Build.0 = Release|x64
+		{770BBA8C-706C-4C15-9F9E-892FB3C824CA}.Release|x86.ActiveCfg = Release|x86
+		{770BBA8C-706C-4C15-9F9E-892FB3C824CA}.Release|x86.Build.0 = Release|x86
+		{999472C2-E95E-4A05-A496-4DA24E46042C}.Debug|ARM.ActiveCfg = Debug|ARM
+		{999472C2-E95E-4A05-A496-4DA24E46042C}.Debug|ARM.Build.0 = Debug|ARM
+		{999472C2-E95E-4A05-A496-4DA24E46042C}.Debug|x64.ActiveCfg = Debug|x64
+		{999472C2-E95E-4A05-A496-4DA24E46042C}.Debug|x64.Build.0 = Debug|x64
+		{999472C2-E95E-4A05-A496-4DA24E46042C}.Debug|x86.ActiveCfg = Debug|Win32
+		{999472C2-E95E-4A05-A496-4DA24E46042C}.Debug|x86.Build.0 = Debug|Win32
+		{999472C2-E95E-4A05-A496-4DA24E46042C}.Release|ARM.ActiveCfg = Release|ARM
+		{999472C2-E95E-4A05-A496-4DA24E46042C}.Release|ARM.Build.0 = Release|ARM
+		{999472C2-E95E-4A05-A496-4DA24E46042C}.Release|x64.ActiveCfg = Release|x64
+		{999472C2-E95E-4A05-A496-4DA24E46042C}.Release|x64.Build.0 = Release|x64
+		{999472C2-E95E-4A05-A496-4DA24E46042C}.Release|x86.ActiveCfg = Release|Win32
+		{999472C2-E95E-4A05-A496-4DA24E46042C}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
