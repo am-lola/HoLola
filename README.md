@@ -28,6 +28,16 @@ If the following steps don't work, please follow the [complete instructions here
 
 https://developer.microsoft.com/en-us/windows/mixed-reality/using_the_hololens_emulator
 
+### Building & Deploying the External DLLs
+
+Both the native and managed DLLs can be build from `LolaComms.sln` under [/net/LolaComms](./net/LolaComms).
+
+**For deployment to Hololens or the emulator** you *must* build `x86`, *not* `x64`.
+
+Managed DLLs need to be copied to `<Unity Project Root>/Assets/Plugins/`
+
+Unmanaged (C++) DLLs need to be copied to `<Unity Project Root>/Assets/`
+
 ## Known Issues
 
 * Sometimes when deploying to the Hololens Emulator the app crashes on startup with a CLR error indicating a stack overflow. Re-deploying without making any changes often fixes this. Unclear, yet, if this is an issue with how we're loading our DLLs or if it's just a general stability problem with the Emulator.
