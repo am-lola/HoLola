@@ -13,6 +13,7 @@
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="LolaCommsNative.cpp" />
     <ClCompile Include="pch.cpp" />
+    <ClCompile Include="VisionListener.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LolaCommsNative.h" />
@@ -123,6 +124,8 @@
     <ClInclude Include="iface\include\sd_LOLA_uEIDN.h">
       <Filter>iface</Filter>
     </ClInclude>
+    <ClInclude Include="sock_utils.h" />
+    <ClInclude Include="VisionListener.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="iface\include\README.txt">
