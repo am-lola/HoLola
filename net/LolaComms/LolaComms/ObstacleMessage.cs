@@ -34,7 +34,7 @@ namespace LolaComms
             string res = "";
             res += type.ToString();
             res += " " + model_id + "|" + part_id;
-            res += " 0x" + action.ToString("x2");
+            res += " " + (Common.MsgId)action;
             res += " (" + radius + ")";
             res += " [" +
                 coeffs[0] + " " +

@@ -11,40 +11,38 @@ using UnityEngine;
 
 public class dlltest : MonoBehaviour {
 
-    public void makebreakvl()
-    {
 #if UNITY_EDITOR
-        throw new System.NotImplementedException("This method cannot be called from the editor");
 #else
+    public LolaComms.VisionListener makebreakvl()
+    {
         Debug.Log("Initializing comms");
-        bool success = LolaComms.SampleClass.init();
+
+        bool success = LolaComms.Common.Init();
         if (!success)
         {
-            Debug.Log("OMFG WHAT NOW");
-            return;
+            Debug.Log("Failed to initialize networking!");
+            return null;
         }
 
         Debug.Log("Setting info callback...");
-        LolaComms.SampleClass.RegisterInfoCallback((str) => Debug.Log("INFO: " + str));
-        Debug.Log("Oh, it worked?");
-        IntPtr vl = LolaComms.SampleClass.VisionListener_Create(9090);
-        LolaComms.SampleClass.VisionListener_OnError(vl, (errstr) => Debug.Log(errstr));
-        LolaComms.SampleClass.VisionListener_OnConnect(vl, (host) => Debug.Log("Connected to: " + host));
-        LolaComms.SampleClass.VisionListener_OnDisconnect(vl, (host) => Debug.Log("Disconnected from: " + host));
-        LolaComms.SampleClass.VisionListener_OnObstacleMessage(vl, (msg) => {
-            Debug.Log("New obstacle: " + msg.ToString());
-            //Marshal.FreeHGlobal(msg);
-            }
-        );
-        LolaComms.SampleClass.VisionListener_Listen(vl);
-        Debug.Log("Listener is listening: " + LolaComms.SampleClass.VisionListener_IsListening(vl));
-#endif
+        LolaComms.Common.RegisterInfoCallback((str) => Debug.Log("INFO: " + str));
+
+        LolaComms.VisionListener vl = new LolaComms.VisionListener(9090);
+        vl.onError += (errstr) => Debug.Log(errstr);
+        vl.onConnect += (host) => Debug.Log("Connected to: " + host);
+        vl.onDisconnect += (host) => Debug.Log("Disconnected from: " + host);
+        vl.onObstacleMessage += (msg) => Debug.Log("New obstacle: " + msg.ToString());
+        vl.Listen();
+        Debug.Log("Listener is listening: " + vl.Listening);
+        return vl;
+
     }
     // Use this for initialization
     void Start () {
         Debug.Log("Starting up! :D");
 
-        makebreakvl();
+        LolaComms.VisionListener vl = makebreakvl();
 	}
+#endif
 	
 }
