@@ -126,6 +126,7 @@
     </ClInclude>
     <ClInclude Include="sock_utils.h" />
     <ClInclude Include="VisionListener.h" />
+    <ClInclude Include="Logging.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="iface\include\README.txt">

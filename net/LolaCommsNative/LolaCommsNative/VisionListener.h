@@ -15,6 +15,7 @@
 #include <iface_msg.hpp>
 
 #include "sock_utils.h"
+#include "Logging.h"
 
 class VisionListener
 {
@@ -28,10 +29,10 @@ public:
 	typedef std::function<void(std::wstring)>                   OnDisconnect;
 	typedef std::function<void(std::wstring)>                   OnError;
 
-    VisionListener(int port) : _port(port) { OutputDebugString(L"New VisionListener with port "); }
+    VisionListener(int port) : _port(port) { LogInfo(L"New VisionListener created"); }
 	~VisionListener()
 	{
-        OutputDebugString(L"VisionListener destroyed!");
+        LogInfo(L"VisionListener destroyed!");
 		stop();
 	}
 
@@ -157,7 +158,7 @@ private:
 
             if (_verbose)
             {
-                OutputDebugString((L"Waiting for am2b_iface::MsgHeader (" + std::to_wstring(ifaceHeaderSize) + L" bytes)...").c_str());
+                LogInfo(L"Waiting for am2b_iface::MsgHeader (" + std::to_wstring(ifaceHeaderSize) + L" bytes)...");
             }
 
             while (total_received < total_expected)
@@ -247,7 +248,7 @@ private:
 
             if (total_expected != total_received)
             {
-                std::cout << "TOTAL RECVD: " << total_received << " : EXPECTED: " << sizeof(am2b_iface::MsgHeader) + iface_header->len << std::endl;
+                LogInfo(L"TOTAL RECVD: " + std::to_wstring(total_received) + L" : EXPECTED: " + std::to_wstring(sizeof(am2b_iface::MsgHeader)) + std::to_wstring(iface_header->len));
                 break;
             }
             else
@@ -312,12 +313,6 @@ private:
             }
         }
 
-        if (_verbose)
-        {
-            std::wcout << std::endl << L"-------------------------------------------------" << std::endl;
-            std::wcout << L"Connection to client " << hostString(si_other) << L" terminated!" << std::endl;
-            std::wcout << L"-------------------------------------------------" << std::endl << std::endl;
-        }
         closesocket(socket_remote);
         cb(_onDisconnect, hostString(si_other));
     }

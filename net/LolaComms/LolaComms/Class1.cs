@@ -7,15 +7,9 @@ using System.Threading.Tasks;
 
 namespace LolaComms
 {
-    public class SampleClass
+    
+    public class VisionListener
     {
-        [DllImport("LolaCommsNative", CallingConvention = CallingConvention.Cdecl)]
-        [return: MarshalAs(UnmanagedType.BStr)]
-        public static extern string SampleFunc(float f);
-
-        [DllImport("LolaCommsNative")]
-        public static extern bool init();
-
         [DllImport("LolaCommsNative")]
         public static extern IntPtr VisionListener_Create(int port);
 
@@ -34,5 +28,17 @@ namespace LolaComms
         public delegate void VisionListener_OnErrorCallback([MarshalAs(UnmanagedType.BStr)]string errstr);
         [DllImport("LolaCommsNative")]
         public static extern void VisionListener_OnError(IntPtr vl, VisionListener_OnErrorCallback callback);
+
+        public delegate void VisionListener_OnConnectCallback([MarshalAs(UnmanagedType.BStr)]string errstr);
+        [DllImport("LolaCommsNative")]
+        public static extern void VisionListener_OnConnect(IntPtr vl, VisionListener_OnConnectCallback callback);
+
+        public delegate void VisionListener_OnDisconnectCallback([MarshalAs(UnmanagedType.BStr)]string errstr);
+        [DllImport("LolaCommsNative")]
+        public static extern void VisionListener_OnDisconnect(IntPtr vl, VisionListener_OnDisconnectCallback callback);
+
+        public delegate void VisionListener_OnObstacleMessageCallback(ObstacleMessage obstacle);
+        [DllImport("LolaCommsNative")]
+        public static extern void VisionListener_OnObstacleMessage(IntPtr vl, VisionListener_OnObstacleMessageCallback callback);
     }
 }

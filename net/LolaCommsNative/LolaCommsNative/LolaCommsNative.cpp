@@ -3,12 +3,8 @@
 
 extern "C"
 {
-    BSTR SampleFunc(float f)
-    {
-        return ::SysAllocString(std::to_wstring(f).c_str());
-    }
 
-    bool init()
+    bool Init()
     {
         WSADATA wsaData = { 0 };
         int res = WSAStartup(MAKEWORD(2, 2), &wsaData);
@@ -18,6 +14,21 @@ extern "C"
             return false;
         }
         return true;
+    }
+
+    bool DeInit()
+    {
+        int res = WSACleanup();
+        if (res != 0)
+        {
+            return false; // cleanup failed
+        }
+        return true;
+    }
+
+    void __stdcall RegisterInfoCallback(VL_INFOCALLBACK callback)
+    {
+        SetInfoCB([callback](std::wstring text) {callback(::SysAllocString(text.c_str())); });
     }
 
     VisionListener* VisionListener_Create(int port)
@@ -48,5 +59,20 @@ extern "C"
     void __stdcall VisionListener_OnError(VisionListener* vl, VL_ONERRORCALLBACK callback)
     {
         vl->onError([callback](std::wstring errstr) {callback(::SysAllocString(errstr.c_str())); });
+    }
+
+    void __stdcall VisionListener_OnConnect(VisionListener* vl, VL_ONCONNECTCALLBACK callback)
+    {
+        vl->onConnect([callback](std::wstring hostname) {callback(::SysAllocString(hostname.c_str())); });
+    }
+
+    void __stdcall VisionListener_OnDisconnect(VisionListener* vl, VL_ONDISCONNECTCALLBACK callback)
+    {
+        vl->onDisconnect([callback](std::wstring hostname) {callback(::SysAllocString(hostname.c_str())); });
+    }
+
+    void __stdcall VisionListener_OnObstacleMessage(VisionListener* vl, VL_ONOBSTACLEMESSAGECALLBACK callback)
+    {
+        vl->onObstacleMessage([callback](am2b_iface::ObstacleMessage* obstacle) { callback(*obstacle); });
     }
 }

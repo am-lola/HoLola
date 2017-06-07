@@ -134,12 +134,16 @@
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <CompileAsWinRT>false</CompileAsWinRT>
+      <PreprocessorDefinitions>LOLACOMMSNATIVEDLL_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /F /Y /V $(OutputPath)$(TargetFileName) $(SolutionDir)\..\..\HoLola\Assets\</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -232,6 +236,7 @@
     <ClInclude Include="iface\include\iface_wpatt_lola.hpp" />
     <ClInclude Include="iface\include\iface_wstab_to_wpatt.hpp" />
     <ClInclude Include="iface\include\sd_LOLA_uEIDN.h" />
+    <ClInclude Include="Logging.h" />
     <ClInclude Include="LolaCommsNative.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="sock_utils.h" />

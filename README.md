@@ -34,10 +34,13 @@ Both the native and managed DLLs can be build from `LolaComms.sln` under [/net/L
 
 **For deployment to Hololens or the emulator** you *must* build `x86`, *not* `x64`.
 
-Managed DLLs need to be copied to `<Unity Project Root>/Assets/Plugins/`
+Resulting DLLs should be automatically deployed to the Unity project:
 
-Unmanaged (C++) DLLs need to be copied to `<Unity Project Root>/Assets/`
+* Managed DLLs need to be copied to `<Unity Project Root>/Assets/Plugins/`
+* Unmanaged (C++) DLLs need to be copied to `<Unity Project Root>/Assets/`
+
+Once the DLLs have been updated in the Unity project, build from Unity and follow the instructions above to deploy to the device or emulator.
 
 ## Known Issues
 
-* Sometimes when deploying to the Hololens Emulator the app crashes on startup with a CLR error indicating a stack overflow. Re-deploying without making any changes often fixes this. Unclear, yet, if this is an issue with how we're loading our DLLs or if it's just a general stability problem with the Emulator.
+* Sometimes when deploying to the Hololens Emulator the app crashes on startup with a CLR error. Under a debugger this appears to be a fatal error in Windows.Mirage.dll, but there are also often bad references in Unty's D3D code (null textures, etc) which can lead to an early crash. Re-deploying without making any changes often fixes this.
