@@ -13,7 +13,10 @@ public class dlltest : MonoBehaviour {
 
 #if UNITY_EDITOR
 #else
-    public LolaComms.VisionListener makebreakvl()
+    private LolaComms.VisionListener vl;
+    private Dictionary<uint, GameObject> obstacle_map = new Dictionary<uint, GameObject>();
+
+    public LolaComms.VisionListener SetupVL()
     {
         Debug.Log("Initializing comms");
 
@@ -31,7 +34,64 @@ public class dlltest : MonoBehaviour {
         vl.onError += (errstr) => Debug.Log(errstr);
         vl.onConnect += (host) => Debug.Log("Connected to: " + host);
         vl.onDisconnect += (host) => Debug.Log("Disconnected from: " + host);
-        vl.onObstacleMessage += (msg) => Debug.Log("New obstacle: " + msg.ToString());
+        vl.onObstacleMessage += (msg) => {
+            Debug.Log("New obstacle message: " + msg.ToString());
+
+            switch (msg.action)
+            {
+                case (uint)LolaComms.Common.MsgId.SET_SSV:
+                {
+                    if (msg.type == LolaComms.ObstacleType.Sphere)
+                    {
+                        GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                        sphere.transform.position = new Vector3(msg.coeffs[0], msg.coeffs[1], msg.coeffs[2]);
+                        sphere.transform.localScale = new Vector3(msg.radius, msg.radius, msg.radius);
+                        sphere.transform.parent = transform;
+                        obstacle_map.Add(msg.model_id, sphere);
+                    }
+                    else if (msg.type == LolaComms.ObstacleType.Capsule)
+                    {
+                        GameObject cap = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+                        cap.transform.position = new Vector3(msg.coeffs[0], msg.coeffs[1], msg.coeffs[2]);
+                        cap.transform.localScale = new Vector3(msg.radius, msg.radius, msg.radius) * 5.0f;
+                        cap.transform.parent = transform;
+                        obstacle_map.Add(msg.model_id, cap);
+                    }
+                    break;
+                }
+                case (uint)LolaComms.Common.MsgId.MODIFY_SSV:
+                {
+                    if (obstacle_map.ContainsKey(msg.model_id))
+                    {
+                        obstacle_map[msg.model_id].transform.position = new Vector3(msg.coeffs[0], msg.coeffs[1], msg.coeffs[2]);
+                        obstacle_map[msg.model_id].transform.localScale = new Vector3(msg.radius, msg.radius, msg.radius) * 5.0f;
+                    }
+                    break;
+                }
+                case (uint)LolaComms.Common.MsgId.REMOVE_SSV_ONLY_PART:
+                {
+                    if (obstacle_map.ContainsKey(msg.model_id))
+                    {
+                        Destroy(obstacle_map[msg.model_id]);
+                        obstacle_map.Remove(msg.model_id);
+                    }
+                    break;
+                }
+                case (uint)LolaComms.Common.MsgId.REMOVE_SSV_WHOLE_SEGMENT:
+                {
+                    if (obstacle_map.ContainsKey(msg.model_id))
+                    {
+                        Destroy(obstacle_map[msg.model_id]);
+                        obstacle_map.Remove(msg.model_id);
+                    }
+                    break;
+                }
+                default:
+                    Debug.LogWarning("Got unexpected SSV action: " + msg.action);
+                    break;
+            }
+        };
+
         vl.Listen();
         Debug.Log("Listener is listening: " + vl.Listening);
         return vl;
@@ -41,8 +101,13 @@ public class dlltest : MonoBehaviour {
     void Start () {
         Debug.Log("Starting up! :D");
 
-        LolaComms.VisionListener vl = makebreakvl();
+        vl = SetupVL();
 	}
+
+    private void Update()
+    {
+        vl.Process();
+    }
 #endif
-	
+
 }

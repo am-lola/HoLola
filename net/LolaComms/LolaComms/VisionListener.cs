@@ -13,6 +13,11 @@ namespace LolaComms
     /// </summary>
     public class VisionListener
     {
+        private int _port;
+        private IntPtr _visionListener = IntPtr.Zero; // pointer to native implementation
+        private Queue<ObstacleMessage> _obstacles = new Queue<ObstacleMessage>();
+        private Object _obsLock = new Object();
+
         public delegate void VisionListener_OnErrorCallback([MarshalAs(UnmanagedType.BStr)]string errstr);
         public delegate void VisionListener_OnConnectCallback([MarshalAs(UnmanagedType.BStr)]string errstr);
         public delegate void VisionListener_OnDisconnectCallback([MarshalAs(UnmanagedType.BStr)]string errstr);
@@ -61,6 +66,24 @@ namespace LolaComms
             get { return VisionListener_IsListening(_visionListener); }
         }
 
+        /// <summary>
+        /// To be called from Update() or FixedUpdate().
+        /// Calls any outstanding callbacks from the calling thread.
+        /// </summary>
+        public void Process()
+        {
+            lock (_obsLock)
+            {
+                foreach (var obstacle in _obstacles)
+                {
+                    onObstacleMessage?.Invoke(obstacle);
+                }
+                _obstacles.Clear();
+            }
+            
+        }
+
+#region private callbacks
         private void OnError(string error)
         {
             onError?.Invoke(error);
@@ -78,38 +101,82 @@ namespace LolaComms
 
         private void OnObstacleMessage(ObstacleMessage msg)
         {
-            onObstacleMessage?.Invoke(msg);
+            lock (_obsLock)
+            {
+                _obstacles.Enqueue(msg);
+            }
         }
+#endregion
 
-        private int    _port;
-        private IntPtr _visionListener = IntPtr.Zero; // pointer to native implementation
-
-
+#region native imports
+        /// <summary>
+        /// Creates a new native VisionListener
+        /// </summary>
+        /// <param name="port">Port to listen on for vision data</param>
+        /// <returns>Pointer to new VisionListener instance</returns>
         [DllImport("LolaCommsNative")]
         private static extern IntPtr VisionListener_Create(int port);
 
+        /// <summary>
+        /// Destroys an existing native VisionListener instance
+        /// </summary>
+        /// <param name="vl">Pointer to existing instance</param>
         [DllImport("LolaCommsNative")]
         private static extern void VisionListener_Destroy(IntPtr vl);
 
+        /// <summary>
+        /// Tells VisionListener to begin listening for data
+        /// </summary>
+        /// <param name="vl">Pointer to existing VisionListener interface</param>
         [DllImport("LolaCommsNative")]
         private static extern void VisionListener_Listen(IntPtr vl);
 
+        /// <summary>
+        /// Queries VisionListener for its current listening state
+        /// </summary>
+        /// <param name="vl">Pointer to existing VisionListener interface</param>
+        /// <returns></returns>
         [DllImport("LolaCommsNative")]
         private static extern bool VisionListener_IsListening(IntPtr vl);
 
+        /// <summary>
+        /// Shuts VisionListener down, closes open connections, kills listening thread, etc
+        /// </summary>
+        /// <param name="vl">Pointer to existing VisionListener interface</param>
         [DllImport("LolaCommsNative")]
         private static extern void VisionListener_Stop(IntPtr vl);
 
+        /// <summary>
+        /// Registers a function to call when an error occurs inside the listener
+        /// </summary>
+        /// <param name="vl">Pointer to existing VisionListener interface</param>
+        /// <param name="callback"></param>
         [DllImport("LolaCommsNative")]
         private static extern void VisionListener_OnError(IntPtr vl, VisionListener_OnErrorCallback callback);
 
+        /// <summary>
+        /// Registers a function to call when a new connection is established
+        /// </summary>
+        /// <param name="vl">Pointer to existing VisionListener interface</param>
+        /// <param name="callback"></param>
         [DllImport("LolaCommsNative")]
         private static extern void VisionListener_OnConnect(IntPtr vl, VisionListener_OnConnectCallback callback);
 
+        /// <summary>
+        /// Registers a function to call when a connection is terminated
+        /// </summary>
+        /// <param name="vl">Pointer to existing VisionListener interface</param>
+        /// <param name="callback"></param>
         [DllImport("LolaCommsNative")]
         private static extern void VisionListener_OnDisconnect(IntPtr vl, VisionListener_OnDisconnectCallback callback);
 
+        /// <summary>
+        /// Registers a function to call when a new ObstacleMessage is received
+        /// </summary>
+        /// <param name="vl">Pointer to existing VisionListener interface</param>
+        /// <param name="callback"></param>
         [DllImport("LolaCommsNative")]
         private static extern void VisionListener_OnObstacleMessage(IntPtr vl, VisionListener_OnObstacleMessageCallback callback);
+#endregion
     }
 }
