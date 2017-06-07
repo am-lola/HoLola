@@ -2,13 +2,14 @@
 
 ## Dependencies
 
-* Visual Studio, including:
-** .NET Framework 3.5 development tools
-** .NET Portable Library targeting pack
-** Visual C++ runtime for UWP
-** Windows Universal CRT SDK
-** Visual Studio Tools for Unity (will be installed by Unity)
-** Windows 10 SDK for UWP: C# and C++
+* [Visual Studio](https://developer.microsoft.com/en-us/windows/mixed-reality/install_the_tools), including:
+  * .NET Framework 3.5 development tools
+  * .NET Portable Library targeting pack
+  * Visual C++ runtime for UWP
+  * Windows Universal CRT SDK
+  * Visual Studio Tools for Unity (will be installed by Unity)
+  * Windows 10 SDK for UWP: C# and C++
+* [Unity 5.6](https://store.unity.com/) or greater
 
 ## Build Instructions
 
