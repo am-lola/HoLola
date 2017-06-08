@@ -10,7 +10,7 @@ using UnityEngine;
 /// </summary>
 
 public class dlltest : MonoBehaviour {
-
+    public Material obstacleMaterial;
 #if UNITY_EDITOR
 #else
     private LolaComms.VisionListener vl;
@@ -34,7 +34,8 @@ public class dlltest : MonoBehaviour {
         vl.onError += (errstr) => Debug.Log(errstr);
         vl.onConnect += (host) => Debug.Log("Connected to: " + host);
         vl.onDisconnect += (host) => Debug.Log("Disconnected from: " + host);
-        vl.onObstacleMessage += (msg) => {
+        vl.onObstacleMessage += (msg) =>
+        {
             Debug.Log("New obstacle message: " + msg.ToString());
 
             switch (msg.action)
@@ -44,17 +45,19 @@ public class dlltest : MonoBehaviour {
                     if (msg.type == LolaComms.ObstacleType.Sphere)
                     {
                         GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-                        sphere.transform.position = new Vector3(msg.coeffs[0], msg.coeffs[1], msg.coeffs[2]);
-                        sphere.transform.localScale = new Vector3(msg.radius, msg.radius, msg.radius);
                         sphere.transform.parent = transform;
+                        sphere.transform.localPosition = new Vector3(msg.coeffs[0], msg.coeffs[1], msg.coeffs[2]);
+                        sphere.transform.localScale = new Vector3(msg.radius, msg.radius, msg.radius);
+                        sphere.GetComponent<MeshRenderer>().material = obstacleMaterial;
                         obstacle_map.Add(msg.model_id, sphere);
                     }
                     else if (msg.type == LolaComms.ObstacleType.Capsule)
                     {
                         GameObject cap = GameObject.CreatePrimitive(PrimitiveType.Capsule);
-                        cap.transform.position = new Vector3(msg.coeffs[0], msg.coeffs[1], msg.coeffs[2]);
-                        cap.transform.localScale = new Vector3(msg.radius, msg.radius, msg.radius) * 5.0f;
                         cap.transform.parent = transform;
+                        cap.transform.localPosition = new Vector3(msg.coeffs[0], msg.coeffs[1], msg.coeffs[2]);
+                        cap.transform.localScale = new Vector3(msg.radius, msg.radius, msg.radius) * 5.0f;
+                        cap.GetComponent<MeshRenderer>().material = obstacleMaterial;
                         obstacle_map.Add(msg.model_id, cap);
                     }
                     break;
@@ -87,8 +90,8 @@ public class dlltest : MonoBehaviour {
                     break;
                 }
                 default:
-                    Debug.LogWarning("Got unexpected SSV action: " + msg.action);
-                    break;
+                Debug.LogWarning("Got unexpected SSV action: " + msg.action);
+                break;
             }
         };
 
