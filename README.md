@@ -1,5 +1,7 @@
 # HoLola - Holographic Data Visualization for Lola
 
+NOTE: Please use `--recursive` when cloning this repo to pull in submodules.
+
 ## Dependencies
 
 * [Visual Studio](https://developer.microsoft.com/en-us/windows/mixed-reality/install_the_tools), including:
