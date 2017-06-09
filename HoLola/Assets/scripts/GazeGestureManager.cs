@@ -50,7 +50,12 @@ public class GazeGestureManager : MonoBehaviour
 
     private void Recognizer_ManipulationCompletedEvent(InteractionSourceKind source, Vector3 cumulativeDelta, Ray headRay)
     {
-
+        if (FocusedObject != null && HasSelection)
+        {
+            var selectable = FocusedObject.GetComponent<Selectable>();
+            if (selectable != null)
+                selectable.OnManipulateStop();
+        }
     }
 
     private void Recognizer_ManipulationStartedEvent(InteractionSourceKind source, Vector3 cumulativeDelta, Ray headRay)

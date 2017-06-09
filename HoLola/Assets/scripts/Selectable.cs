@@ -61,9 +61,11 @@ public class Selectable : MonoBehaviour {
     }
 
     public virtual void OnManipulateStart()
-    {
+    { }
 
-    }
+    public virtual void OnManipulateStop()
+    { }
+
     public virtual void OnManipulate(Vector3 cumulativeDelta)
     {
         Debug.Log(gameObject.name + " Manipulation delta: " + cumulativeDelta);
