@@ -20,6 +20,7 @@ public class Selectable : MonoBehaviour {
     {
         _selected = true;
         var baseColor = _renderer.material.color;
+        var baseEmission = _renderer.material.GetColor("_EmissionColor");
         var hiColor = new Color(Mathf.Min(1.0f, baseColor.r + 0.25f),
                                 Mathf.Min(1.0f, baseColor.g + 0.20f),
                                 Mathf.Min(1.0f, baseColor.b + 0.05f));
@@ -34,11 +35,15 @@ public class Selectable : MonoBehaviour {
             }
 
             t += Time.deltaTime * dir;
+            var newColor =
             _renderer.material.color = Color.Lerp(baseColor, hiColor, t);
+            _renderer.material.SetColor("_EmissionColor", Color.Lerp(baseEmission, hiColor, t));
             yield return new WaitForSeconds(0.01f);
         }
 
         _renderer.material.color = baseColor; // reset color
+        _renderer.material.SetColor("_EmissionColor", baseEmission);
+
     }
     public virtual void Select()
     {
