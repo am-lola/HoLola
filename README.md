@@ -1,5 +1,7 @@
 # HoLola - Holographic Data Visualization for Lola
 
+NOTE: Please use `--recursive` when cloning this repo to pull in submodules.
+
 ## Dependencies
 
 * [Visual Studio](https://developer.microsoft.com/en-us/windows/mixed-reality/install_the_tools), including:
@@ -14,15 +16,34 @@
 
 ### Building & Deploying the Unity Project
 
+#### Normal build/deploy
+
 If the following steps don't work, please follow the [complete instructions here](https://developer.microsoft.com/en-us/windows/mixed-reality/exporting_and_building_a_unity_visual_studio_solution).
 
 1. Open the Unity project in Unity
-2. `File->Build Settings...
+2. `File->Build Settings...`
 3. Double-check that the **PLatform** is set to **Windows Store** and that at least one scene is listed under **Scenes In Build**
 4. Click the **Build** button. You will be asked to choose a directory to put the binaries in (e.g `.\Build\`).
 5. After the build completes, navigate to the build directory you selected and open `HoLola.sln` in Visual Studio (*NOTE: This is **not** the same `HoLola.sln` as you will find in the Unity project root directory!)
 6. Set your CPU architecture to `x86`, then set the target (next to the green arrow) to either `Device` or `Hololens Emulator`.
 7. Press `F5` to deploy and launch the application.
+
+#### Manual Deployment
+
+This will be necessary if you do not have sufficient permissions on your build machine to use the deployment and remote debugging tools in Visual Sudio (requires [Developer Mode](https://docs.microsoft.com/en-us/windows/uwp/get-started/enable-your-device-for-development), which must be enabled by an admin).
+
+**The Hololens should be connected to your PC via USB**
+
+1. Open the Unity project in Unity
+2. `HoloToolkit->Build Window`
+3. Select `Build SLN, Build APPX`
+4. When the build is complete, select `Open APPX Packages Location`
+5. Open a web browser and navigate to `http://127.0.0.1:10080`
+6. In the browser select `Apps` on the left
+7. In the App Manager, under *Install app* use the `Choose File` button to select the `.appx` file in directory opened in step 4
+8. Click `Add dependency`, and add all of the `.appx` files under `<APPX Dir>/Dependencies/x86'
+9. Click `Go`
+10. Your app should now be installed! Bloom to find it in the app list, or use the *Insalled apps* menu in the App Manager to start it.
 
 #### Using the Hololens Emulator
 
