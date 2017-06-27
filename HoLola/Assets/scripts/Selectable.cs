@@ -7,15 +7,10 @@ public class Selectable : MonoBehaviour {
     private MeshRenderer _renderer;
     private bool _selected = false;
 
-	void Start () {
+	protected void Start () {
         _renderer = GetComponent<MeshRenderer>();
 	}
 	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
     IEnumerator SelectionPulse()
     {
         _selected = true;
@@ -35,7 +30,6 @@ public class Selectable : MonoBehaviour {
             }
 
             t += Time.deltaTime * dir;
-            var newColor =
             _renderer.material.color = Color.Lerp(baseColor, hiColor, t);
             _renderer.material.SetColor("_EmissionColor", Color.Lerp(baseEmission, hiColor, t));
             yield return new WaitForSeconds(0.01f);
