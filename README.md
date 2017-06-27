@@ -10,7 +10,7 @@ NOTE: Please use `--recursive` when cloning this repo to pull in submodules.
   * Visual C++ runtime for UWP
   * Visual Studio Tools for Unity (will be installed by Unity)
   * Windows 10 SDK for UWP: C# and C++
-* [Unity 5.6](https://store.unity.com/) or greater
+* [Unity 5.6.2f1](https://store.unity.com/) or greater (earlier versions may build the project, but contain bugs in some APIs!)
 
 ## Build Instructions
 
