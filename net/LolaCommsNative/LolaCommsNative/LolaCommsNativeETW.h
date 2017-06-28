@@ -220,20 +220,20 @@ Remarks:
 EXTERN_C __declspec(selectany) const GUID LolaCommsNative = {0x8eb119a9, 0x2fe5, 0x46f5, {0x99, 0x8b, 0xa3, 0x96, 0xca, 0x3f, 0x74, 0xb7}};
 
 //
-// Levels
+// Channel
 //
-#define Default 0x10
+#define LolaCommsNative_CHANNEL_Application 0x9
 
 //
 // Event Descriptors
 //
-EXTERN_C __declspec(selectany) const EVENT_DESCRIPTOR OnConnectionOpened = {0x1, 0x1, 0x0, 0x10, 0x0, 0x0, 0x0};
+EXTERN_C __declspec(selectany) const EVENT_DESCRIPTOR OnConnectionOpened = {0x1, 0x1, 0x0, 0x0, 0x0, 0x0, 0x0};
 #define OnConnectionOpened_value 0x1
-EXTERN_C __declspec(selectany) const EVENT_DESCRIPTOR OnConnectionClosed = {0x2, 0x1, 0x0, 0x10, 0x0, 0x0, 0x0};
+EXTERN_C __declspec(selectany) const EVENT_DESCRIPTOR OnConnectionClosed = {0x2, 0x1, 0x0, 0x0, 0x0, 0x0, 0x0};
 #define OnConnectionClosed_value 0x2
 EXTERN_C __declspec(selectany) const EVENT_DESCRIPTOR OnConnectionError = {0x3, 0x1, 0x0, 0x0, 0x0, 0x0, 0x0};
 #define OnConnectionError_value 0x3
-EXTERN_C __declspec(selectany) const EVENT_DESCRIPTOR OnObstacleMessageReceived = {0x4, 0x1, 0x0, 0x10, 0x0, 0x0, 0x0};
+EXTERN_C __declspec(selectany) const EVENT_DESCRIPTOR OnObstacleMessageReceived = {0x4, 0x1, 0x0, 0x0, 0x0, 0x0, 0x0};
 #define OnObstacleMessageReceived_value 0x4
 
 //
@@ -264,9 +264,9 @@ EXTERN_C __declspec(selectany) const EVENT_DESCRIPTOR OnObstacleMessageReceived 
 //
 
 EXTERN_C __declspec(selectany) DECLSPEC_CACHEALIGN ULONG LolaCommsNativeEnableBits[1];
-EXTERN_C __declspec(selectany) const ULONGLONG LolaCommsNativeKeywords[2] = {0x0, 0x0};
-EXTERN_C __declspec(selectany) const UCHAR LolaCommsNativeLevels[2] = {16, 0};
-EXTERN_C __declspec(selectany) MCGEN_TRACE_CONTEXT LolaCommsNative_Context = {0, 0, 0, 0, 0, 0, 0, 0, 2, LolaCommsNativeEnableBits, LolaCommsNativeKeywords, LolaCommsNativeLevels};
+EXTERN_C __declspec(selectany) const ULONGLONG LolaCommsNativeKeywords[1] = {0x0};
+EXTERN_C __declspec(selectany) const UCHAR LolaCommsNativeLevels[1] = {0};
+EXTERN_C __declspec(selectany) MCGEN_TRACE_CONTEXT LolaCommsNative_Context = {0, 0, 0, 0, 0, 0, 0, 0, 1, LolaCommsNativeEnableBits, LolaCommsNativeKeywords, LolaCommsNativeLevels};
 
 EXTERN_C __declspec(selectany) REGHANDLE LolaCommsNativeHandle = (REGHANDLE)0;
 
@@ -398,7 +398,7 @@ Remarks:
 // Enablement check macro for OnConnectionError
 //
 
-#define EventEnabledOnConnectionError() ((LolaCommsNativeEnableBits[0] & 0x00000002) != 0)
+#define EventEnabledOnConnectionError() ((LolaCommsNativeEnableBits[0] & 0x00000001) != 0)
 
 //
 // Event Macro for OnConnectionError
@@ -505,5 +505,7 @@ Template_dqqqfdF9(
 };
 #endif
 
+#define MSG_level_LogAlways                  0x50000000L
+#define MSG_channel_Application              0x90000001L
 #define MSG_LolaCommsNative_event_1_message  0xB0010001L
 #define MSG_LolaCommsNative_event_2_message  0xB0010002L

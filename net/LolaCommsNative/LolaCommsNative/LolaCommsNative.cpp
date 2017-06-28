@@ -8,7 +8,8 @@ extern "C"
 
     bool Init()
     {
-        EventRegisterLolaCommsNative();
+        auto reg = EventRegisterLolaCommsNative();
+        LogInfo(std::wstring(L"ETW Registration: ") + std::to_wstring(reg));
         WSADATA wsaData = { 0 };
         int res = WSAStartup(MAKEWORD(2, 2), &wsaData);
 

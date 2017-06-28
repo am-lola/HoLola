@@ -19,6 +19,8 @@ public class dlltest : MonoBehaviour {
 
     public LolaComms.VisionListener SetupVL()
     {
+        Debug.Log("Setting info callback...");
+        LolaComms.Common.RegisterInfoCallback((str) => Debug.Log("INFO: " + str));
         Debug.Log("Initializing comms");
 
         bool success = LolaComms.Common.Init();
@@ -27,9 +29,6 @@ public class dlltest : MonoBehaviour {
             Debug.Log("Failed to initialize networking!");
             return null;
         }
-
-        Debug.Log("Setting info callback...");
-        LolaComms.Common.RegisterInfoCallback((str) => Debug.Log("INFO: " + str));
 
         LolaComms.VisionListener vl = new LolaComms.VisionListener(9090);
         vl.onError += (errstr) => Debug.Log(errstr);
