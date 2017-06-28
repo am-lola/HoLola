@@ -11,6 +11,7 @@ using UnityEngine;
 
 public class dlltest : MonoBehaviour {
     public Material obstacleMaterial;
+    public GameObject Capsule;
 #if UNITY_EDITOR
 #else
     private LolaComms.VisionListener vl;
@@ -53,11 +54,12 @@ public class dlltest : MonoBehaviour {
                     }
                     else if (msg.type == LolaComms.ObstacleType.Capsule)
                     {
-                        GameObject cap = GameObject.CreatePrimitive(PrimitiveType.Capsule);
-                        cap.transform.parent = transform;
-                        cap.transform.localPosition = new Vector3(msg.coeffs[0], msg.coeffs[1], msg.coeffs[2]);
-                        cap.transform.localScale = new Vector3(msg.radius, msg.radius, msg.radius) * 5.0f;
-                        cap.GetComponent<MeshRenderer>().material = obstacleMaterial;
+                        GameObject cap = Instantiate(Capsule, this.transform);
+                        Capsule c = cap.GetComponent<Capsule>();
+                        c.Radius = msg.radius;
+                        c.Top = new Vector3(msg.coeffs[0], msg.coeffs[1], msg.coeffs[2]);
+                        c.Bottom = new Vector3(msg.coeffs[3], msg.coeffs[4], msg.coeffs[5]);
+
                         obstacle_map.Add(msg.model_id, cap);
                     }
                     break;
@@ -66,8 +68,18 @@ public class dlltest : MonoBehaviour {
                 {
                     if (obstacle_map.ContainsKey(msg.model_id))
                     {
-                        obstacle_map[msg.model_id].transform.position = new Vector3(msg.coeffs[0], msg.coeffs[1], msg.coeffs[2]);
-                        obstacle_map[msg.model_id].transform.localScale = new Vector3(msg.radius, msg.radius, msg.radius) * 5.0f;
+                        if (msg.type == LolaComms.ObstacleType.Sphere)
+                        {
+                            obstacle_map[msg.model_id].transform.localPosition = new Vector3(msg.coeffs[0], msg.coeffs[1], msg.coeffs[2]);
+                            obstacle_map[msg.model_id].transform.localScale = new Vector3(msg.radius, msg.radius, msg.radius) * 5.0f;
+                        }
+                        else if (msg.type == LolaComms.ObstacleType.Capsule)
+                        {
+                            Capsule c = obstacle_map[msg.model_id].GetComponent<Capsule>();
+                            c.Radius = msg.radius;
+                            c.Top = new Vector3(msg.coeffs[0], msg.coeffs[1], msg.coeffs[2]);
+                            c.Bottom = new Vector3(msg.coeffs[3], msg.coeffs[4], msg.coeffs[5]);
+                        }
                     }
                     break;
                 }
