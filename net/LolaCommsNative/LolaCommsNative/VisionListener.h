@@ -136,6 +136,7 @@ private:
 
             cb(_onConnect, hostString(si_other));
 
+            EventWriteOnConnectionOpened(hostString(si_other).c_str());
             if (fd == _socket)
             {
                 std::thread servicer(&VisionListener::readVisionMessagesFrom, this, s_other, si_other);
@@ -274,47 +275,48 @@ private:
 
             switch (visionHeader->type)
             {
-            case am2b_iface::Message_Type::Obstacle:
-            {
-                cb(_onObstacleMessage,
-                    (am2b_iface::ObstacleMessage*)
-                    (buf.data() + sizeof(am2b_iface::VisionMessageHeader) + sizeof(am2b_iface::MsgHeader)));
-                break;
-            }
-            case am2b_iface::Message_Type::Surface:
-            {
-                cb(_onSurfaceMessage,
-                    (am2b_iface::SurfaceMessage*)
-                    (buf.data() + sizeof(am2b_iface::VisionMessageHeader) + sizeof(am2b_iface::MsgHeader)));
-                break;
-            }
-            case am2b_iface::Message_Type::RGB_Image:
-            {
-                am2b_iface::RGBMessage* message = (am2b_iface::RGBMessage*)
-                    (buf.data()
-                        + sizeof(am2b_iface::VisionMessageHeader) + sizeof(am2b_iface::MsgHeader));
-                message->pixels = (unsigned char*)((char*)message + sizeof(am2b_iface::RGBMessage)); // fix pointer
-                cb(_onRGBMessage, message);
-                break;
-            }
-            case am2b_iface::Message_Type::PointCloud:
-            {
-                am2b_iface::PointCloudMessage* message = (am2b_iface::PointCloudMessage*)
-                    (buf.data()
-                        + sizeof(am2b_iface::VisionMessageHeader) + sizeof(am2b_iface::MsgHeader));
-                message->data = (unsigned char*)((char*)message + sizeof(am2b_iface::PointCloudMessage));
-                cb(_onPointCloudMessage, message);
-                break;
-            }
-            default:
-            {
-                std::cout << "UNKNOWN message type: " << visionHeader->type << "!!" << std::endl;
-            }
+                case am2b_iface::Message_Type::Obstacle:
+                {
+                    am2b_iface::ObstacleMessage* o = (am2b_iface::ObstacleMessage*)(buf.data() + sizeof(am2b_iface::VisionMessageHeader) + sizeof(am2b_iface::MsgHeader));
+                    EventWriteOnObstacleMessageReceived(o->type, o->model_id, o->part_id, o->action, o->radius, o->surface, o->coeffs);
+                    cb(_onObstacleMessage, o);
+                    break;
+                }
+                case am2b_iface::Message_Type::Surface:
+                {
+                    cb(_onSurfaceMessage,
+                        (am2b_iface::SurfaceMessage*)
+                        (buf.data() + sizeof(am2b_iface::VisionMessageHeader) + sizeof(am2b_iface::MsgHeader)));
+                    break;
+                }
+                case am2b_iface::Message_Type::RGB_Image:
+                {
+                    am2b_iface::RGBMessage* message = (am2b_iface::RGBMessage*)
+                        (buf.data()
+                            + sizeof(am2b_iface::VisionMessageHeader) + sizeof(am2b_iface::MsgHeader));
+                    message->pixels = (unsigned char*)((char*)message + sizeof(am2b_iface::RGBMessage)); // fix pointer
+                    cb(_onRGBMessage, message);
+                    break;
+                }
+                case am2b_iface::Message_Type::PointCloud:
+                {
+                    am2b_iface::PointCloudMessage* message = (am2b_iface::PointCloudMessage*)
+                        (buf.data()
+                            + sizeof(am2b_iface::VisionMessageHeader) + sizeof(am2b_iface::MsgHeader));
+                    message->data = (unsigned char*)((char*)message + sizeof(am2b_iface::PointCloudMessage));
+                    cb(_onPointCloudMessage, message);
+                    break;
+                }
+                default:
+                {
+                    std::cout << "UNKNOWN message type: " << visionHeader->type << "!!" << std::endl;
+                }
             }
         }
 
         closesocket(socket_remote);
         cb(_onDisconnect, hostString(si_other));
+        EventWriteOnConnectionClosed(hostString(si_other).c_str());
     }
 
 };

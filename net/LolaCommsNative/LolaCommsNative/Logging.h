@@ -2,7 +2,7 @@
 
 #include <functional>
 #include <comutil.h>
-
+#include "LolaCommsNativeETW.h"
 ///
 // Some simple utils to make passing log data back up 
 // to managed land a little easier so it can be displayed

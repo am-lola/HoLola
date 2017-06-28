@@ -1,11 +1,14 @@
 ﻿#include "pch.h"
 #include "LolaCommsNative.h"
+#include <Windows.h>
+#include "LolaCommsNativeETW.h"
 
 extern "C"
 {
 
     bool Init()
     {
+        EventRegisterLolaCommsNative();
         WSADATA wsaData = { 0 };
         int res = WSAStartup(MAKEWORD(2, 2), &wsaData);
 
@@ -23,6 +26,7 @@ extern "C"
         {
             return false; // cleanup failed
         }
+        EventUnregisterLolaCommsNative();
         return true;
     }
 

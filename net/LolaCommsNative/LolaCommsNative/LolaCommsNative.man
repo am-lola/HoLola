@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<instrumentationManifest xsi:schemaLocation="http://schemas.microsoft.com/win/2004/08/events eventman.xsd" xmlns="http://schemas.microsoft.com/win/2004/08/events" xmlns:win="http://manifests.microsoft.com/win/2004/08/windows/events" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:trace="http://schemas.microsoft.com/win/2004/08/events/trace">
+	<instrumentation>
+		<events>
+			<provider name="LolaCommsNative" guid="{8EB119A9-2FE5-46F5-998B-A396CA3F74B7}" symbol="LolaCommsNative" resourceFileName="LolaCommsNative.dll" messageFileName="LolaCommsNative.dll">
+				<events>
+					<event symbol="OnConnectionOpened" value="1" version="1" level="Default" template="ConnectionStateChanged" message="$(string.LolaCommsNative.event.1.message)"></event>
+					<event symbol="OnConnectionClosed" value="2" version="1" level="Default" template="ConnectionStateChanged" message="$(string.LolaCommsNative.event.2.message)"></event>
+					<event symbol="OnConnectionError" value="3" version="1" template="ConnectionStateChanged"></event>
+					<event symbol="OnObstacleMessageReceived" value="4" version="1" level="Default" template="ObstacleMessage"></event>
+				</events>
+				<levels>
+					<level name="Default" symbol="Default" value="16"></level>
+				</levels>
+				<templates>
+					<template tid="ConnectionStateChanged">
+						<data name="hostname" inType="win:UnicodeString" outType="xs:string"></data>
+					</template>
+					<template tid="ObstacleMessage">
+						<data name="type" inType="win:Int32" outType="xs:int"></data>
+						<data name="model_id" inType="win:UInt32" outType="xs:unsignedInt"></data>
+						<data name="part_id" inType="win:UInt32" outType="xs:unsignedInt"></data>
+						<data name="action" inType="win:UInt32" outType="win:HexInt32"></data>
+						<data name="radius" inType="win:Float" outType="xs:float"></data>
+						<data name="surface" inType="win:Int32" outType="xs:int"></data>
+						<data name="coeffs" inType="win:Float" outType="xs:float" count="9"></data>
+					</template>
+				</templates>
+			</provider>
+		</events>
+	</instrumentation>
+	<localization>
+		<resources culture="en-US">
+			<stringTable>
+				<string id="LolaCommsNative.event.2.message" value="Connection Closed"></string>
+				<string id="LolaCommsNative.event.1.message" value="New Connection"></string>
+			</stringTable>
+		</resources>
+	</localization>
+</instrumentationManifest>

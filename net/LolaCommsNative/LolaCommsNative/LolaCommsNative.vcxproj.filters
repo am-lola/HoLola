@@ -127,6 +127,7 @@
     <ClInclude Include="sock_utils.h" />
     <ClInclude Include="VisionListener.h" />
     <ClInclude Include="Logging.h" />
+    <ClInclude Include="LolaCommsNativeETW.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="iface\include\README.txt">
@@ -137,5 +138,11 @@
     <None Include="iface\include\sig_commands.i">
       <Filter>iface</Filter>
     </None>
+    <None Include="LolaCommsNative.man" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="LolaCommsNativeETW.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

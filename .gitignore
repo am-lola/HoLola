@@ -79,6 +79,8 @@ HoLola.sln
 Package.StoreAssociation.xml
 _pkginfo.txt
 *.appx
+*.[Bb][Ii][Nn]
+*.res
 
 # ignore files ending in cache, but not directories
 *.[Cc]ache
