@@ -6,7 +6,7 @@
 extern "C"
 {
 
-    bool Init()
+    bool __stdcall Init()
     {
         auto reg = EventRegisterLolaCommsNative();
         LogInfo(std::wstring(L"ETW Registration: ") + std::to_wstring(reg));
@@ -20,7 +20,7 @@ extern "C"
         return true;
     }
 
-    bool DeInit()
+    bool __stdcall DeInit()
     {
         int res = WSACleanup();
         if (res != 0)
@@ -36,27 +36,27 @@ extern "C"
         SetInfoCB([callback](std::wstring text) {callback(::SysAllocString(text.c_str())); });
     }
 
-    VisionListener* VisionListener_Create(int port)
+    VisionListener* __stdcall VisionListener_Create(int port)
     {
         return new VisionListener(port);
     }
 
-    void VisionListener_Destroy(VisionListener* vl)
+    void __stdcall VisionListener_Destroy(VisionListener* vl)
     {
         delete vl;
     }
 
-    void VisionListener_Listen(VisionListener* vl)
+    void __stdcall VisionListener_Listen(VisionListener* vl)
     {
         vl->listen();
     }
 
-    bool VisionListener_IsListening(VisionListener* vl)
+    bool __stdcall VisionListener_IsListening(VisionListener* vl)
     {
         return vl->listening();
     }
 
-    void VisionListener_Stop(VisionListener* vl)
+    void __stdcall VisionListener_Stop(VisionListener* vl)
     {
         vl->stop();
     }

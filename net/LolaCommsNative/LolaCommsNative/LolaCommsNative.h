@@ -25,16 +25,16 @@
 extern "C"
 {
 
-    LOLACOMMSDLL_API bool Init();
-    LOLACOMMSDLL_API bool DeInit();
+    LOLACOMMSDLL_API bool __stdcall Init();
+    LOLACOMMSDLL_API bool __stdcall DeInit();
 
     LOLACOMMSDLL_API void __stdcall RegisterInfoCallback(VL_INFOCALLBACK callback);
 
-    LOLACOMMSDLL_API VisionListener* VisionListener_Create(int port);
-    LOLACOMMSDLL_API void VisionListener_Destroy(VisionListener* vl);
-    LOLACOMMSDLL_API void VisionListener_Listen(VisionListener* vl);
-    LOLACOMMSDLL_API bool VisionListener_IsListening(VisionListener* vl);
-    LOLACOMMSDLL_API void VisionListener_Stop(VisionListener* vl);
+    LOLACOMMSDLL_API VisionListener* __stdcall VisionListener_Create(int port);
+    LOLACOMMSDLL_API void __stdcall VisionListener_Destroy(VisionListener* vl);
+    LOLACOMMSDLL_API void __stdcall VisionListener_Listen(VisionListener* vl);
+    LOLACOMMSDLL_API bool __stdcall VisionListener_IsListening(VisionListener* vl);
+    LOLACOMMSDLL_API void __stdcall VisionListener_Stop(VisionListener* vl);
 
     typedef void(__stdcall *VL_ONERRORCALLBACK)(BSTR errstr);
     LOLACOMMSDLL_API void __stdcall VisionListener_OnError(VisionListener* vl, VL_ONERRORCALLBACK callback);
