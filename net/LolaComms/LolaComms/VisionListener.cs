@@ -19,27 +19,42 @@ namespace LolaComms
         private Queue<SurfaceMessage> _surfaces = new Queue<SurfaceMessage>();
         private Object _obsLock = new Object();
 
+        [UnmanagedFunctionPointer (CallingConvention.StdCall)]
         public delegate void VisionListener_OnErrorCallback([MarshalAs(UnmanagedType.BStr)]string errstr);
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         public delegate void VisionListener_OnConnectCallback([MarshalAs(UnmanagedType.BStr)]string errstr);
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         public delegate void VisionListener_OnDisconnectCallback([MarshalAs(UnmanagedType.BStr)]string errstr);
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         public delegate void VisionListener_OnObstacleMessageCallback(ObstacleMessage obstacle);
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         public delegate void VisionListener_OnSurfaceMessageCallback(SurfaceMessage surface);
 
-        public VisionListener_OnErrorCallback onError;
-        public VisionListener_OnConnectCallback onConnect;
-        public VisionListener_OnDisconnectCallback onDisconnect;
-        public VisionListener_OnObstacleMessageCallback onObstacleMessage;
-        public VisionListener_OnSurfaceMessageCallback onSurfaceMessage;
+        public VisionListener_OnErrorCallback onError, p_onError;
+        public VisionListener_OnConnectCallback onConnect, p_onConnect;
+        public VisionListener_OnDisconnectCallback onDisconnect, p_onDisconnect;
+        public VisionListener_OnObstacleMessageCallback onObstacleMessage, p_onObstacleMessage;
+        public VisionListener_OnSurfaceMessageCallback onSurfaceMessage, p_onSurfaceMessage;
 
+        GCHandle handle;
         public VisionListener(int port)
         {
             _port = port;
             _visionListener = VisionListener_Create(_port);
-            VisionListener_OnError(_visionListener, OnError);
-            VisionListener_OnConnect(_visionListener, OnConnect);
-            VisionListener_OnDisconnect(_visionListener, OnDisconnect);
-            VisionListener_OnObstacleMessage(_visionListener, OnObstacleMessage);
-            VisionListener_OnSurfaceMessage(_visionListener, OnSurfaceMessage);
+
+            /// Ensure callbacks we pass to native code are allocated outside our class
+            /// see issue #11
+            p_onError = new VisionListener_OnErrorCallback(OnError);
+            p_onConnect = new VisionListener_OnConnectCallback(OnConnect);
+            p_onDisconnect = new VisionListener_OnDisconnectCallback(OnDisconnect);
+            p_onObstacleMessage = new VisionListener_OnObstacleMessageCallback(OnObstacleMessage);
+            p_onSurfaceMessage = new VisionListener_OnSurfaceMessageCallback(OnSurfaceMessage);
+
+            VisionListener_OnError(_visionListener, p_onError);
+            VisionListener_OnConnect(_visionListener, p_onConnect);
+            VisionListener_OnDisconnect(_visionListener, p_onDisconnect);
+            VisionListener_OnObstacleMessage(_visionListener, p_onObstacleMessage);
+            VisionListener_OnSurfaceMessage(_visionListener, p_onSurfaceMessage);
         }
 
         ~VisionListener()
