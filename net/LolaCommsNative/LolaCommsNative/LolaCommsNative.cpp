@@ -80,4 +80,9 @@ extern "C"
     {
         vl->onObstacleMessage([callback](am2b_iface::ObstacleMessage* obstacle) { callback(*obstacle); });
     }
+
+    void __stdcall VisionListener_OnSurfaceMessage(VisionListener* vl, VL_ONSURFACEMESSAGECALLBACK callback)
+    {
+        vl->onSurfaceMessage([callback](am2b_iface::SurfaceMessage* obstacle) { callback(*obstacle); });
+    }
 }

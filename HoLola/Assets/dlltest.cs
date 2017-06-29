@@ -12,10 +12,12 @@ using UnityEngine;
 public class dlltest : MonoBehaviour {
     public Material obstacleMaterial;
     public GameObject Capsule;
+    public GameObject Plane;
 #if UNITY_EDITOR
 #else
     private LolaComms.VisionListener vl;
     private Dictionary<uint, GameObject> obstacle_map = new Dictionary<uint, GameObject>();
+    private Dictionary<uint, GameObject> surface_map  = new Dictionary<uint, GameObject>();
 
     public LolaComms.VisionListener SetupVL()
     {
@@ -104,6 +106,152 @@ public class dlltest : MonoBehaviour {
                 Debug.LogWarning("Got unexpected SSV action: " + msg.action);
                 break;
             }
+        };
+        vl.onSurfaceMessage += (msg) =>
+        {
+            Debug.Log("Got a new surface: " + msg.ToString());
+
+            switch (msg.action)
+            {
+                case (uint)LolaComms.Common.MsgId.SET_SURFACE: // add new surface
+                {
+                    var new_surface = Instantiate(Plane, this.transform);
+                    var mesh = new_surface.GetComponent<MeshFilter>();
+                    mesh.mesh = new Mesh();
+
+                    // set vertices
+                    var verts = new Vector3[msg.vertices.Length / 3];
+                    for (int i = 0; i < verts.Length; i++)
+                    {
+                        verts[i] = new Vector3(msg.vertices[i*3], msg.vertices[i*3 + 1], msg.vertices[i*3 + 2]);
+                    }
+                    mesh.mesh.vertices = verts;
+                    Debug.Log("Verts");
+                    // make triangle fan from vertices
+                    var tris = new int[18]; // 6 triangles w/ 3 verts each
+                    tris[0] = 0;
+                    tris[1] = 1;
+                    tris[2] = 2;
+
+                    tris[3] = 0;
+                    tris[4] = 2;
+                    tris[5] = 3;
+
+                    tris[6] = 0;
+                    tris[7] = 3;
+                    tris[8] = 4;
+
+                    tris[9]  = 0;
+                    tris[10] = 4;
+                    tris[11] = 5;
+
+                    tris[12] = 0;
+                    tris[13] = 5;
+                    tris[14] = 6;
+
+                    tris[15] = 0;
+                    tris[16] = 6;
+                    tris[17] = 7;
+
+                    mesh.mesh.triangles = tris;
+                    Debug.Log("tris");
+                    // set normals
+                    var normals = new Vector3[verts.Length];
+                    for (int i = 0; i < normals.Length; i++)
+                    {
+                        normals[i] = new Vector3(msg.normal[0], msg.normal[1], msg.normal[2]);
+                    }
+                    mesh.mesh.normals = normals;
+                    Debug.Log("normals");
+
+                    if (surface_map.ContainsKey(msg.id)) // don't add surface if it already exists
+                    {
+                        Debug.LogWarning("Received SET_SURFACE msg for already existing surface ID: " + msg.id);
+                    }
+                    else
+                    {
+                        surface_map.Add(msg.id, new_surface);
+                    }
+                    break;
+                }
+                case (uint)LolaComms.Common.MsgId.MODIFY_SURFACE:
+                {
+                    if (!surface_map.ContainsKey(msg.id))
+                    {
+                        Debug.LogError("Received MODIFY_SURFACE msg for non-existent surface ID: " + msg.id);
+                        break;
+                    }
+                    var surface = surface_map[msg.id];
+                    var mesh = surface.GetComponent<MeshFilter>();
+                    mesh.mesh = new Mesh();
+
+                    // set vertices
+                    var verts = new Vector3[msg.vertices.Length / 3];
+                    for (int i = 0; i < verts.Length; i++)
+                    {
+                        verts[i] = new Vector3(msg.vertices[i * 3], msg.vertices[i * 3 + 1], msg.vertices[i * 3 + 2]);
+                    }
+                    mesh.mesh.vertices = verts;
+                    Debug.Log("Verts");
+
+                    // make triangle fan from vertices
+                    var tris = new int[18]; // 6 triangles w/ 3 verts each
+                    tris[0] = 0;
+                    tris[1] = 1;
+                    tris[2] = 2;
+
+                    tris[3] = 0;
+                    tris[4] = 2;
+                    tris[5] = 3;
+
+                    tris[6] = 0;
+                    tris[7] = 3;
+                    tris[8] = 4;
+
+                    tris[9] = 0;
+                    tris[10] = 4;
+                    tris[11] = 5;
+
+                    tris[12] = 0;
+                    tris[13] = 5;
+                    tris[14] = 6;
+
+                    tris[15] = 0;
+                    tris[16] = 6;
+                    tris[17] = 7;
+
+                    mesh.mesh.triangles = tris;
+                    Debug.Log("Tris");
+                    // set normals
+                    var normals = new Vector3[verts.Length];
+                    for (int i = 0; i < normals.Length; i++)
+                    {
+                        normals[i] = new Vector3(msg.normal[0], msg.normal[1], msg.normal[2]);
+                    }
+                    mesh.mesh.normals = normals;
+                    Debug.Log("normals");
+                    break;
+                }
+                case (uint)LolaComms.Common.MsgId.REMOVE_SURFACE:
+                {
+                    Destroy(surface_map[msg.id]);
+                    surface_map.Remove(msg.id);
+                    break;
+                }
+                case (uint)LolaComms.Common.MsgId.RESET_SURFACEMAP: // clear ALL surfaces
+                {
+                    foreach (var surface in surface_map)
+                    {
+                        Destroy(surface.Value);
+                    }
+                    surface_map.Clear();
+                    break;
+                }
+                default:
+                Debug.LogError("Got unknown surface action: " + msg.action);
+                break;
+            }
+
         };
 
         vl.Listen();

@@ -89,6 +89,7 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="SurfaceMessage.cs" />
     <Compile Include="VisionListener.cs" />
     <Compile Include="Common.cs" />
     <Compile Include="ObstacleMessage.cs" />

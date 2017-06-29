@@ -16,17 +16,20 @@ namespace LolaComms
         private int _port;
         private IntPtr _visionListener = IntPtr.Zero; // pointer to native implementation
         private Queue<ObstacleMessage> _obstacles = new Queue<ObstacleMessage>();
+        private Queue<SurfaceMessage> _surfaces = new Queue<SurfaceMessage>();
         private Object _obsLock = new Object();
 
         public delegate void VisionListener_OnErrorCallback([MarshalAs(UnmanagedType.BStr)]string errstr);
         public delegate void VisionListener_OnConnectCallback([MarshalAs(UnmanagedType.BStr)]string errstr);
         public delegate void VisionListener_OnDisconnectCallback([MarshalAs(UnmanagedType.BStr)]string errstr);
         public delegate void VisionListener_OnObstacleMessageCallback(ObstacleMessage obstacle);
+        public delegate void VisionListener_OnSurfaceMessageCallback(SurfaceMessage surface);
 
         public VisionListener_OnErrorCallback onError;
         public VisionListener_OnConnectCallback onConnect;
         public VisionListener_OnDisconnectCallback onDisconnect;
         public VisionListener_OnObstacleMessageCallback onObstacleMessage;
+        public VisionListener_OnSurfaceMessageCallback onSurfaceMessage;
 
         public VisionListener(int port)
         {
@@ -36,6 +39,7 @@ namespace LolaComms
             VisionListener_OnConnect(_visionListener, OnConnect);
             VisionListener_OnDisconnect(_visionListener, OnDisconnect);
             VisionListener_OnObstacleMessage(_visionListener, OnObstacleMessage);
+            VisionListener_OnSurfaceMessage(_visionListener, OnSurfaceMessage);
         }
 
         ~VisionListener()
@@ -79,6 +83,12 @@ namespace LolaComms
                     onObstacleMessage?.Invoke(obstacle);
                 }
                 _obstacles.Clear();
+
+                foreach (var surface in _surfaces)
+                {
+                    onSurfaceMessage?.Invoke(surface);
+                }
+                _surfaces.Clear();
             }
             
         }
@@ -104,6 +114,14 @@ namespace LolaComms
             lock (_obsLock)
             {
                 _obstacles.Enqueue(msg);
+            }
+        }
+
+        private void OnSurfaceMessage(SurfaceMessage msg)
+        {
+            lock (_obsLock)
+            {
+                _surfaces.Enqueue(msg);
             }
         }
 #endregion
@@ -177,6 +195,14 @@ namespace LolaComms
         /// <param name="callback"></param>
         [DllImport("LolaCommsNative")]
         private static extern void VisionListener_OnObstacleMessage(IntPtr vl, VisionListener_OnObstacleMessageCallback callback);
-#endregion
+
+        /// <summary>
+        /// Registers a function to call when a new SurfaceMessage is received
+        /// </summary>
+        /// <param name="vl">Pointer to existing VisionListener interface</param>
+        /// <param name="callback"></param>
+        [DllImport("LolaCommsNative")]
+        private static extern void VisionListener_OnSurfaceMessage(IntPtr vl, VisionListener_OnSurfaceMessageCallback callback);
+        #endregion
     }
 }

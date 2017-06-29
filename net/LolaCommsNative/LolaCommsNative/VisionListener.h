@@ -70,7 +70,7 @@ public:
 	void onPointCloudMessage(OnPointCloudMessage cb) { _onPointCloudMessage = cb; }
 
 private:
-	bool _verbose = false;
+	bool _verbose = true;
 	int  _port;
 	int  _socket;
 	bool _listening = false;
@@ -157,6 +157,7 @@ private:
             ssize_t total_received = 0;
             ssize_t total_expected = ifaceHeaderSize;
 
+
             if (_verbose)
             {
                 LogInfo(L"Waiting for am2b_iface::MsgHeader (" + std::to_wstring(ifaceHeaderSize) + L" bytes)...");
@@ -189,8 +190,7 @@ private:
 
                 if (_verbose)
                 {
-                    std::printf("(iface header) Received %zu / %zu total bytes from %s\n",
-                        total_received, total_expected, hostString(si_other).c_str());
+                    LogInfo(std::wstring(L"(iface header) Received ") + std::to_wstring(total_received).c_str() + L" / " + std::to_wstring(total_expected) + L" total bytes from " + hostString(si_other).c_str());
                 }
             }
 
@@ -200,8 +200,7 @@ private:
             am2b_iface::MsgHeader* iface_header = (am2b_iface::MsgHeader*)buf.data();
             if (_verbose)
             {
-                std::cout << "Received am2b_iface::MsgHeader: id = 0x" << std::hex
-                    << iface_header->id << std::dec << ", len = " << iface_header->len << std::endl;
+                LogInfo(std::wstring(L"Received am2b_iface::MsgHeader: id = ") + std::to_wstring(iface_header->id) + L", len = " + std::to_wstring(iface_header->len));
             }
 
             total_expected += iface_header->len;
@@ -209,7 +208,7 @@ private:
             {
                 if (_verbose)
                 {
-                    std::cout << "Resizing receive buffer to " << total_expected << " bytes" << std::endl;
+                    LogInfo(std::wstring(L"Resizing receive buffer to ") + std::to_wstring(total_expected) + L" bytes");
                 }
                 buf.resize(total_expected);
                 iface_header = (am2b_iface::MsgHeader*)buf.data(); // update pointer after re-allocation
@@ -239,8 +238,7 @@ private:
                 total_received += recvd;
                 if (_verbose)
                 {
-                    std::printf("(message) Received %zu / %zu total bytes from %s\n",
-                        total_received, total_expected, hostString(si_other).c_str());
+                    LogInfo(std::wstring(L"(message) Received ") + std::to_wstring(total_received) + L" / " + std::to_wstring(total_expected) + L" total bytes from " + hostString(si_other));
                 }
             }
 

@@ -446,6 +446,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   obstacleMaterial: {fileID: 2100000, guid: 8cb65c049b4c00546bae1c46fcbec2f8, type: 2}
   Capsule: {fileID: 1461448996409306, guid: 83688a79fc862154e8aa045888cd5710, type: 2}
+  Plane: {fileID: 1308866113171022, guid: 4015255d2127142468c92f7bf8bac863, type: 2}
 --- !u!114 &289864014
 MonoBehaviour:
   m_ObjectHideFlags: 0

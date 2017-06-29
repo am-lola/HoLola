@@ -47,6 +47,9 @@ extern "C"
 
     typedef void(__stdcall *VL_ONOBSTACLEMESSAGECALLBACK)(am2b_iface::ObstacleMessage obstacle);
     LOLACOMMSDLL_API void __stdcall VisionListener_OnObstacleMessage(VisionListener* vl, VL_ONOBSTACLEMESSAGECALLBACK callback);
+
+    typedef void(__stdcall *VL_ONSURFACEMESSAGECALLBACK)(am2b_iface::SurfaceMessage surface);
+    LOLACOMMSDLL_API void __stdcall VisionListener_OnSurfaceMessage(VisionListener* vl, VL_ONSURFACEMESSAGECALLBACK callback);
 }
 
 #endif // _LOLA_COMMS_NATIVE_DLL_H
