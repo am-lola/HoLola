@@ -4,7 +4,7 @@ NOTE: Please use `--recursive` when cloning this repo to pull in submodules.
 
 ## Dependencies
 
-* [Visual Studio](https://developer.microsoft.com/en-us/windows/mixed-reality/install_the_tools), including:
+* [Visual Studio 2017](https://developer.microsoft.com/en-us/windows/mixed-reality/install_the_tools), including:
   * .NET Framework 3.5 development tools
   * .NET Portable Library targeting pack
   * Visual C++ runtime for UWP
