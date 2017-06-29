@@ -272,6 +272,7 @@ private:
                 std::cout << "Should have " << visionHeader->len + sizeof(am2b_iface::VisionMessageHeader)
                     << " bytes (got " << total_received << ")" << std::endl;
             }
+            EventWriteOnVisionMessageReceived(L"Received VisionMessage");
 
             switch (visionHeader->type)
             {
@@ -284,6 +285,7 @@ private:
                 }
                 case am2b_iface::Message_Type::Surface:
                 {
+                    EventWriteOnSurfaceMessageReceived(L"New Surface Received");
                     cb(_onSurfaceMessage,
                         (am2b_iface::SurfaceMessage*)
                         (buf.data() + sizeof(am2b_iface::VisionMessageHeader) + sizeof(am2b_iface::MsgHeader)));
@@ -291,6 +293,7 @@ private:
                 }
                 case am2b_iface::Message_Type::RGB_Image:
                 {
+                    EventWriteOnRGBImageMessageReceived(L"New RGB Image Received");
                     am2b_iface::RGBMessage* message = (am2b_iface::RGBMessage*)
                         (buf.data()
                             + sizeof(am2b_iface::VisionMessageHeader) + sizeof(am2b_iface::MsgHeader));
@@ -300,6 +303,7 @@ private:
                 }
                 case am2b_iface::Message_Type::PointCloud:
                 {
+                    EventWriteOnPointCloudMessageReceived(L"New PointCloud Received");
                     am2b_iface::PointCloudMessage* message = (am2b_iface::PointCloudMessage*)
                         (buf.data()
                             + sizeof(am2b_iface::VisionMessageHeader) + sizeof(am2b_iface::MsgHeader));
@@ -309,6 +313,7 @@ private:
                 }
                 default:
                 {
+                    EventWriteOnUnknownVisionMessageReceived(L"BAD Vision Message received!");
                     std::cout << "UNKNOWN message type: " << visionHeader->type << "!!" << std::endl;
                 }
             }

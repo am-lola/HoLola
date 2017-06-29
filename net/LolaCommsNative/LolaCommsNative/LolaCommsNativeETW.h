@@ -215,7 +215,7 @@ Remarks:
 #endif
 #endif // MCGEN_DISABLE_PROVIDER_CODE_GENERATION
 //+
-// Provider LolaCommsNative Event Count 4
+// Provider LolaCommsNative Event Count 9
 //+
 EXTERN_C __declspec(selectany) const GUID LolaCommsNative = {0x8eb119a9, 0x2fe5, 0x46f5, {0x99, 0x8b, 0xa3, 0x96, 0xca, 0x3f, 0x74, 0xb7}};
 
@@ -233,8 +233,18 @@ EXTERN_C __declspec(selectany) const EVENT_DESCRIPTOR OnConnectionClosed = {0x2,
 #define OnConnectionClosed_value 0x2
 EXTERN_C __declspec(selectany) const EVENT_DESCRIPTOR OnConnectionError = {0x3, 0x1, 0x0, 0x0, 0x0, 0x0, 0x0};
 #define OnConnectionError_value 0x3
-EXTERN_C __declspec(selectany) const EVENT_DESCRIPTOR OnObstacleMessageReceived = {0x4, 0x1, 0x0, 0x0, 0x0, 0x0, 0x0};
-#define OnObstacleMessageReceived_value 0x4
+EXTERN_C __declspec(selectany) const EVENT_DESCRIPTOR OnVisionMessageReceived = {0x4, 0x1, 0x0, 0x0, 0x0, 0x0, 0x0};
+#define OnVisionMessageReceived_value 0x4
+EXTERN_C __declspec(selectany) const EVENT_DESCRIPTOR OnObstacleMessageReceived = {0x5, 0x1, 0x0, 0x0, 0x0, 0x0, 0x0};
+#define OnObstacleMessageReceived_value 0x5
+EXTERN_C __declspec(selectany) const EVENT_DESCRIPTOR OnSurfaceMessageReceived = {0x6, 0x1, 0x0, 0x0, 0x0, 0x0, 0x0};
+#define OnSurfaceMessageReceived_value 0x6
+EXTERN_C __declspec(selectany) const EVENT_DESCRIPTOR OnRGBImageMessageReceived = {0x7, 0x1, 0x0, 0x0, 0x0, 0x0, 0x0};
+#define OnRGBImageMessageReceived_value 0x7
+EXTERN_C __declspec(selectany) const EVENT_DESCRIPTOR OnPointCloudMessageReceived = {0x8, 0x1, 0x0, 0x0, 0x0, 0x0, 0x0};
+#define OnPointCloudMessageReceived_value 0x8
+EXTERN_C __declspec(selectany) const EVENT_DESCRIPTOR OnUnknownVisionMessageReceived = {0x9, 0x1, 0x0, 0x0, 0x0, 0x0, 0x0};
+#define OnUnknownVisionMessageReceived_value 0x9
 
 //
 // Note on Generate Code from Manifest for Windows Vista and above
@@ -409,6 +419,20 @@ Remarks:
         : ERROR_SUCCESS\
 
 //
+// Enablement check macro for OnVisionMessageReceived
+//
+
+#define EventEnabledOnVisionMessageReceived() ((LolaCommsNativeEnableBits[0] & 0x00000001) != 0)
+
+//
+// Event Macro for OnVisionMessageReceived
+//
+#define EventWriteOnVisionMessageReceived(info)\
+        EventEnabledOnVisionMessageReceived() ?\
+        Template_z(LolaCommsNativeHandle, &OnVisionMessageReceived, info)\
+        : ERROR_SUCCESS\
+
+//
 // Enablement check macro for OnObstacleMessageReceived
 //
 
@@ -420,6 +444,62 @@ Remarks:
 #define EventWriteOnObstacleMessageReceived(type, model_id, part_id, action, radius, surface, coeffs)\
         EventEnabledOnObstacleMessageReceived() ?\
         Template_dqqqfdF9(LolaCommsNativeHandle, &OnObstacleMessageReceived, type, model_id, part_id, action, radius, surface, coeffs)\
+        : ERROR_SUCCESS\
+
+//
+// Enablement check macro for OnSurfaceMessageReceived
+//
+
+#define EventEnabledOnSurfaceMessageReceived() ((LolaCommsNativeEnableBits[0] & 0x00000001) != 0)
+
+//
+// Event Macro for OnSurfaceMessageReceived
+//
+#define EventWriteOnSurfaceMessageReceived(info)\
+        EventEnabledOnSurfaceMessageReceived() ?\
+        Template_z(LolaCommsNativeHandle, &OnSurfaceMessageReceived, info)\
+        : ERROR_SUCCESS\
+
+//
+// Enablement check macro for OnRGBImageMessageReceived
+//
+
+#define EventEnabledOnRGBImageMessageReceived() ((LolaCommsNativeEnableBits[0] & 0x00000001) != 0)
+
+//
+// Event Macro for OnRGBImageMessageReceived
+//
+#define EventWriteOnRGBImageMessageReceived(info)\
+        EventEnabledOnRGBImageMessageReceived() ?\
+        Template_z(LolaCommsNativeHandle, &OnRGBImageMessageReceived, info)\
+        : ERROR_SUCCESS\
+
+//
+// Enablement check macro for OnPointCloudMessageReceived
+//
+
+#define EventEnabledOnPointCloudMessageReceived() ((LolaCommsNativeEnableBits[0] & 0x00000001) != 0)
+
+//
+// Event Macro for OnPointCloudMessageReceived
+//
+#define EventWriteOnPointCloudMessageReceived(info)\
+        EventEnabledOnPointCloudMessageReceived() ?\
+        Template_z(LolaCommsNativeHandle, &OnPointCloudMessageReceived, info)\
+        : ERROR_SUCCESS\
+
+//
+// Enablement check macro for OnUnknownVisionMessageReceived
+//
+
+#define EventEnabledOnUnknownVisionMessageReceived() ((LolaCommsNativeEnableBits[0] & 0x00000001) != 0)
+
+//
+// Event Macro for OnUnknownVisionMessageReceived
+//
+#define EventWriteOnUnknownVisionMessageReceived(info)\
+        EventEnabledOnUnknownVisionMessageReceived() ?\
+        Template_z(LolaCommsNativeHandle, &OnUnknownVisionMessageReceived, info)\
         : ERROR_SUCCESS\
 
 #endif // MCGEN_DISABLE_PROVIDER_CODE_GENERATION
