@@ -152,11 +152,10 @@ private:
 
         while (_listening)
         {
-            ssize_t ifaceHeaderSize = sizeof(am2b_iface::MsgHeader);
-            ssize_t visionHeaderSize = sizeof(am2b_iface::VisionMessageHeader);
-            ssize_t total_received = 0;
-            ssize_t total_expected = ifaceHeaderSize;
-
+            size_t ifaceHeaderSize = sizeof(am2b_iface::MsgHeader);
+            size_t visionHeaderSize = sizeof(am2b_iface::VisionMessageHeader);
+            size_t total_received = 0;
+            size_t total_expected = ifaceHeaderSize;
 
             if (_verbose)
             {

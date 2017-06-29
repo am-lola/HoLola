@@ -99,7 +99,6 @@ static int create_server_socket(unsigned int port)
 static int create_client_socket(unsigned int port, std::string host)
 {
 	struct addrinfo hints, *res;
-	struct sockaddr_in server_addr;
 	int s;
 
 	// get server info for connection
