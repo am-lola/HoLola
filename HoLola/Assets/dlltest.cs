@@ -46,7 +46,15 @@ public class dlltest : MonoBehaviour {
                 {
                     if (msg.type == LolaComms.ObstacleType.Sphere)
                     {
-                        GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                        GameObject sphere;
+                        if (obstacle_map.ContainsKey(msg.model_id))
+                        {
+                            sphere = obstacle_map[msg.model_id];
+                        }
+                        else
+                        {
+                            sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                        }
                         sphere.transform.parent = transform;
                         sphere.transform.localPosition = new Vector3(msg.coeffs[0], msg.coeffs[1], msg.coeffs[2]);
                         sphere.transform.localScale = new Vector3(msg.radius, msg.radius, msg.radius);
@@ -55,7 +63,15 @@ public class dlltest : MonoBehaviour {
                     }
                     else if (msg.type == LolaComms.ObstacleType.Capsule)
                     {
-                        GameObject cap = Instantiate(Capsule, this.transform);
+                        GameObject cap;
+                        if (obstacle_map.ContainsKey(msg.model_id))
+                        {
+                            cap = obstacle_map[msg.model_id];
+                        }
+                        else
+                        {
+                            cap = Instantiate(Capsule, this.transform);
+                        }
                         Capsule c = cap.GetComponent<Capsule>();
                         c.Radius = msg.radius;
                         c.Top = new Vector3(msg.coeffs[0], msg.coeffs[1], msg.coeffs[2]);
@@ -82,6 +98,10 @@ public class dlltest : MonoBehaviour {
                             c.Bottom = new Vector3(msg.coeffs[3], msg.coeffs[4], msg.coeffs[5]);
                         }
                     }
+                    else
+                    {
+                        Debug.LogWarning("Got MODIFY_SSV msg for non-existent object: " + msg.model_id);
+                    }
                     break;
                 }
                 case (uint)LolaComms.Common.MsgId.REMOVE_SSV_ONLY_PART:
@@ -90,6 +110,10 @@ public class dlltest : MonoBehaviour {
                     {
                         Destroy(obstacle_map[msg.model_id]);
                         obstacle_map.Remove(msg.model_id);
+                    }
+                    else
+                    {
+                        Debug.LogWarning("Got REMOVE_SSV_ONLY_PART msg for non-existen object: " + msg.model_id);
                     }
                     break;
                 }
@@ -100,11 +124,15 @@ public class dlltest : MonoBehaviour {
                         Destroy(obstacle_map[msg.model_id]);
                         obstacle_map.Remove(msg.model_id);
                     }
+                    else
+                    {
+                        Debug.LogWarning("Got REMOVE_SSV_WHOLE_SEGMENT msg for non-existen object: " + msg.model_id);
+                    }
                     break;
                 }
                 default:
-                Debug.LogWarning("Got unexpected SSV action: " + msg.action);
-                break;
+                    Debug.LogWarning("Got unexpected SSV action: " + msg.action);
+                    break;
             }
         };
         vl.onSurfaceMessage += (msg) =>
@@ -115,7 +143,15 @@ public class dlltest : MonoBehaviour {
             {
                 case (uint)LolaComms.Common.MsgId.SET_SURFACE: // add new surface
                 {
-                    var new_surface = Instantiate(Plane, this.transform);
+                    GameObject new_surface;
+                    if (!surface_map.ContainsKey(msg.id)) // only create new object if this surface is really new
+                    {
+                        new_surface = Instantiate(Plane, this.transform);
+                    }
+                    else // if we have this surface already, replace the existing mesh data
+                    {
+                        new_surface = surface_map[msg.id];
+                    }
                     var mesh = new_surface.GetComponent<MeshFilter>();
                     mesh.mesh = new Mesh();
 
@@ -126,7 +162,7 @@ public class dlltest : MonoBehaviour {
                         verts[i] = new Vector3(msg.vertices[i*3], msg.vertices[i*3 + 1], msg.vertices[i*3 + 2]);
                     }
                     mesh.mesh.vertices = verts;
-                    Debug.Log("Verts");
+
                     // make triangle fan from vertices
                     var tris = new int[18]; // 6 triangles w/ 3 verts each
                     tris[0] = 0;
@@ -154,7 +190,7 @@ public class dlltest : MonoBehaviour {
                     tris[17] = 7;
 
                     mesh.mesh.triangles = tris;
-                    Debug.Log("tris");
+
                     // set normals
                     var normals = new Vector3[verts.Length];
                     for (int i = 0; i < normals.Length; i++)
@@ -162,7 +198,6 @@ public class dlltest : MonoBehaviour {
                         normals[i] = new Vector3(msg.normal[0], msg.normal[1], msg.normal[2]);
                     }
                     mesh.mesh.normals = normals;
-                    Debug.Log("normals");
 
                     if (surface_map.ContainsKey(msg.id)) // don't add surface if it already exists
                     {
@@ -172,6 +207,8 @@ public class dlltest : MonoBehaviour {
                     {
                         surface_map.Add(msg.id, new_surface);
                     }
+
+                    mesh.mesh.RecalculateBounds();
                     break;
                 }
                 case (uint)LolaComms.Common.MsgId.MODIFY_SURFACE:
@@ -192,7 +229,6 @@ public class dlltest : MonoBehaviour {
                         verts[i] = new Vector3(msg.vertices[i * 3], msg.vertices[i * 3 + 1], msg.vertices[i * 3 + 2]);
                     }
                     mesh.mesh.vertices = verts;
-                    Debug.Log("Verts");
 
                     // make triangle fan from vertices
                     var tris = new int[18]; // 6 triangles w/ 3 verts each
@@ -221,7 +257,7 @@ public class dlltest : MonoBehaviour {
                     tris[17] = 7;
 
                     mesh.mesh.triangles = tris;
-                    Debug.Log("Tris");
+
                     // set normals
                     var normals = new Vector3[verts.Length];
                     for (int i = 0; i < normals.Length; i++)
@@ -229,13 +265,21 @@ public class dlltest : MonoBehaviour {
                         normals[i] = new Vector3(msg.normal[0], msg.normal[1], msg.normal[2]);
                     }
                     mesh.mesh.normals = normals;
-                    Debug.Log("normals");
+
+                    mesh.mesh.RecalculateBounds();
                     break;
                 }
                 case (uint)LolaComms.Common.MsgId.REMOVE_SURFACE:
                 {
-                    Destroy(surface_map[msg.id]);
-                    surface_map.Remove(msg.id);
+                    if (surface_map.ContainsKey(msg.id))
+                    {
+                        Destroy(surface_map[msg.id]);
+                        surface_map.Remove(msg.id);
+                    }
+                    else
+                    {
+                        Debug.LogWarning("Got REMOVE_SURFACE msg for non-existent surface: " + msg.id);
+                    }
                     break;
                 }
                 case (uint)LolaComms.Common.MsgId.RESET_SURFACEMAP: // clear ALL surfaces
