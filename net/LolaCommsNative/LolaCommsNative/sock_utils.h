@@ -96,9 +96,9 @@ static int create_server_socket(unsigned int port)
 }
 
 // Creates a new TCP socket connected to the given host:port
-static int create_client_socket(unsigned int port, std::string host)
+static int create_client_socket(unsigned int port, std::wstring host)
 {
-	struct addrinfo hints, *res;
+	ADDRINFOW hints, *res;
 	int s;
 
 	// get server info for connection
@@ -106,14 +106,15 @@ static int create_client_socket(unsigned int port, std::string host)
 	hints.ai_family = AF_UNSPEC;
 	hints.ai_socktype = SOCK_STREAM;
 	hints.ai_protocol = IPPROTO_TCP;
-	int n = getaddrinfo(host.c_str(), std::to_string(port).c_str(), &hints, &res);
+    
+	int n = GetAddrInfoW(host.c_str(), std::to_wstring(port).c_str(), &hints, &res);
 	if (n != 0)
 	{
-		LogWSAErrorStr("Could not get host info for: " + host);
+		LogWSAErrorStr(std::wstring(L"Could not get host info for: ") + host);
 		return INVALID_SOCKET;
 	}
 
-	std::cout << "Attempting to connect to: " << host << ":" << port << std::endl;
+	std::wcout << "Attempting to connect to: " << host << ":" << port << std::endl;
 
 	// connect to server
 	bool connection_success = false;
@@ -126,7 +127,7 @@ static int create_client_socket(unsigned int port, std::string host)
 					  // attempt to connect
 		if (connect(s, rp->ai_addr, rp->ai_addrlen) == 0)
 		{
-			std::cout << "Successfully connected to " << host << ":" << port << std::endl;
+			std::wcout << "Successfully connected to " << host << ":" << port << std::endl;
 			connection_success = true;
 			break;
 		}
@@ -140,11 +141,11 @@ static int create_client_socket(unsigned int port, std::string host)
 
 	if (!connection_success)
 	{
-		std::cout << "Connection to " << host << ":" << port << " failed! Exiting..." << std::endl;
+		std::wcout << "Connection to " << host << ":" << port << " failed! Exiting..." << std::endl;
 		exit(1);
 	}
+    FreeAddrInfoW(res);
 
-	freeaddrinfo(res);
 	return s;
 }
 

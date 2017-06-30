@@ -213,6 +213,7 @@ rc $(ProjectName)ETW.rc</Command>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="FootstepListener.h" />
     <ClInclude Include="iface\include\begin_pack.h" />
     <ClInclude Include="iface\include\end_pack.h" />
     <ClInclude Include="iface\include\iface.h" />

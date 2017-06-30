@@ -21,6 +21,7 @@
 
 #include "Logging.h"
 #include "VisionListener.h"
+#include "FootstepListener.h"
 
 extern "C"
 {
