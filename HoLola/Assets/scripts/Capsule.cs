@@ -59,6 +59,7 @@ public class Capsule : MonoBehaviour {
     {
         cap1.LookAt(cap2, Vector3.up);
         cap2.LookAt(cap1, Vector3.down);
+        GetComponentInChildren<SkinnedMeshRenderer>().localBounds = new Bounds(Vector3.zero, cap1.localPosition - cap2.localPosition);
     }
 
 }
