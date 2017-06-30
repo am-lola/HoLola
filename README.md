@@ -64,6 +64,13 @@ Resulting DLLs should be automatically deployed to the Unity project:
 
 Once the DLLs have been updated in the Unity project, build from Unity and follow the instructions above to deploy to the device or emulator.
 
+#### Debugging the external DLLs
+
+1. Enable mixed-mode debugging in the project properties to examine behavior in LolaCommsNative
+2. To catch exceptions and breakpoints in both DLLs, ensure `Enable Just My Code` is **NOT** checked in your debugging Options.
+
+*Unfortunate side-effects:* Doing both of the above will also cause you catch a lot of exceptions in Unity and other components you likely don't want to deal with. This can make debugging tedious since Unity often throws a bunch of exceptions during initialization, so the recommendation is to keep your debugging setup for managed-only and Just My Code unless you *need* to dig into the communications DLLs.
+
 ## Known Issues
 
 * Sometimes when deploying to the Hololens Emulator the app crashes on startup with a CLR error. Under a debugger this appears to be a fatal error in Windows.Mirage.dll, but there are also often bad references in Unty's D3D code (null textures, etc) which can lead to an early crash. Re-deploying without making any changes often fixes this.
