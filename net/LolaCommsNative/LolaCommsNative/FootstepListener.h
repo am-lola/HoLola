@@ -24,10 +24,55 @@
 class FootstepListener
 {
 public:
-    typedef std::function<void(std::wstring)> OnNewStep;
-    typedef std::function<void(std::wstring)> OnError;
-    typedef std::function<void(std::wstring)> OnConnect;
-    typedef std::function<void(std::wstring)> OnDisconnect;
+    // a subset of the data from am2b_iface::struct_data_stepseq_ssv_log
+    typedef struct Footstep
+    {
+        uint64_t stamp_gen;
+
+        float L0;
+        float L1;
+        float B;
+        float phiO;
+        float dz_clear;
+        float dz_step;
+        float dy;
+        float H;
+        float T; // step time    
+
+        float start_x;
+        float start_y;
+        float start_z;
+        float start_phi_z;
+        float phi_leg_rel;
+        int32_t stance;
+
+        Footstep(am2b_iface::struct_data_stepseq_ssv_log* stepseq_ssv_log)
+        {
+            stamp_gen   = stepseq_ssv_log->stamp_gen;
+            L0          = stepseq_ssv_log->L0;
+            L1          = stepseq_ssv_log->L1;
+            B           = stepseq_ssv_log->B;
+            phiO        = stepseq_ssv_log->phiO;
+            dz_clear    = stepseq_ssv_log->dz_clear;
+            dz_step     = stepseq_ssv_log->dz_step;
+            dy          = stepseq_ssv_log->dy;
+            H           = stepseq_ssv_log->H;
+            T           = stepseq_ssv_log->T;
+            start_x     = stepseq_ssv_log->start_x;
+            start_y     = stepseq_ssv_log->start_y;
+            start_z     = stepseq_ssv_log->start_z;
+            phi_leg_rel = stepseq_ssv_log->phi_leg_rel;
+            stance      = stepseq_ssv_log->stance;
+        }
+
+        Footstep(am2b_iface::struct_data_stepseq_ssv_log stepseq_ssv_log) : Footstep(&stepseq_ssv_log)
+        {}
+    };
+
+    typedef std::function<void(Footstep step)> OnNewStep;
+    typedef std::function<void(std::wstring)>  OnError;
+    typedef std::function<void(std::wstring)>  OnConnect;
+    typedef std::function<void(std::wstring)>  OnDisconnect;
 
     FootstepListener(unsigned int port, std::wstring host, bool verbose = false) :
         _port(port), _hostname(host), _verbose(verbose)
@@ -182,7 +227,7 @@ private:
 
             am2b_iface::struct_data_stepseq_ssv_log* message = (am2b_iface::struct_data_stepseq_ssv_log*)(buf.data() + header_size);
 
-            cb(_onNewStep, std::wstring(L"New Footstep"));
+            cb(_onNewStep, Footstep(message));
         }
 
 

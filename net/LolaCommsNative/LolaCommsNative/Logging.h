@@ -9,7 +9,7 @@
 // to users in Unity or logged with Unity's logger.
 ///
 
-typedef void(__stdcall *VL_INFOCALLBACK)(BSTR txt);
+typedef void(__stdcall *INFOCALLBACK)(BSTR txt);
 typedef std::function<void(std::wstring)> LogInfoFn;
 static LogInfoFn LogInfo_cb = [](std::wstring txt) { OutputDebugString(txt.c_str()); };
 

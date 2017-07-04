@@ -20,11 +20,13 @@ class PoseListener
 {
 public:
     typedef std::function<void(HR_Pose_Red*)> OnNewPose;
-    typedef std::function<void(std::string)>  OnError;
+    typedef std::function<void(std::wstring)> OnError;
+
+    PoseListener(int port) : _port(port), _verbose(false)
+    {}
 
     PoseListener(int port, bool verbose) : _port(port), _verbose(verbose)
-    {
-    }
+    {}
 
     void listen()
     {
@@ -90,7 +92,7 @@ private:
                 if (errno == EAGAIN || errno == EWOULDBLOCK)
                     continue;
                 else
-                    cb(_onError, "Unable to receive data");
+                    cb(_onError, L"Unable to receive data");
                 continue;
             }
 

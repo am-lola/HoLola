@@ -253,6 +253,7 @@ rc $(ProjectName)ETW.rc</Command>
     <ClInclude Include="LolaCommsNative.h" />
     <ClInclude Include="LolaCommsNativeETW.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="PoseListener.h" />
     <ClInclude Include="sock_utils.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="VisionListener.h" />
