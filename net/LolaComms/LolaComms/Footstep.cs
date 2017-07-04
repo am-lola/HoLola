@@ -12,23 +12,23 @@ namespace LolaComms
     [StructLayout(LayoutKind.Sequential)]
     public struct Footstep
     {    // a subset of the data from am2b_iface::struct_data_stepseq_ssv_log
-        UInt64 stamp_gen;
+        public UInt64 stamp_gen;
 
-        float L0;
-        float L1;
-        float B;
-        float phiO;
-        float dz_clear;
-        float dz_step;
-        float dy;
-        float H;
-        float T; // step time    
+        public float L0;
+        public float L1;
+        public float B;
+        public float phiO;
+        public float dz_clear;
+        public float dz_step;
+        public float dy;
+        public float H;
+        public float T; // step time    
 
-        float start_x;
-        float start_y;
-        float start_z;
-        float start_phi_z;
-        float phi_leg_rel;
-        Int32 stance;
+        public float start_x;
+        public float start_y;
+        public float start_z;
+        public float start_phi_z;
+        public float phi_leg_rel;
+        public Int32 stance;
     }
 }

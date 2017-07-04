@@ -16,9 +16,36 @@ public class dlltest : MonoBehaviour {
 #if UNITY_EDITOR
 #else
     private LolaComms.VisionListener vl;
+    private LolaComms.PoseListener pl;
+    private LolaComms.FootstepListener fl;
     private Dictionary<uint, GameObject> obstacle_map = new Dictionary<uint, GameObject>();
     private Dictionary<uint, GameObject> surface_map  = new Dictionary<uint, GameObject>();
 
+    public LolaComms.FootstepListener SetupFL()
+    {
+        Debug.Log("Setting up FootstepListener...");
+        LolaComms.FootstepListener fl = new LolaComms.FootstepListener(9091, "169.254.80.80");
+        Debug.Log("Registering event handlers...");
+        fl.onError += (errstr) => Debug.LogError("[Footsteps] " + errstr);
+        fl.onConnect += (host) => Debug.Log("[Footsteps] Connected to: " + host);
+        fl.onDisonnect += (host) => Debug.Log("[Footsteps] Disconnected from: " + host);
+        fl.onNewStep += (step) => Debug.Log("Got new footstep for " + (LolaComms.Foot)(step.stance) + " @ [" + step.start_x + ", " + step.start_y + ", " + step.start_z + "]");
+        Debug.Log("Listening...");
+        fl.Listen();
+        Debug.Log("FootstepListener Ready!");
+        return fl;
+    }
+
+    public LolaComms.PoseListener SetupPL()
+    {
+        Debug.Log("Setting up PoseListener...");
+        LolaComms.PoseListener pl = new LolaComms.PoseListener(9092);
+        pl.onError += (errstr) => Debug.LogError("[Pose] " + errstr);
+        pl.onNewPose += (pose) => Debug.Log("Got new pose: " + pose);
+        pl.Listen();
+        Debug.Log("PoseListener Ready!");
+        return pl;
+    }
     public LolaComms.VisionListener SetupVL()
     {
         Debug.Log("Setting info callback...");
@@ -308,11 +335,15 @@ public class dlltest : MonoBehaviour {
         Debug.Log("Starting up! :D");
 
         vl = SetupVL();
+        pl = SetupPL();
+        fl = SetupFL();
 	}
 
     private void Update()
     {
         vl.Process();
+        fl.Process();
+        pl.Process();
     }
 #endif
 

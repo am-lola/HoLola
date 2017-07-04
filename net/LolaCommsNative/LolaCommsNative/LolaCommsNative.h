@@ -70,7 +70,7 @@ extern "C"
 #pragma endregion
 
 #pragma region FootstepListener
-    LOLACOMMSDLL_API FootstepListener* __stdcall FootstepListener_Create(int port, std::wstring host);
+    LOLACOMMSDLL_API FootstepListener* __cdecl FootstepListener_Create(int port, BSTR host);
     LOLACOMMSDLL_API void __stdcall FootstepListener_Destroy(FootstepListener* fl);
     LOLACOMMSDLL_API void __stdcall FootstepListener_Listen(FootstepListener* fl);
     LOLACOMMSDLL_API bool __stdcall FootstepListener_IsListening(FootstepListener* fl);

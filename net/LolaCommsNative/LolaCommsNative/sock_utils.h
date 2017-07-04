@@ -133,7 +133,8 @@ static int create_client_socket(unsigned int port, std::wstring host)
 		}
 		else
 		{
-			perror("Could not connect");
+            LogWSAErrorStr(std::wstring(L"Could not connect to ") + host);
+            break;
 		}
 
 		closesocket(s); // if connection failed, close socket and move on to the next address
@@ -142,7 +143,7 @@ static int create_client_socket(unsigned int port, std::wstring host)
 	if (!connection_success)
 	{
 		std::wcout << "Connection to " << host << ":" << port << " failed! Exiting..." << std::endl;
-		exit(1);
+        s = INVALID_SOCKET;
 	}
     FreeAddrInfoW(res);
 

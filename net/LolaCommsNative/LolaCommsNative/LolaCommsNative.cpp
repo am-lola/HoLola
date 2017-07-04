@@ -126,9 +126,9 @@ extern "C"
 #pragma endregion
 
 #pragma region FootstepListener
-    FootstepListener* __stdcall FootstepListener_Create(int port, std::wstring host)
+    FootstepListener* __cdecl FootstepListener_Create(int port, BSTR host)
     {
-        return new FootstepListener(port, host);
+        return new FootstepListener(port, std::wstring(host));
     }
 
     void __stdcall FootstepListener_Destroy(FootstepListener* fl)

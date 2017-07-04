@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 
 namespace LolaComms
 {
-    class FootstepListener
+    public class FootstepListener
     {
         private IntPtr _footstepListener = IntPtr.Zero; // pointer to native implementation
         private Queue<Footstep> _footsteps = new Queue<Footstep>();
@@ -123,8 +123,8 @@ namespace LolaComms
         /// <param name="port">Port to use for communication</param>
         /// <param name="hostname">Server to connect to for footstep data</param>
         /// <returns></returns>
-        [DllImport("LolaCommsNative")]
-        private static extern IntPtr FootstepListener_Create(int port, string hostname);
+        [DllImport("LolaCommsNative", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+        private static extern IntPtr FootstepListener_Create(int port, [MarshalAs(UnmanagedType.BStr)]string hostname);
 
         /// <summary>
         /// Destroys existing native FootstepListener instance

@@ -77,6 +77,7 @@ public:
     FootstepListener(unsigned int port, std::wstring host, bool verbose = false) :
         _port(port), _hostname(host), _verbose(verbose)
     {
+        LogInfo(L"Gonna connect to: " + host);
     }
 
     void listen()
@@ -85,6 +86,13 @@ public:
             return;
 
         _socket = create_client_socket(_port, _hostname);
+
+        if (_socket == INVALID_SOCKET)
+        {
+            cb(_onError, L"Could not connect to host");
+            return;
+        }
+
         _listener = std::thread(&FootstepListener::listen_impl, this);
     }
 
