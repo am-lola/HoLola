@@ -89,6 +89,9 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Footstep.cs" />
+    <Compile Include="HR_Pose.cs" />
+    <Compile Include="PoseListener.cs" />
     <Compile Include="SurfaceMessage.cs" />
     <Compile Include="VisionListener.cs" />
     <Compile Include="Common.cs" />

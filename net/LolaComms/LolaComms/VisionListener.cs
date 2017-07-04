@@ -30,13 +30,18 @@ namespace LolaComms
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         public delegate void VisionListener_OnSurfaceMessageCallback(SurfaceMessage surface);
 
-        public VisionListener_OnErrorCallback onError, p_onError;
-        public VisionListener_OnConnectCallback onConnect, p_onConnect;
-        public VisionListener_OnDisconnectCallback onDisconnect, p_onDisconnect;
-        public VisionListener_OnObstacleMessageCallback onObstacleMessage, p_onObstacleMessage;
-        public VisionListener_OnSurfaceMessageCallback onSurfaceMessage, p_onSurfaceMessage;
+        public VisionListener_OnErrorCallback onError;
+        public VisionListener_OnConnectCallback onConnect;
+        public VisionListener_OnDisconnectCallback onDisconnect;
+        public VisionListener_OnObstacleMessageCallback onObstacleMessage;
+        public VisionListener_OnSurfaceMessageCallback onSurfaceMessage;
 
-        GCHandle handle;
+        private VisionListener_OnErrorCallback p_onError;
+        private VisionListener_OnConnectCallback p_onConnect;
+        private VisionListener_OnDisconnectCallback p_onDisconnect;
+        private VisionListener_OnObstacleMessageCallback p_onObstacleMessage;
+        private VisionListener_OnSurfaceMessageCallback p_onSurfaceMessage;
+
         public VisionListener(int port)
         {
             _port = port;
