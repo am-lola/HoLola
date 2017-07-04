@@ -9,8 +9,9 @@ namespace LolaComms
 {
     public class PoseListener
     {
-        private int _port;
         private IntPtr _poseListener = IntPtr.Zero; // pointer to native implementation
+        private Queue<HR_Pose_Red> _poses = new Queue<HR_Pose_Red>();
+        private object _poseLock = new object();
 
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         public delegate void PoseListener_OnErrorCallback([MarshalAs(UnmanagedType.BStr)]string errstr);
@@ -25,8 +26,7 @@ namespace LolaComms
 
         public PoseListener(int port)
         {
-            _port = port;
-            _poseListener = PoseListener_Create(_port);
+            _poseListener = PoseListener_Create(port);
 
             /// Ensure callbacks we pass to native code are allocated outside our class
             /// see issue #11
@@ -65,6 +65,21 @@ namespace LolaComms
             get { return PoseListener_IsListening(_poseListener); }
         }
 
+        /// <summary>
+        /// To be called from Update() or FixedUpdate().
+        /// Calls any outstanding callbacks from the calling thread.
+        /// </summary>
+        public void Process()
+        {
+            lock (_poseLock)
+            {
+                foreach (var pose in _poses)
+                {
+                    onNewPose?.Invoke(pose);
+                }
+                _poses.Clear();
+            }
+        }
 #region private callbacks
         private void OnError(string error)
         {
@@ -73,7 +88,7 @@ namespace LolaComms
 
         private void OnNewPose(HR_Pose_Red pose)
         {
-            onNewPose?.Invoke(pose);
+            _poses.Enqueue(pose);
         }
         #endregion
 

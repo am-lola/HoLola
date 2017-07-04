@@ -90,6 +90,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Footstep.cs" />
+    <Compile Include="FootstepListener.cs" />
     <Compile Include="HR_Pose.cs" />
     <Compile Include="PoseListener.cs" />
     <Compile Include="SurfaceMessage.cs" />
