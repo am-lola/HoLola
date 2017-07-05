@@ -29,6 +29,10 @@ namespace LolaComms
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 9)]
         public float[] coeffs;
 
+        public string IdString()
+        {
+            return model_id + "|" + part_id;
+        }
         public override string ToString()
         {
             string res = "";

@@ -19,7 +19,7 @@ public class dlltest : MonoBehaviour {
     private LolaComms.VisionListener vl;
     private LolaComms.PoseListener pl;
     private LolaComms.FootstepListener fl;
-    private Dictionary<uint, GameObject> obstacle_map = new Dictionary<uint, GameObject>();
+    private Dictionary<string, GameObject> obstacle_map = new Dictionary<string, GameObject>();
     private Dictionary<uint, GameObject> surface_map  = new Dictionary<uint, GameObject>();
 
     public LolaComms.FootstepListener SetupFL()
@@ -80,53 +80,50 @@ public class dlltest : MonoBehaviour {
                 {
                     if (msg.type == LolaComms.ObstacleType.Sphere)
                     {
-                        GameObject sphere;
-                        if (obstacle_map.ContainsKey(msg.model_id))
+                        if (obstacle_map.ContainsKey(msg.IdString()))
                         {
-                            sphere = obstacle_map[msg.model_id];
+                            Destroy(obstacle_map[msg.IdString()]);
+                            obstacle_map.Remove(msg.IdString());
                         }
-                        else
-                        {
-                            sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-                        }
+
+                        GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
                         sphere.transform.parent = transform;
                         sphere.transform.localPosition = new Vector3(msg.coeffs[0], msg.coeffs[1], msg.coeffs[2]);
                         sphere.transform.localScale = new Vector3(msg.radius, msg.radius, msg.radius) * 2.0f; // unity default spheres have radius 1.0
                         sphere.GetComponent<MeshRenderer>().material = obstacleMaterial;
-                        obstacle_map.Add(msg.model_id, sphere);
+
+                        obstacle_map.Add(msg.IdString(), sphere);
                     }
                     else if (msg.type == LolaComms.ObstacleType.Capsule)
                     {
-                        GameObject cap;
-                        if (obstacle_map.ContainsKey(msg.model_id))
+                        if (obstacle_map.ContainsKey(msg.IdString()))
                         {
-                            cap = obstacle_map[msg.model_id];
+                            Destroy(obstacle_map[msg.IdString()]);
+                            obstacle_map.Remove(msg.IdString());
                         }
-                        else
-                        {
-                            cap = Instantiate(Capsule, this.transform);
-                        }
+                        
+                        GameObject cap = Instantiate(Capsule, this.transform);
                         Capsule c = cap.GetComponent<Capsule>();
                         c.Radius = msg.radius;
                         c.Top = new Vector3(msg.coeffs[0], msg.coeffs[1], msg.coeffs[2]);
                         c.Bottom = new Vector3(msg.coeffs[3], msg.coeffs[4], msg.coeffs[5]);
 
-                        obstacle_map.Add(msg.model_id, cap);
+                        obstacle_map.Add(msg.IdString(), cap);
                     }
                     break;
                 }
                 case (uint)LolaComms.Common.MsgId.MODIFY_SSV:
                 {
-                    if (obstacle_map.ContainsKey(msg.model_id))
+                    if (obstacle_map.ContainsKey(msg.IdString()))
                     {
                         if (msg.type == LolaComms.ObstacleType.Sphere)
                         {
-                            obstacle_map[msg.model_id].transform.localPosition = new Vector3(msg.coeffs[0], msg.coeffs[1], msg.coeffs[2]);
-                            obstacle_map[msg.model_id].transform.localScale = new Vector3(msg.radius, msg.radius, msg.radius) * 2.0f; // unity default spheres have radius 1.0
+                            obstacle_map[msg.IdString()].transform.localPosition = new Vector3(msg.coeffs[0], msg.coeffs[1], msg.coeffs[2]);
+                            obstacle_map[msg.IdString()].transform.localScale = new Vector3(msg.radius, msg.radius, msg.radius) * 2.0f; // unity default spheres have radius 1.0
                         }
                         else if (msg.type == LolaComms.ObstacleType.Capsule)
                         {
-                            Capsule c = obstacle_map[msg.model_id].GetComponent<Capsule>();
+                            Capsule c = obstacle_map[msg.IdString()].GetComponent<Capsule>();
                             c.Radius = msg.radius;
                             c.Top = new Vector3(msg.coeffs[0], msg.coeffs[1], msg.coeffs[2]);
                             c.Bottom = new Vector3(msg.coeffs[3], msg.coeffs[4], msg.coeffs[5]);
@@ -134,33 +131,45 @@ public class dlltest : MonoBehaviour {
                     }
                     else
                     {
-                        Debug.LogWarning("Got MODIFY_SSV msg for non-existent object: " + msg.model_id);
+                        Debug.LogWarning("Got MODIFY_SSV msg for non-existent object: " + msg.IdString());
                     }
                     break;
                 }
                 case (uint)LolaComms.Common.MsgId.REMOVE_SSV_ONLY_PART:
                 {
-                    if (obstacle_map.ContainsKey(msg.model_id))
+                    if (obstacle_map.ContainsKey(msg.IdString()))
                     {
-                        Destroy(obstacle_map[msg.model_id]);
-                        obstacle_map.Remove(msg.model_id);
+                        Destroy(obstacle_map[msg.IdString()]);
+                        obstacle_map.Remove(msg.IdString());
                     }
                     else
                     {
-                        Debug.LogWarning("Got REMOVE_SSV_ONLY_PART msg for non-existen object: " + msg.model_id);
+                        Debug.LogWarning("Got REMOVE_SSV_ONLY_PART msg for non-existent object: " + msg.model_id);
                     }
                     break;
                 }
                 case (uint)LolaComms.Common.MsgId.REMOVE_SSV_WHOLE_SEGMENT:
                 {
-                    if (obstacle_map.ContainsKey(msg.model_id))
+                    List<string> to_remove = new List<string>();
+                    foreach (var obstacle in obstacle_map) /// TODO: Evaluate whether we should use a different structure to optimize this case
                     {
-                        Destroy(obstacle_map[msg.model_id]);
-                        obstacle_map.Remove(msg.model_id);
+                        if (obstacle.Key.Split('|')[0] == msg.model_id.ToString())
+                        {
+                            Destroy(obstacle.Value);
+                            to_remove.Add(obstacle.Key);
+                        }
+                    }
+
+                    if (to_remove.Count == 0)
+                    {
+                        Debug.LogWarning("Got REMOVE_SSV_WHOLE_SEGMENT msg for non-existent object: " + msg.model_id);
                     }
                     else
                     {
-                        Debug.LogWarning("Got REMOVE_SSV_WHOLE_SEGMENT msg for non-existen object: " + msg.model_id);
+                        foreach (var item in to_remove)
+                        {
+                            obstacle_map.Remove(item);
+                        }
                     }
                     break;
                 }
