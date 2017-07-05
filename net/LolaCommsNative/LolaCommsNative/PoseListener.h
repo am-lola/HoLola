@@ -22,7 +22,7 @@ public:
     typedef std::function<void(HR_Pose_Red*)> OnNewPose;
     typedef std::function<void(std::wstring)> OnError;
 
-    PoseListener(int port) : _port(port), _verbose(false)
+    PoseListener(int port) : _port(port), _verbose(true)
     {}
 
     PoseListener(int port, bool verbose) : _port(port), _verbose(verbose)
@@ -36,6 +36,14 @@ public:
         _listening = true;
 
         _socket = create_udp_socket(_port);
+
+        if (_socket == INVALID_SOCKET)
+        {
+            cb(_onError, L"Could not open UDP port " + std::to_wstring(_port));
+            _listening = false;
+            return;
+        }
+
         _listener = std::thread(&PoseListener::listen_impl, this);
     }
 
@@ -80,20 +88,26 @@ private:
         std::vector<char> buf;
         buf.resize(_buflen);
         sockaddr_in si_other;
-        int slen = sizeof(sockaddr);
+        int slen = sizeof(si_other);
 
         while (_listening)
         {
+            LogInfo(L"[PoseListener] Waiting for message...");
             // wait for message
             int nrecvd = recvfrom(_socket, buf.data(), _buflen - 1, 0, (sockaddr*)&si_other, &slen);
 
-            if (nrecvd < 0)
+            if (nrecvd == SOCKET_ERROR)
             {
                 if (errno == EAGAIN || errno == EWOULDBLOCK)
                     continue;
                 else
                     cb(_onError, L"Unable to receive data");
+                LogWSAErrorStr(L"Failed to receive datagram!");
                 continue;
+            }
+            else if (nrecvd == 0) // connection was closed gracefully
+            {
+                LogInfo(L"[PoseListener] Connection closed");
             }
 
             if (_verbose)

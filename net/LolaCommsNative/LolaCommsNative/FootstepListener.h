@@ -90,6 +90,7 @@ public:
         if (_socket == INVALID_SOCKET)
         {
             cb(_onError, L"Could not connect to host");
+            _listening = false;
             return;
         }
 
@@ -151,15 +152,24 @@ private:
 
         size_t sent = send(_socket, (char*)&footstep_sub, sizeof(footstep_sub), 0);
         if (sent <= 0)
+        {
             cb(_onError, std::wstring(L"[footsteps] Error sending subscribe request!"));
+            return;
+        }
+
         sent = send(_socket, (char*)&footstep_sub_id, sizeof(footstep_sub_id), 0);
         if (sent <= 0)
+        {
             cb(_onError, std::wstring(L"[footsteps] Error sending footstep sub ID!"));
+            return;
+        }
 
         if (_verbose)
             LogInfo(std::wstring(L"[footsteps] Subscribed!"));
+        
+        _listening = true;
         cb(_onConnect, _hostname);
-
+        
         while (_listening)
         {
             std::fill(buf.begin(), buf.end(), 0);
@@ -238,7 +248,7 @@ private:
             cb(_onNewStep, Footstep(message));
         }
 
-
+        _listening = false;
         cb(_onDisconnect, _hostname);
         closesocket(_socket);
     }

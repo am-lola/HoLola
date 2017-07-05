@@ -180,7 +180,7 @@ static socklen_t create_udp_socket(unsigned int port)
 	si_me.sin_family = AF_INET;
 	si_me.sin_port = htons(port);
 	si_me.sin_addr.s_addr = htonl(INADDR_ANY);
-	if (bind(s, (sockaddr*)&si_me, sizeof(si_me)) == -1)
+	if (bind(s, (sockaddr*)&si_me, sizeof(si_me)) != 0)
 	{
 		LogWSAErrorStr(L"Binding UDP socket failed!");
 		return INVALID_SOCKET;

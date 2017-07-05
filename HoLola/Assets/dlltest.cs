@@ -13,6 +13,7 @@ public class dlltest : MonoBehaviour {
     public Material obstacleMaterial;
     public GameObject Capsule;
     public GameObject Plane;
+    public GameObject Footprint;
 #if UNITY_EDITOR
 #else
     private LolaComms.VisionListener vl;
@@ -25,14 +26,19 @@ public class dlltest : MonoBehaviour {
     {
         Debug.Log("Setting up FootstepListener...");
         LolaComms.FootstepListener fl = new LolaComms.FootstepListener(9091, "169.254.80.80");
-        Debug.Log("Registering event handlers...");
         fl.onError += (errstr) => Debug.LogError("[Footsteps] " + errstr);
         fl.onConnect += (host) => Debug.Log("[Footsteps] Connected to: " + host);
         fl.onDisonnect += (host) => Debug.Log("[Footsteps] Disconnected from: " + host);
-        fl.onNewStep += (step) => Debug.Log("Got new footstep for " + (LolaComms.Foot)(step.stance) + " @ [" + step.start_x + ", " + step.start_y + ", " + step.start_z + "]");
-        Debug.Log("Listening...");
+        fl.onNewStep += (step) =>
+        {
+            Debug.Log("Got new footstep for " + (LolaComms.Foot)(step.stance) + " @ [" + step.start_x + ", " + step.start_y + ", " + step.start_z + "]");
+            var newstep = Instantiate(Footprint, transform);
+            newstep.transform.localPosition = new Vector3(step.start_x, step.start_y, step.start_z);
+            /// TODO: Fix rotation according to step.start_phi_z
+        };
         fl.Listen();
-        Debug.Log("FootstepListener Ready!");
+
+        Debug.Log("FootstepListener: " + (fl.Listening ? "is listening" : "is NOT listening"));
         return fl;
     }
 
@@ -43,7 +49,8 @@ public class dlltest : MonoBehaviour {
         pl.onError += (errstr) => Debug.LogError("[Pose] " + errstr);
         pl.onNewPose += (pose) => Debug.Log("Got new pose: " + pose);
         pl.Listen();
-        Debug.Log("PoseListener Ready!");
+
+        Debug.Log("PoseListener: " + (pl.Listening ? "is listening" : "is NOT listening"));
         return pl;
     }
     public LolaComms.VisionListener SetupVL()
@@ -84,7 +91,7 @@ public class dlltest : MonoBehaviour {
                         }
                         sphere.transform.parent = transform;
                         sphere.transform.localPosition = new Vector3(msg.coeffs[0], msg.coeffs[1], msg.coeffs[2]);
-                        sphere.transform.localScale = new Vector3(msg.radius, msg.radius, msg.radius);
+                        sphere.transform.localScale = new Vector3(msg.radius, msg.radius, msg.radius) * 2.0f; // unity default spheres have radius 1.0
                         sphere.GetComponent<MeshRenderer>().material = obstacleMaterial;
                         obstacle_map.Add(msg.model_id, sphere);
                     }
@@ -115,7 +122,7 @@ public class dlltest : MonoBehaviour {
                         if (msg.type == LolaComms.ObstacleType.Sphere)
                         {
                             obstacle_map[msg.model_id].transform.localPosition = new Vector3(msg.coeffs[0], msg.coeffs[1], msg.coeffs[2]);
-                            obstacle_map[msg.model_id].transform.localScale = new Vector3(msg.radius, msg.radius, msg.radius) * 5.0f;
+                            obstacle_map[msg.model_id].transform.localScale = new Vector3(msg.radius, msg.radius, msg.radius) * 2.0f; // unity default spheres have radius 1.0
                         }
                         else if (msg.type == LolaComms.ObstacleType.Capsule)
                         {
