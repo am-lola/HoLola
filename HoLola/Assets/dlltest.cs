@@ -82,33 +82,28 @@ public class dlltest : MonoBehaviour {
                     {
                         if (obstacle_map.ContainsKey(msg.IdString()))
                         {
+                            Debug.LogWarning("Received SET_SSV command for existing objec: " + msg.IdString());
                             Destroy(obstacle_map[msg.IdString()]);
                             obstacle_map.Remove(msg.IdString());
                         }
 
-                        GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-                        sphere.transform.parent = transform;
-                        sphere.transform.localPosition = new Vector3(msg.coeffs[0], msg.coeffs[1], msg.coeffs[2]);
-                        sphere.transform.localScale = new Vector3(msg.radius, msg.radius, msg.radius) * 2.0f; // unity default spheres have radius 1.0
-                        sphere.GetComponent<MeshRenderer>().material = obstacleMaterial;
-
-                        obstacle_map.Add(msg.IdString(), sphere);
+                        obstacle_map.Add(msg.IdString(), CreateSphere(msg.radius, new Vector3(msg.coeffs[0], msg.coeffs[1], msg.coeffs[2]), transform));
                     }
                     else if (msg.type == LolaComms.ObstacleType.Capsule)
                     {
                         if (obstacle_map.ContainsKey(msg.IdString()))
                         {
+                            Debug.LogWarning("Received SET_SSV command for existing objec: " + msg.IdString());
                             Destroy(obstacle_map[msg.IdString()]);
                             obstacle_map.Remove(msg.IdString());
                         }
-                        
-                        GameObject cap = Instantiate(Capsule, this.transform);
-                        Capsule c = cap.GetComponent<Capsule>();
-                        c.Radius = msg.radius;
-                        c.Top = new Vector3(msg.coeffs[0], msg.coeffs[1], msg.coeffs[2]);
-                        c.Bottom = new Vector3(msg.coeffs[3], msg.coeffs[4], msg.coeffs[5]);
 
-                        obstacle_map.Add(msg.IdString(), cap);
+                        obstacle_map.Add(msg.IdString(),
+                            CreateCapsule(msg.radius,
+                              new Vector3(msg.coeffs[0], msg.coeffs[1], msg.coeffs[2]),
+                              new Vector3(msg.coeffs[3], msg.coeffs[4], msg.coeffs[5]),
+                              transform)
+                        );
                     }
                     break;
                 }
@@ -116,17 +111,18 @@ public class dlltest : MonoBehaviour {
                 {
                     if (obstacle_map.ContainsKey(msg.IdString()))
                     {
+                        // in case we get a sphere replacing a capsule or vice versa, just replace what we had
+                        Destroy(obstacle_map[msg.IdString()]);
                         if (msg.type == LolaComms.ObstacleType.Sphere)
                         {
-                            obstacle_map[msg.IdString()].transform.localPosition = new Vector3(msg.coeffs[0], msg.coeffs[1], msg.coeffs[2]);
-                            obstacle_map[msg.IdString()].transform.localScale = new Vector3(msg.radius, msg.radius, msg.radius) * 2.0f; // unity default spheres have radius 1.0
+                            obstacle_map[msg.IdString()] = CreateSphere(msg.radius, new Vector3(msg.coeffs[0], msg.coeffs[1], msg.coeffs[2]), transform);
                         }
                         else if (msg.type == LolaComms.ObstacleType.Capsule)
                         {
-                            Capsule c = obstacle_map[msg.IdString()].GetComponent<Capsule>();
-                            c.Radius = msg.radius;
-                            c.Top = new Vector3(msg.coeffs[0], msg.coeffs[1], msg.coeffs[2]);
-                            c.Bottom = new Vector3(msg.coeffs[3], msg.coeffs[4], msg.coeffs[5]);
+                            obstacle_map[msg.IdString()] = CreateCapsule(msg.radius,
+                                                            new Vector3(msg.coeffs[0], msg.coeffs[1], msg.coeffs[2]),
+                                                            new Vector3(msg.coeffs[3], msg.coeffs[4], msg.coeffs[5]),
+                                                            transform);
                         }
                     }
                     else
@@ -346,6 +342,29 @@ public class dlltest : MonoBehaviour {
         return vl;
 
     }
+
+    GameObject CreateSphere(float radius, Vector3 position, Transform parent)
+    {
+        GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        sphere.transform.parent = parent;
+        sphere.transform.localPosition = position;
+        sphere.transform.localScale = new Vector3(radius, radius, radius) * 2.0f; // unity default spheres have radius 1.0
+        sphere.GetComponent<MeshRenderer>().material = obstacleMaterial;
+
+        return sphere;
+    }
+
+    GameObject CreateCapsule(float radius, Vector3 pos1, Vector3 pos2, Transform parent)
+    {
+        GameObject cap = Instantiate(Capsule, parent);
+        Capsule c = cap.GetComponent<Capsule>();
+        c.Radius = radius;
+        c.Top = pos1;
+        c.Bottom = pos2;
+
+        return cap;
+    }
+
     // Use this for initialization
     void Start () {
         Debug.Log("Starting up! :D");
