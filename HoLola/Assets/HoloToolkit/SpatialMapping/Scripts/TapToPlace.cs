@@ -47,6 +47,7 @@ namespace HoloToolkit.Unity.SpatialMapping
         /// </summary>
         protected SpatialMappingManager spatialMappingManager;
 
+        private GameObject anchorTarget;
         protected virtual void Start()
         {
             // Make sure we have all the components in the scene we need.
@@ -62,12 +63,21 @@ namespace HoloToolkit.Unity.SpatialMapping
                 Debug.LogError("This script expects that you have a SpatialMappingManager component in your scene.");
             }
 
+            if (PlaceParentOnTap)
+            {
+                anchorTarget = ParentGameObjectToPlace;
+            }
+            else
+            {
+                anchorTarget = this.gameObject;
+            }
+
             if (anchorManager != null && spatialMappingManager != null)
             {
                 // If we are not starting out with actively placing the object, give it a World Anchor
                 if(!IsBeingPlaced)
                 {
-                    anchorManager.AttachAnchor(gameObject, SavedAnchorFriendlyName);
+                    anchorManager.AttachAnchor(anchorTarget, SavedAnchorFriendlyName);
                 }
             }
             else
@@ -100,11 +110,6 @@ namespace HoloToolkit.Unity.SpatialMapping
                 RaycastHit hitInfo;
                 if (Physics.Raycast(headPosition, gazeDirection, out hitInfo, 30.0f, spatialMappingManager.LayerMask))
                 {
-                    // Rotate this object to face the user.
-                    Quaternion toQuat = Camera.main.transform.localRotation;
-                    toQuat.x = 0;
-                    toQuat.z = 0;
-
                     // Move this object to where the raycast
                     // hit the Spatial Mapping mesh.
                     // Here is where you might consider adding intelligence
@@ -116,12 +121,10 @@ namespace HoloToolkit.Unity.SpatialMapping
                         // Place the parent object as well but keep the focus on the current game object
                         Vector3 currentMovement = hitInfo.point - gameObject.transform.position;
                         ParentGameObjectToPlace.transform.position += currentMovement;
-                        ParentGameObjectToPlace.transform.rotation = toQuat;
                     }
                     else
                     {
                         gameObject.transform.position = hitInfo.point;
-                        gameObject.transform.rotation = toQuat;
                     }
                 }
             }
@@ -137,16 +140,16 @@ namespace HoloToolkit.Unity.SpatialMapping
             {
                 spatialMappingManager.DrawVisualMeshes = true;
 
-                Debug.Log(gameObject.name + " : Removing existing world anchor if any.");
+                Debug.Log(anchorTarget.name + " : Removing existing world anchor if any.");
 
-                anchorManager.RemoveAnchor(gameObject);
+                anchorManager.RemoveAnchor(anchorTarget);
             }
             // If the user is not in placing mode, hide the spatial mapping mesh.
             else
             {
                 spatialMappingManager.DrawVisualMeshes = false;
                 // Add world anchor when object placement is done.
-                anchorManager.AttachAnchor(gameObject, SavedAnchorFriendlyName);
+                anchorManager.AttachAnchor(anchorTarget, SavedAnchorFriendlyName);
             }
         }
 
