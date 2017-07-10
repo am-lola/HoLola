@@ -28,7 +28,7 @@ If the following steps don't work, please follow the [complete instructions here
 6. Set your CPU architecture to `x86`, then set the target (next to the green arrow) to either `Device` or `Hololens Emulator`.
 7. Press `F5` to deploy and launch the application.
 
-#### Manual Deployment
+#### Manual Deployment From Unity
 
 This will be necessary if you do not have sufficient permissions on your build machine to use the deployment and remote debugging tools in Visual Sudio (requires [Developer Mode](https://docs.microsoft.com/en-us/windows/uwp/get-started/enable-your-device-for-development), which must be enabled by an admin).
 
@@ -63,6 +63,18 @@ Resulting DLLs should be automatically deployed to the Unity project:
 * Unmanaged (C++) DLLs need to be copied to `<Unity Project Root>/Assets/`
 
 Once the DLLs have been updated in the Unity project, build from Unity and follow the instructions above to deploy to the device or emulator.
+
+## Debugging Tips
+
+#### Log Files
+Unity produces a log file containing all the output from `Debug.Log*` calls, callstacks if a Monobehavior hits an unhandled exception, etc. The log file is over-written every time the app launches, so make sure to download the logs after every test!
+
+The log is located in: `User Files \ LocalAppData \ HoLola_x.x.x.x_x86__xxx \ TempState`
+
+#### ETW Events
+ETW Trace data is available for some native components, which may help track down issues in the LolaComms DLLs. To enable them and get trace data, open the `Logging` section of the device portal, then under *Custom Providers* enter the GUID `8EB119A9-2FE5-46F5-998B-A396CA3F74B7` and click *Enable*. You should now see live event data at the bottom of the page when the application is active.
+
+See [net/LolaCommsNative/LolaCommsNative/LolaCommsNative.man](net/LolaCommsNative/LolaCommsNative/LolaCommsNative.man) for event definitions.
 
 #### Debugging the external DLLs
 
