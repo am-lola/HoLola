@@ -25,40 +25,15 @@ public class RotateHandle : Selectable
         }
     }
 
-    //private void OnDestroy()
-    //{
-    //    if (_anchorStore != null)
-    //    {
-    //        WorldAnchor anchor = target.GetComponent<WorldAnchor>();
-    //        if (anchor != null)
-    //        {
-    //            _anchorStore.Save("lola_" + target.gameObject.name, anchor);
-    //        }
-    //    }
-    //}
-
     public override void OnManipulateStart()
     {
         _baseRot = target.rotation;
         _anchorStore.RemoveAnchor(target.gameObject);
-
-        //var anchor = target.GetComponent<WorldAnchor>();
-        //if (anchor != null)
-        //{
-        //    DestroyImmediate(anchor);
-        //}
     }
 
     public override void OnManipulateStop()
     {
         _anchorStore.AttachAnchor(target.gameObject, _anchorName);
-
-        //target.gameObject.AddComponent<WorldAnchor>();
-
-        //if (_anchorStore != null)
-        //{
-        //    _anchorStore.Save("lola_" + target.gameObject.name, target.GetComponent<WorldAnchor>());
-        //}
     }
 
     public override void OnManipulate(Vector3 cumulativeDelta)
