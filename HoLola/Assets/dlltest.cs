@@ -25,7 +25,7 @@ public class dlltest : MonoBehaviour {
     public LolaComms.FootstepListener SetupFL()
     {
         Debug.Log("Setting up FootstepListener...");
-        LolaComms.FootstepListener fl = new LolaComms.FootstepListener(9091, "169.254.80.80");
+        LolaComms.FootstepListener fl = new LolaComms.FootstepListener(61448, "192.168.0.7");
         fl.onError += (errstr) => Debug.LogError("[Footsteps] " + errstr);
         fl.onConnect += (host) => Debug.Log("[Footsteps] Connected to: " + host);
         fl.onDisonnect += (host) => Debug.Log("[Footsteps] Disconnected from: " + host);
@@ -45,7 +45,7 @@ public class dlltest : MonoBehaviour {
     public LolaComms.PoseListener SetupPL()
     {
         Debug.Log("Setting up PoseListener...");
-        LolaComms.PoseListener pl = new LolaComms.PoseListener(9092);
+        LolaComms.PoseListener pl = new LolaComms.PoseListener(53249);
         pl.onError += (errstr) => Debug.LogError("[Pose] " + errstr);
         pl.onNewPose += (pose) => Debug.Log("Got new pose: " + pose);
         pl.Listen();
