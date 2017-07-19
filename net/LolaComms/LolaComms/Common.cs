@@ -5,6 +5,8 @@ namespace LolaComms
 {
     public static class Common
     {
+        private static bool initialized = false;
+
         /// <summary>
         /// MsgIds taken from am2b_iface
         /// TODO: Generate this list
@@ -39,13 +41,52 @@ namespace LolaComms
         /// </summary>
         /// <returns>TRUE on success, FALSE if the sockets library could not be initialized</returns>
         [DllImport("LolaCommsNative")]
-        public static extern bool Init();
+        private static extern bool Init();
 
         /// <summary>
         /// Should be called when native networking capabilities are no longer necessary.
         /// </summary>
         /// <returns>TRUE if everything was cleaned up successfully, FALSE if an error occurred.</returns>
         [DllImport("LolaCommsNative")]
-        public static extern bool DeInit();
+        private static extern bool DeInit();
+
+        /// <summary>
+        /// Must be called before using any native networking capabilities
+        /// </summary>
+        /// <returns>TRUE on success, FALSE if the sockets library could not be initialized</returns>
+        public static bool Initialize()
+        {
+            if (initialized)
+            {
+                throw new InvalidOperationException("Initialize should only be called once!");
+            }
+
+            initialized = true;
+            return Init();
+        }
+
+        /// <summary>
+        /// Must be called before using any native networking capabilities
+        /// </summary>
+        /// <returns>TRUE on success, FALSE if the sockets library could not be initialized</returns>
+        public static bool Uninitialize()
+        {
+            if (!initialized)
+            {
+                throw new InvalidOperationException("Initialize must be called before Uninitialize");
+            }
+
+            initialized = false;
+            return DeInit();
+        }
+
+        /// <summary>
+        /// Query whether the library has already been initialized or not
+        /// </summary>
+        /// <returns>True if Initialize() has been called and Uninitialize() has not been called.</returns>
+        public static bool Initialized()
+        {
+            return initialized;
+        }
     }
 }
