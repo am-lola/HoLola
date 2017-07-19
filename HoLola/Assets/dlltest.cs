@@ -14,6 +14,33 @@ public class dlltest : MonoBehaviour {
     public GameObject Capsule;
     public GameObject Plane;
     public GameObject Footprint;
+    [Space]
+    public int VisionPort    = 9090;
+    public int FootstepPort  = 61448;
+    public string FootstepIP = "192.168.0.7";
+    public int PosePort      = 53249;
+    [Space]
+    public UnityEngine.UI.InputField VisionPortField;
+    public UnityEngine.UI.InputField FootstepPortField;
+    public UnityEngine.UI.InputField PosePortField;
+    [Space]
+    public StatusButton VisionStatus;
+    public StatusButton FootstepStatus;
+    public StatusButton PoseStatus;
+
+    public void OnVisionPortChanged()
+    {
+        VisionPort = Int32.Parse(VisionPortField.text);
+    }
+    public void OnFootstepPortChanged()
+    {
+        FootstepPort = Int32.Parse(FootstepPortField.text);
+    }
+    public void OnPosePortChanged()
+    {
+        PosePort = Int32.Parse(PosePortField.text);
+    }
+
 #if UNITY_EDITOR
 #else
     private LolaComms.VisionListener vl;
@@ -22,13 +49,40 @@ public class dlltest : MonoBehaviour {
     private Dictionary<string, GameObject> obstacle_map = new Dictionary<string, GameObject>();
     private Dictionary<uint, GameObject> surface_map  = new Dictionary<uint, GameObject>();
     private Queue<GameObject> footsteps = new Queue<GameObject>();
-    public LolaComms.FootstepListener SetupFL()
+
+    private bool InitComms()
+    {
+        Debug.Log("Setting LolaComms info callback...");
+        LolaComms.Common.RegisterInfoCallback((str) => Debug.Log("INFO: " + str));
+
+        Debug.Log("Initializing comms");
+        bool success = LolaComms.Common.Initialize();
+        if (!success)
+        {
+            Debug.LogError("Failed to initialize networking!");
+        }
+
+        return success;
+    }
+    private LolaComms.FootstepListener SetupFL()
     {
         Debug.Log("Setting up FootstepListener...");
-        LolaComms.FootstepListener fl = new LolaComms.FootstepListener(61448, "192.168.0.7");
-        fl.onError += (errstr) => Debug.LogError("[Footsteps] " + errstr);
-        fl.onConnect += (host) => Debug.Log("[Footsteps] Connected to: " + host);
-        fl.onDisonnect += (host) => Debug.Log("[Footsteps] Disconnected from: " + host);
+        LolaComms.FootstepListener fl = new LolaComms.FootstepListener(FootstepPort, "192.168.0.7");
+        fl.onError += (errstr) =>
+        {
+            Debug.LogError("[Footsteps] " + errstr);
+        };
+
+        fl.onConnect += (host) =>
+        {
+            Debug.Log("[Footsteps] Connected to: " + host);
+        };
+
+        fl.onDisonnect += (host) =>
+        {
+            Debug.Log("[Footsteps] Disconnected from: " + host);
+        };
+
         fl.onNewStep += (step) =>
         {
             Debug.Log("Got new footstep for " + (LolaComms.Foot)(step.stance) + "{" + step.stamp_gen + "} @ [" + step.start_x + ", " + step.start_y + ", " + step.start_z + "], start_phi_z: " + step.start_phi_z +
@@ -49,35 +103,40 @@ public class dlltest : MonoBehaviour {
         return fl;
     }
 
-    public LolaComms.PoseListener SetupPL()
+    private LolaComms.PoseListener SetupPL()
     {
         Debug.Log("Setting up PoseListener...");
-        LolaComms.PoseListener pl = new LolaComms.PoseListener(53249);
-        pl.onError += (errstr) => Debug.LogError("[Pose] " + errstr);
+        LolaComms.PoseListener pl = new LolaComms.PoseListener(PosePort);
+        pl.onError += (errstr) =>
+        {
+            Debug.LogError("[Pose] " + errstr);
+        };
         pl.onNewPose += (pose) => Debug.Log("[Pose] New pose: S: " + pose.stamp + " T: " + pose.t_wr_cl + ", R: " + pose.R_wr_cl);
         pl.Listen();
 
         Debug.Log("PoseListener: " + (pl.Listening ? "is listening" : "is NOT listening"));
+
         return pl;
     }
-    public LolaComms.VisionListener SetupVL()
+
+    private LolaComms.VisionListener SetupVL()
     {
-        Debug.Log("Setting info callback...");
-        LolaComms.Common.RegisterInfoCallback((str) => Debug.Log("INFO: " + str));
-        Debug.Log("Initializing comms");
-
-        bool success = LolaComms.Common.Init();
-        if (!success)
-        {
-            Debug.Log("Failed to initialize networking!");
-            return null;
-        }
-
         Debug.Log("Setting up VisionListener...");
-        LolaComms.VisionListener vl = new LolaComms.VisionListener(9090);
-        vl.onError += (errstr) => Debug.Log(errstr);
-        vl.onConnect += (host) => Debug.Log("Connected to: " + host);
-        vl.onDisconnect += (host) => Debug.Log("Disconnected from: " + host);
+        LolaComms.VisionListener vl = new LolaComms.VisionListener(VisionPort);
+        vl.onError += (errstr) =>
+        {
+            Debug.Log(errstr);
+        };
+        vl.onConnect += (host) =>
+        {
+            Debug.Log("Connected to: " + host);
+        };
+
+        vl.onDisconnect += (host) =>
+        {
+            Debug.Log("Disconnected from: " + host);
+        };
+
         vl.onObstacleMessage += (msg) =>
         {
             Debug.Log("New obstacle message: " + msg.ToString());
@@ -373,20 +432,89 @@ public class dlltest : MonoBehaviour {
         return cap;
     }
 
-    // Use this for initialization
+    public void RestartVisionListener()
+    {
+        if (vl.Listening)
+        {
+            vl.Stop();
+        }
+        VisionStatus.status = StatusButton.Status.Neutral;
+        vl = SetupVL();
+    }
+    public void RestartFootstepListener()
+    {
+        if (fl.Listening)
+        {
+            fl.Stop();
+        }
+        FootstepStatus.status = StatusButton.Status.Neutral;
+        fl = SetupFL();
+    }
+    public void RestartPoseListener()
+    {
+        if (pl.Listening)
+        {
+            pl.Stop();
+        }
+        PoseStatus.status = StatusButton.Status.Neutral;
+        pl = SetupPL();
+    }
+
     void Start () {
         Debug.Log("Starting up! :D");
 
-        vl = SetupVL();
-        pl = SetupPL();
-        fl = SetupFL();
+        VisionPortField.text = VisionPort.ToString();
+        FootstepPortField.text = FootstepPort.ToString();
+        PosePortField.text = PosePort.ToString();
+
+        if (InitComms())
+        {
+            vl = SetupVL();
+            pl = SetupPL();
+            fl = SetupFL();
+        }
 	}
+
+    private void OnDestroy()
+    {
+        if (LolaComms.Common.Initialized())
+        {
+            LolaComms.Common.Uninitialize();
+        }
+    }
 
     private void Update()
     {
-        vl.Process();
-        fl.Process();
-        pl.Process();
+        if (vl.Listening)
+        {
+            VisionStatus.status = StatusButton.Status.Good;
+            vl.Process();
+        }
+        else
+        {
+            VisionStatus.status = StatusButton.Status.Bad;
+        }
+
+        if (fl.Listening)
+        {
+            FootstepStatus.status = StatusButton.Status.Good;
+            fl.Process();
+        }
+        else
+        {
+            FootstepStatus.status = StatusButton.Status.Bad;
+        }
+
+        if (pl.Listening)
+        {
+            PoseStatus.status = StatusButton.Status.Good;
+            pl.Process();
+        }
+        else
+        {
+            PoseStatus.status = StatusButton.Status.Bad;
+        }
+
     }
 #endif
 
