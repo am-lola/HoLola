@@ -94,16 +94,16 @@ private:
         EventWritePose_OnConnectionOpened(std::to_wstring(_port).c_str());
         while (_listening)
         {
-            LogInfo(L"[PoseListener] Waiting for message...");
-            // wait for message
+            // check for message
             int nrecvd = recvfrom(_socket, buf.data(), _buflen - 1, 0, (sockaddr*)&si_other, &slen);
 
             if (nrecvd == SOCKET_ERROR)
             {
-                if (errno == EAGAIN || errno == EWOULDBLOCK)
+                int err = WSAGetLastError();
+                if (err == EAGAIN || err == EWOULDBLOCK || err == WSAEWOULDBLOCK) // no message, try again
                     continue;
                 else
-                    cb(_onError, L"Unable to receive data");
+                    cb(_onError, GetWSAErrorStr(err, L"Unable to receive data "));
                 LogWSAErrorStr(L"Failed to receive datagram!");
                 continue;
             }
@@ -121,6 +121,8 @@ private:
             EventWritePose_OnPoseMessageReceived(std::to_wstring(new_pose->stamp).c_str());
             cb(_onNewPose, new_pose);
         }
+
+        closesocket(_socket);
         EventWritePose_OnConnectionClosed(std::to_wstring(_port).c_str());
     }
 };

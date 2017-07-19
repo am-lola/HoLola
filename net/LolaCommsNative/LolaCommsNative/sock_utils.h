@@ -53,7 +53,7 @@ inline std::wstring GetWSAErrorStr(int error, std::wstring msg)
         MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
         (LPWSTR)&err, 0, NULL);
     
-    return msg + L" -- " + err;
+    return msg + L" -- " + std::to_wstring(errno) + L": " + err;
 }
 
 // gets '<hostname>:<port>' from an address
@@ -155,8 +155,9 @@ static socklen_t create_udp_socket(unsigned int port)
 {
     struct sockaddr_in si_me;
     socklen_t s;
-    char broadcast = 1;
-    char reuseport = 1;
+    char   broadcast  = 1;
+    char   reuseport  = 1;
+    u_long nonblocking = 1;
 
     // create & bind socket
     if ((s = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == INVALID_SOCKET)
@@ -174,6 +175,12 @@ static socklen_t create_udp_socket(unsigned int port)
     if (setsockopt(s, SOL_SOCKET, SO_REUSEADDR, &reuseport, sizeof(reuseport)) != 0)
     {
         LogWSAErrorStr(L"Setting Reuse Addr flag on UDP socket failed!");
+        return INVALID_SOCKET;
+    }
+
+    if (ioctlsocket(s, FIONBIO, &nonblocking) == SOCKET_ERROR)
+    {
+        LogWSAErrorStr(L"Setting Non-blocking flag on UDP socket failed!");
         return INVALID_SOCKET;
     }
 
