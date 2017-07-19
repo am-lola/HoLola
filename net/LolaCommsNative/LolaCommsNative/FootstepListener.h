@@ -74,10 +74,10 @@ public:
     typedef std::function<void(std::wstring)>  OnConnect;
     typedef std::function<void(std::wstring)>  OnDisconnect;
 
-    FootstepListener(unsigned int port, std::wstring host, bool verbose = false) :
+    FootstepListener(unsigned int port, std::wstring host, bool verbose = true) :
         _port(port), _hostname(host), _verbose(verbose)
     {
-        LogInfo(L"Gonna connect to: " + host);
+        LogInfo(L"[Footseps] Gonna connect to: " + host + L":" + std::to_wstring(port));
     }
 
     void listen()
@@ -89,6 +89,7 @@ public:
 
         if (_socket == INVALID_SOCKET)
         {
+            EventWriteFootsteps_OnConnectionError(_hostname.c_str());
             cb(_onError, L"Could not connect to host");
             _listening = false;
             return;
@@ -144,8 +145,9 @@ private:
         std::vector<char> buf;
         buf.resize(_buflen);
 
+        EventWriteFootsteps_OnConnectionOpened(_hostname.c_str());
         if (_verbose)
-            LogInfo(std::wstring(L"[footsteps] Attempting to subscribe to footstep data from ") + _hostname);
+            LogInfo(L"[footsteps] Attempting to subscribe to footstep data from " + _hostname + L":" + std::to_wstring(_port));
 
         am2b_iface::MsgId footstep_sub_id = __DOM_WPATT; //am2b_iface::STEPSEQ_AR_VIZUALIZATION;
         am2b_iface::MsgHeader footstep_sub = { am2b_iface::ps::SIG_PS_SUBSCRIBE, sizeof(am2b_iface::MsgId) };
@@ -153,19 +155,21 @@ private:
         size_t sent = send(_socket, (char*)&footstep_sub, sizeof(footstep_sub), 0);
         if (sent <= 0)
         {
-            cb(_onError, std::wstring(L"[footsteps] Error sending subscribe request!"));
+            EventWriteFootsteps_OnConnectionError(_hostname.c_str());
+            cb(_onError, L"[footsteps] Error sending subscribe request!");
             return;
         }
 
         sent = send(_socket, (char*)&footstep_sub_id, sizeof(footstep_sub_id), 0);
         if (sent <= 0)
         {
-            cb(_onError, std::wstring(L"[footsteps] Error sending footstep sub ID!"));
+            EventWriteFootsteps_OnConnectionError(_hostname.c_str());
+            cb(_onError, L"[footsteps] Error sending footstep sub ID!");
             return;
         }
 
         if (_verbose)
-            LogInfo(std::wstring(L"[footsteps] Subscribed!"));
+            LogInfo(L"[footsteps] Subscribed!");
         
         _listening = true;
         cb(_onConnect, _hostname);
@@ -179,9 +183,9 @@ private:
 
             if (_verbose)
             {
-                LogInfo(std::wstring(L"[footsteps] Waiting for am2b_iface::MsgHeader (") +
+                LogInfo(L"[footsteps] Waiting for am2b_iface::MsgHeader (" +
                         std::to_wstring(header_size) +
-                        std::wstring(L" bytes)..."));
+                        L" bytes)...");
             }
 
             while (total_received < header_size)
@@ -198,9 +202,9 @@ private:
 
                 if (_verbose)
                 {
-                    LogInfo(std::wstring(L"[footsteps] footstep header) Received ") +
+                    LogInfo(L"[footsteps] footstep header) Received " +
                         std::to_wstring(total_received) +
-                        std::wstring(L" total bytes from ") + _hostname);
+                        L" total bytes from " + _hostname);
                 }
             }
             if (total_received < header_size)
@@ -221,9 +225,9 @@ private:
 
                 if (_verbose)
                 {
-                    LogInfo(std::wstring(L"[footsteps] (footstep data) Received ")
+                    LogInfo(L"[footsteps] (footstep data) Received "
                           + std::to_wstring(total_received)
-                          + std::wstring(L" total bytes from ") + _hostname.c_str());
+                          + L" total bytes from " + _hostname.c_str());
                 }
             }
 
@@ -231,10 +235,12 @@ private:
             {
                 if (header->id == am2b_iface::COM_EOK)
                 {
-                    LogInfo(std::wstring(L"[footsteps] Received COM_EOK! msg len: ") + std::to_wstring(header->len));
+                    EventWriteFootsteps_OnConnectionHandshakeComplete(_hostname.c_str());
+                    LogInfo(L"[footsteps] Received COM_EOK! msg len: " + std::to_wstring(header->len));
                 }
                 else
                 {
+                    EventWriteFootsteps_OnOtherMessageReceived(std::to_wstring(header->id).c_str());
                     std::cout << "[footsteps] Skipping message (type: 0x"
                         << std::hex << header->id << std::dec
                         << ", expecting: 0x" << std::hex << am2b_iface::STEPSEQ_AR_VIZUALIZATION << std::dec
@@ -245,12 +251,14 @@ private:
 
             am2b_iface::struct_data_stepseq_ssv_log* message = (am2b_iface::struct_data_stepseq_ssv_log*)(buf.data() + header_size);
 
+            EventWriteFootsteps_OnFootstepMessageReceived(std::to_wstring(message->stamp_gen).c_str());
             cb(_onNewStep, Footstep(message));
         }
 
         _listening = false;
         cb(_onDisconnect, _hostname);
         closesocket(_socket);
+        EventWriteFootsteps_OnConnectionClosed(_hostname.c_str());
     }
 };
 

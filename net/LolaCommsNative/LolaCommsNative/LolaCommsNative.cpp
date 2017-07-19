@@ -28,6 +28,7 @@ extern "C"
             return false; // cleanup failed
         }
         EventUnregisterLolaCommsNative();
+
         return true;
     }
 

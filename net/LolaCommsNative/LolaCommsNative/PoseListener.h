@@ -39,6 +39,7 @@ public:
 
         if (_socket == INVALID_SOCKET)
         {
+            EventWritePose_OnConnectionError(std::to_wstring(_port).c_str());
             cb(_onError, L"Could not open UDP port " + std::to_wstring(_port));
             _listening = false;
             return;
@@ -72,8 +73,8 @@ private:
     std::thread _listener;
     size_t      _buflen    = sizeof(HR_Pose_Red) + 1;
 
-    OnNewPose _onNewPose;
-    OnError   _onError;
+    OnNewPose  _onNewPose;
+    OnError    _onError;
 
     // wrapper to ensure safe use of callbacks
     template <class Functor, class... Args>
@@ -90,6 +91,7 @@ private:
         sockaddr_in si_other;
         int slen = sizeof(si_other);
 
+        EventWritePose_OnConnectionOpened(std::to_wstring(_port).c_str());
         while (_listening)
         {
             LogInfo(L"[PoseListener] Waiting for message...");
@@ -116,8 +118,10 @@ private:
             }
 
             HR_Pose_Red* new_pose = (HR_Pose_Red*)buf.data();
+            EventWritePose_OnPoseMessageReceived(std::to_wstring(new_pose->stamp).c_str());
             cb(_onNewPose, new_pose);
         }
+        EventWritePose_OnConnectionClosed(std::to_wstring(_port).c_str());
     }
 };
 

@@ -215,7 +215,7 @@ Remarks:
 #endif
 #endif // MCGEN_DISABLE_PROVIDER_CODE_GENERATION
 //+
-// Provider LolaCommsNative Event Count 9
+// Provider LolaCommsNative Event Count 19
 //+
 EXTERN_C __declspec(selectany) const GUID LolaCommsNative = {0x8eb119a9, 0x2fe5, 0x46f5, {0x99, 0x8b, 0xa3, 0x96, 0xca, 0x3f, 0x74, 0xb7}};
 
@@ -227,24 +227,44 @@ EXTERN_C __declspec(selectany) const GUID LolaCommsNative = {0x8eb119a9, 0x2fe5,
 //
 // Event Descriptors
 //
-EXTERN_C __declspec(selectany) const EVENT_DESCRIPTOR OnConnectionOpened = {0x1, 0x1, 0x0, 0x0, 0x0, 0x0, 0x0};
-#define OnConnectionOpened_value 0x1
-EXTERN_C __declspec(selectany) const EVENT_DESCRIPTOR OnConnectionClosed = {0x2, 0x1, 0x0, 0x0, 0x0, 0x0, 0x0};
-#define OnConnectionClosed_value 0x2
-EXTERN_C __declspec(selectany) const EVENT_DESCRIPTOR OnConnectionError = {0x3, 0x1, 0x0, 0x0, 0x0, 0x0, 0x0};
-#define OnConnectionError_value 0x3
-EXTERN_C __declspec(selectany) const EVENT_DESCRIPTOR OnVisionMessageReceived = {0x4, 0x1, 0x0, 0x0, 0x0, 0x0, 0x0};
-#define OnVisionMessageReceived_value 0x4
-EXTERN_C __declspec(selectany) const EVENT_DESCRIPTOR OnObstacleMessageReceived = {0x5, 0x1, 0x0, 0x0, 0x0, 0x0, 0x0};
-#define OnObstacleMessageReceived_value 0x5
-EXTERN_C __declspec(selectany) const EVENT_DESCRIPTOR OnSurfaceMessageReceived = {0x6, 0x1, 0x0, 0x0, 0x0, 0x0, 0x0};
-#define OnSurfaceMessageReceived_value 0x6
-EXTERN_C __declspec(selectany) const EVENT_DESCRIPTOR OnRGBImageMessageReceived = {0x7, 0x1, 0x0, 0x0, 0x0, 0x0, 0x0};
-#define OnRGBImageMessageReceived_value 0x7
-EXTERN_C __declspec(selectany) const EVENT_DESCRIPTOR OnPointCloudMessageReceived = {0x8, 0x1, 0x0, 0x0, 0x0, 0x0, 0x0};
-#define OnPointCloudMessageReceived_value 0x8
-EXTERN_C __declspec(selectany) const EVENT_DESCRIPTOR OnUnknownVisionMessageReceived = {0x9, 0x1, 0x0, 0x0, 0x0, 0x0, 0x0};
-#define OnUnknownVisionMessageReceived_value 0x9
+EXTERN_C __declspec(selectany) const EVENT_DESCRIPTOR Vision_OnConnectionOpened = {0x65, 0x1, 0x0, 0x0, 0x0, 0x0, 0x0};
+#define Vision_OnConnectionOpened_value 0x65
+EXTERN_C __declspec(selectany) const EVENT_DESCRIPTOR Vision_OnConnectionClosed = {0x66, 0x1, 0x0, 0x0, 0x0, 0x0, 0x0};
+#define Vision_OnConnectionClosed_value 0x66
+EXTERN_C __declspec(selectany) const EVENT_DESCRIPTOR Vision_OnConnectionError = {0x67, 0x1, 0x0, 0x0, 0x0, 0x0, 0x0};
+#define Vision_OnConnectionError_value 0x67
+EXTERN_C __declspec(selectany) const EVENT_DESCRIPTOR Vision_OnVisionMessageReceived = {0x68, 0x1, 0x0, 0x0, 0x0, 0x0, 0x0};
+#define Vision_OnVisionMessageReceived_value 0x68
+EXTERN_C __declspec(selectany) const EVENT_DESCRIPTOR Vision_OnObstacleMessageReceived = {0x69, 0x1, 0x0, 0x0, 0x0, 0x0, 0x0};
+#define Vision_OnObstacleMessageReceived_value 0x69
+EXTERN_C __declspec(selectany) const EVENT_DESCRIPTOR Vision_OnSurfaceMessageReceived = {0x6a, 0x1, 0x0, 0x0, 0x0, 0x0, 0x0};
+#define Vision_OnSurfaceMessageReceived_value 0x6a
+EXTERN_C __declspec(selectany) const EVENT_DESCRIPTOR Vision_OnRGBImageMessageReceived = {0x6b, 0x1, 0x0, 0x0, 0x0, 0x0, 0x0};
+#define Vision_OnRGBImageMessageReceived_value 0x6b
+EXTERN_C __declspec(selectany) const EVENT_DESCRIPTOR Vision_OnPointCloudMessageReceived = {0x6c, 0x1, 0x0, 0x0, 0x0, 0x0, 0x0};
+#define Vision_OnPointCloudMessageReceived_value 0x6c
+EXTERN_C __declspec(selectany) const EVENT_DESCRIPTOR Vision_OnUnknownVisionMessageReceived = {0x6d, 0x1, 0x0, 0x0, 0x0, 0x0, 0x0};
+#define Vision_OnUnknownVisionMessageReceived_value 0x6d
+EXTERN_C __declspec(selectany) const EVENT_DESCRIPTOR Pose_OnConnectionOpened = {0xc9, 0x1, 0x0, 0x0, 0x0, 0x0, 0x0};
+#define Pose_OnConnectionOpened_value 0xc9
+EXTERN_C __declspec(selectany) const EVENT_DESCRIPTOR Pose_OnConnectionClosed = {0xca, 0x1, 0x0, 0x0, 0x0, 0x0, 0x0};
+#define Pose_OnConnectionClosed_value 0xca
+EXTERN_C __declspec(selectany) const EVENT_DESCRIPTOR Pose_OnConnectionError = {0xcb, 0x1, 0x0, 0x0, 0x0, 0x0, 0x0};
+#define Pose_OnConnectionError_value 0xcb
+EXTERN_C __declspec(selectany) const EVENT_DESCRIPTOR Pose_OnPoseMessageReceived = {0xcc, 0x1, 0x0, 0x0, 0x0, 0x0, 0x0};
+#define Pose_OnPoseMessageReceived_value 0xcc
+EXTERN_C __declspec(selectany) const EVENT_DESCRIPTOR Footsteps_OnConnectionOpened = {0x12d, 0x1, 0x0, 0x0, 0x0, 0x0, 0x0};
+#define Footsteps_OnConnectionOpened_value 0x12d
+EXTERN_C __declspec(selectany) const EVENT_DESCRIPTOR Footsteps_OnConnectionClosed = {0x12e, 0x1, 0x0, 0x0, 0x0, 0x0, 0x0};
+#define Footsteps_OnConnectionClosed_value 0x12e
+EXTERN_C __declspec(selectany) const EVENT_DESCRIPTOR Footsteps_OnConnectionError = {0x12f, 0x1, 0x0, 0x0, 0x0, 0x0, 0x0};
+#define Footsteps_OnConnectionError_value 0x12f
+EXTERN_C __declspec(selectany) const EVENT_DESCRIPTOR Footsteps_OnConnectionHandshakeComplete = {0x130, 0x1, 0x0, 0x0, 0x0, 0x0, 0x0};
+#define Footsteps_OnConnectionHandshakeComplete_value 0x130
+EXTERN_C __declspec(selectany) const EVENT_DESCRIPTOR Footsteps_OnFootstepMessageReceived = {0x131, 0x1, 0x0, 0x0, 0x0, 0x0, 0x0};
+#define Footsteps_OnFootstepMessageReceived_value 0x131
+EXTERN_C __declspec(selectany) const EVENT_DESCRIPTOR Footsteps_OnOtherMessageReceived = {0x132, 0x1, 0x0, 0x0, 0x0, 0x0, 0x0};
+#define Footsteps_OnOtherMessageReceived_value 0x132
 
 //
 // Note on Generate Code from Manifest for Windows Vista and above
@@ -377,129 +397,269 @@ Remarks:
 #endif
 
 //
-// Enablement check macro for OnConnectionOpened
+// Enablement check macro for Vision_OnConnectionOpened
 //
 
-#define EventEnabledOnConnectionOpened() ((LolaCommsNativeEnableBits[0] & 0x00000001) != 0)
+#define EventEnabledVision_OnConnectionOpened() ((LolaCommsNativeEnableBits[0] & 0x00000001) != 0)
 
 //
-// Event Macro for OnConnectionOpened
+// Event Macro for Vision_OnConnectionOpened
 //
-#define EventWriteOnConnectionOpened(hostname)\
-        EventEnabledOnConnectionOpened() ?\
-        Template_z(LolaCommsNativeHandle, &OnConnectionOpened, hostname)\
+#define EventWriteVision_OnConnectionOpened(hostname)\
+        EventEnabledVision_OnConnectionOpened() ?\
+        Template_z(LolaCommsNativeHandle, &Vision_OnConnectionOpened, hostname)\
         : ERROR_SUCCESS\
 
 //
-// Enablement check macro for OnConnectionClosed
+// Enablement check macro for Vision_OnConnectionClosed
 //
 
-#define EventEnabledOnConnectionClosed() ((LolaCommsNativeEnableBits[0] & 0x00000001) != 0)
+#define EventEnabledVision_OnConnectionClosed() ((LolaCommsNativeEnableBits[0] & 0x00000001) != 0)
 
 //
-// Event Macro for OnConnectionClosed
+// Event Macro for Vision_OnConnectionClosed
 //
-#define EventWriteOnConnectionClosed(hostname)\
-        EventEnabledOnConnectionClosed() ?\
-        Template_z(LolaCommsNativeHandle, &OnConnectionClosed, hostname)\
+#define EventWriteVision_OnConnectionClosed(hostname)\
+        EventEnabledVision_OnConnectionClosed() ?\
+        Template_z(LolaCommsNativeHandle, &Vision_OnConnectionClosed, hostname)\
         : ERROR_SUCCESS\
 
 //
-// Enablement check macro for OnConnectionError
+// Enablement check macro for Vision_OnConnectionError
 //
 
-#define EventEnabledOnConnectionError() ((LolaCommsNativeEnableBits[0] & 0x00000001) != 0)
+#define EventEnabledVision_OnConnectionError() ((LolaCommsNativeEnableBits[0] & 0x00000001) != 0)
 
 //
-// Event Macro for OnConnectionError
+// Event Macro for Vision_OnConnectionError
 //
-#define EventWriteOnConnectionError(hostname)\
-        EventEnabledOnConnectionError() ?\
-        Template_z(LolaCommsNativeHandle, &OnConnectionError, hostname)\
+#define EventWriteVision_OnConnectionError(hostname)\
+        EventEnabledVision_OnConnectionError() ?\
+        Template_z(LolaCommsNativeHandle, &Vision_OnConnectionError, hostname)\
         : ERROR_SUCCESS\
 
 //
-// Enablement check macro for OnVisionMessageReceived
+// Enablement check macro for Vision_OnVisionMessageReceived
 //
 
-#define EventEnabledOnVisionMessageReceived() ((LolaCommsNativeEnableBits[0] & 0x00000001) != 0)
+#define EventEnabledVision_OnVisionMessageReceived() ((LolaCommsNativeEnableBits[0] & 0x00000001) != 0)
 
 //
-// Event Macro for OnVisionMessageReceived
+// Event Macro for Vision_OnVisionMessageReceived
 //
-#define EventWriteOnVisionMessageReceived(info)\
-        EventEnabledOnVisionMessageReceived() ?\
-        Template_z(LolaCommsNativeHandle, &OnVisionMessageReceived, info)\
+#define EventWriteVision_OnVisionMessageReceived(info)\
+        EventEnabledVision_OnVisionMessageReceived() ?\
+        Template_z(LolaCommsNativeHandle, &Vision_OnVisionMessageReceived, info)\
         : ERROR_SUCCESS\
 
 //
-// Enablement check macro for OnObstacleMessageReceived
+// Enablement check macro for Vision_OnObstacleMessageReceived
 //
 
-#define EventEnabledOnObstacleMessageReceived() ((LolaCommsNativeEnableBits[0] & 0x00000001) != 0)
+#define EventEnabledVision_OnObstacleMessageReceived() ((LolaCommsNativeEnableBits[0] & 0x00000001) != 0)
 
 //
-// Event Macro for OnObstacleMessageReceived
+// Event Macro for Vision_OnObstacleMessageReceived
 //
-#define EventWriteOnObstacleMessageReceived(type, model_id, part_id, action, radius, surface, coeffs)\
-        EventEnabledOnObstacleMessageReceived() ?\
-        Template_dqqqfdF9(LolaCommsNativeHandle, &OnObstacleMessageReceived, type, model_id, part_id, action, radius, surface, coeffs)\
+#define EventWriteVision_OnObstacleMessageReceived(type, model_id, part_id, action, radius, surface, coeffs)\
+        EventEnabledVision_OnObstacleMessageReceived() ?\
+        Template_dqqqfdF9(LolaCommsNativeHandle, &Vision_OnObstacleMessageReceived, type, model_id, part_id, action, radius, surface, coeffs)\
         : ERROR_SUCCESS\
 
 //
-// Enablement check macro for OnSurfaceMessageReceived
+// Enablement check macro for Vision_OnSurfaceMessageReceived
 //
 
-#define EventEnabledOnSurfaceMessageReceived() ((LolaCommsNativeEnableBits[0] & 0x00000001) != 0)
+#define EventEnabledVision_OnSurfaceMessageReceived() ((LolaCommsNativeEnableBits[0] & 0x00000001) != 0)
 
 //
-// Event Macro for OnSurfaceMessageReceived
+// Event Macro for Vision_OnSurfaceMessageReceived
 //
-#define EventWriteOnSurfaceMessageReceived(info)\
-        EventEnabledOnSurfaceMessageReceived() ?\
-        Template_z(LolaCommsNativeHandle, &OnSurfaceMessageReceived, info)\
+#define EventWriteVision_OnSurfaceMessageReceived(info)\
+        EventEnabledVision_OnSurfaceMessageReceived() ?\
+        Template_z(LolaCommsNativeHandle, &Vision_OnSurfaceMessageReceived, info)\
         : ERROR_SUCCESS\
 
 //
-// Enablement check macro for OnRGBImageMessageReceived
+// Enablement check macro for Vision_OnRGBImageMessageReceived
 //
 
-#define EventEnabledOnRGBImageMessageReceived() ((LolaCommsNativeEnableBits[0] & 0x00000001) != 0)
+#define EventEnabledVision_OnRGBImageMessageReceived() ((LolaCommsNativeEnableBits[0] & 0x00000001) != 0)
 
 //
-// Event Macro for OnRGBImageMessageReceived
+// Event Macro for Vision_OnRGBImageMessageReceived
 //
-#define EventWriteOnRGBImageMessageReceived(info)\
-        EventEnabledOnRGBImageMessageReceived() ?\
-        Template_z(LolaCommsNativeHandle, &OnRGBImageMessageReceived, info)\
+#define EventWriteVision_OnRGBImageMessageReceived(info)\
+        EventEnabledVision_OnRGBImageMessageReceived() ?\
+        Template_z(LolaCommsNativeHandle, &Vision_OnRGBImageMessageReceived, info)\
         : ERROR_SUCCESS\
 
 //
-// Enablement check macro for OnPointCloudMessageReceived
+// Enablement check macro for Vision_OnPointCloudMessageReceived
 //
 
-#define EventEnabledOnPointCloudMessageReceived() ((LolaCommsNativeEnableBits[0] & 0x00000001) != 0)
+#define EventEnabledVision_OnPointCloudMessageReceived() ((LolaCommsNativeEnableBits[0] & 0x00000001) != 0)
 
 //
-// Event Macro for OnPointCloudMessageReceived
+// Event Macro for Vision_OnPointCloudMessageReceived
 //
-#define EventWriteOnPointCloudMessageReceived(info)\
-        EventEnabledOnPointCloudMessageReceived() ?\
-        Template_z(LolaCommsNativeHandle, &OnPointCloudMessageReceived, info)\
+#define EventWriteVision_OnPointCloudMessageReceived(info)\
+        EventEnabledVision_OnPointCloudMessageReceived() ?\
+        Template_z(LolaCommsNativeHandle, &Vision_OnPointCloudMessageReceived, info)\
         : ERROR_SUCCESS\
 
 //
-// Enablement check macro for OnUnknownVisionMessageReceived
+// Enablement check macro for Vision_OnUnknownVisionMessageReceived
 //
 
-#define EventEnabledOnUnknownVisionMessageReceived() ((LolaCommsNativeEnableBits[0] & 0x00000001) != 0)
+#define EventEnabledVision_OnUnknownVisionMessageReceived() ((LolaCommsNativeEnableBits[0] & 0x00000001) != 0)
 
 //
-// Event Macro for OnUnknownVisionMessageReceived
+// Event Macro for Vision_OnUnknownVisionMessageReceived
 //
-#define EventWriteOnUnknownVisionMessageReceived(info)\
-        EventEnabledOnUnknownVisionMessageReceived() ?\
-        Template_z(LolaCommsNativeHandle, &OnUnknownVisionMessageReceived, info)\
+#define EventWriteVision_OnUnknownVisionMessageReceived(info)\
+        EventEnabledVision_OnUnknownVisionMessageReceived() ?\
+        Template_z(LolaCommsNativeHandle, &Vision_OnUnknownVisionMessageReceived, info)\
+        : ERROR_SUCCESS\
+
+//
+// Enablement check macro for Pose_OnConnectionOpened
+//
+
+#define EventEnabledPose_OnConnectionOpened() ((LolaCommsNativeEnableBits[0] & 0x00000001) != 0)
+
+//
+// Event Macro for Pose_OnConnectionOpened
+//
+#define EventWritePose_OnConnectionOpened(hostname)\
+        EventEnabledPose_OnConnectionOpened() ?\
+        Template_z(LolaCommsNativeHandle, &Pose_OnConnectionOpened, hostname)\
+        : ERROR_SUCCESS\
+
+//
+// Enablement check macro for Pose_OnConnectionClosed
+//
+
+#define EventEnabledPose_OnConnectionClosed() ((LolaCommsNativeEnableBits[0] & 0x00000001) != 0)
+
+//
+// Event Macro for Pose_OnConnectionClosed
+//
+#define EventWritePose_OnConnectionClosed(hostname)\
+        EventEnabledPose_OnConnectionClosed() ?\
+        Template_z(LolaCommsNativeHandle, &Pose_OnConnectionClosed, hostname)\
+        : ERROR_SUCCESS\
+
+//
+// Enablement check macro for Pose_OnConnectionError
+//
+
+#define EventEnabledPose_OnConnectionError() ((LolaCommsNativeEnableBits[0] & 0x00000001) != 0)
+
+//
+// Event Macro for Pose_OnConnectionError
+//
+#define EventWritePose_OnConnectionError(hostname)\
+        EventEnabledPose_OnConnectionError() ?\
+        Template_z(LolaCommsNativeHandle, &Pose_OnConnectionError, hostname)\
+        : ERROR_SUCCESS\
+
+//
+// Enablement check macro for Pose_OnPoseMessageReceived
+//
+
+#define EventEnabledPose_OnPoseMessageReceived() ((LolaCommsNativeEnableBits[0] & 0x00000001) != 0)
+
+//
+// Event Macro for Pose_OnPoseMessageReceived
+//
+#define EventWritePose_OnPoseMessageReceived(info)\
+        EventEnabledPose_OnPoseMessageReceived() ?\
+        Template_z(LolaCommsNativeHandle, &Pose_OnPoseMessageReceived, info)\
+        : ERROR_SUCCESS\
+
+//
+// Enablement check macro for Footsteps_OnConnectionOpened
+//
+
+#define EventEnabledFootsteps_OnConnectionOpened() ((LolaCommsNativeEnableBits[0] & 0x00000001) != 0)
+
+//
+// Event Macro for Footsteps_OnConnectionOpened
+//
+#define EventWriteFootsteps_OnConnectionOpened(hostname)\
+        EventEnabledFootsteps_OnConnectionOpened() ?\
+        Template_z(LolaCommsNativeHandle, &Footsteps_OnConnectionOpened, hostname)\
+        : ERROR_SUCCESS\
+
+//
+// Enablement check macro for Footsteps_OnConnectionClosed
+//
+
+#define EventEnabledFootsteps_OnConnectionClosed() ((LolaCommsNativeEnableBits[0] & 0x00000001) != 0)
+
+//
+// Event Macro for Footsteps_OnConnectionClosed
+//
+#define EventWriteFootsteps_OnConnectionClosed(hostname)\
+        EventEnabledFootsteps_OnConnectionClosed() ?\
+        Template_z(LolaCommsNativeHandle, &Footsteps_OnConnectionClosed, hostname)\
+        : ERROR_SUCCESS\
+
+//
+// Enablement check macro for Footsteps_OnConnectionError
+//
+
+#define EventEnabledFootsteps_OnConnectionError() ((LolaCommsNativeEnableBits[0] & 0x00000001) != 0)
+
+//
+// Event Macro for Footsteps_OnConnectionError
+//
+#define EventWriteFootsteps_OnConnectionError(hostname)\
+        EventEnabledFootsteps_OnConnectionError() ?\
+        Template_z(LolaCommsNativeHandle, &Footsteps_OnConnectionError, hostname)\
+        : ERROR_SUCCESS\
+
+//
+// Enablement check macro for Footsteps_OnConnectionHandshakeComplete
+//
+
+#define EventEnabledFootsteps_OnConnectionHandshakeComplete() ((LolaCommsNativeEnableBits[0] & 0x00000001) != 0)
+
+//
+// Event Macro for Footsteps_OnConnectionHandshakeComplete
+//
+#define EventWriteFootsteps_OnConnectionHandshakeComplete(hostname)\
+        EventEnabledFootsteps_OnConnectionHandshakeComplete() ?\
+        Template_z(LolaCommsNativeHandle, &Footsteps_OnConnectionHandshakeComplete, hostname)\
+        : ERROR_SUCCESS\
+
+//
+// Enablement check macro for Footsteps_OnFootstepMessageReceived
+//
+
+#define EventEnabledFootsteps_OnFootstepMessageReceived() ((LolaCommsNativeEnableBits[0] & 0x00000001) != 0)
+
+//
+// Event Macro for Footsteps_OnFootstepMessageReceived
+//
+#define EventWriteFootsteps_OnFootstepMessageReceived(info)\
+        EventEnabledFootsteps_OnFootstepMessageReceived() ?\
+        Template_z(LolaCommsNativeHandle, &Footsteps_OnFootstepMessageReceived, info)\
+        : ERROR_SUCCESS\
+
+//
+// Enablement check macro for Footsteps_OnOtherMessageReceived
+//
+
+#define EventEnabledFootsteps_OnOtherMessageReceived() ((LolaCommsNativeEnableBits[0] & 0x00000001) != 0)
+
+//
+// Event Macro for Footsteps_OnOtherMessageReceived
+//
+#define EventWriteFootsteps_OnOtherMessageReceived(info)\
+        EventEnabledFootsteps_OnOtherMessageReceived() ?\
+        Template_z(LolaCommsNativeHandle, &Footsteps_OnOtherMessageReceived, info)\
         : ERROR_SUCCESS\
 
 #endif // MCGEN_DISABLE_PROVIDER_CODE_GENERATION
@@ -587,5 +747,5 @@ Template_dqqqfdF9(
 
 #define MSG_level_LogAlways                  0x50000000L
 #define MSG_channel_Application              0x90000001L
-#define MSG_LolaCommsNative_event_1_message  0xB0010001L
-#define MSG_LolaCommsNative_event_2_message  0xB0010002L
+#define MSG_LolaCommsNative_event_1_message  0xB0010065L
+#define MSG_LolaCommsNative_event_2_message  0xB0010066L
