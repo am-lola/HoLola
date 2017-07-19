@@ -76,6 +76,8 @@ ETW Trace data is available for some native components, which may help track dow
 
 See [net/LolaCommsNative/LolaCommsNative/LolaCommsNative.man](net/LolaCommsNative/LolaCommsNative/LolaCommsNative.man) for event definitions.
 
+*Note:* For some reason, provider info and event payloads are not appearing in the device portal. This *may* be related to [this issue](https://wpdev.uservoice.com/forums/110705-universal-windows-platform/suggestions/18591439-loggingchannel-not-showing-string-message-content), meaning a future update on the Hololens (and possibly a matching SDK update) could fix it, but it might also be that the configuration is not quite right on our end...
+
 #### Debugging the external DLLs
 
 1. Enable mixed-mode debugging in the project properties to examine behavior in LolaCommsNative
