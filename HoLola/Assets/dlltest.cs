@@ -21,7 +21,7 @@ public class dlltest : MonoBehaviour {
     private LolaComms.FootstepListener fl;
     private Dictionary<string, GameObject> obstacle_map = new Dictionary<string, GameObject>();
     private Dictionary<uint, GameObject> surface_map  = new Dictionary<uint, GameObject>();
-
+    private Queue<GameObject> footsteps = new Queue<GameObject>();
     public LolaComms.FootstepListener SetupFL()
     {
         Debug.Log("Setting up FootstepListener...");
@@ -31,10 +31,17 @@ public class dlltest : MonoBehaviour {
         fl.onDisonnect += (host) => Debug.Log("[Footsteps] Disconnected from: " + host);
         fl.onNewStep += (step) =>
         {
-            Debug.Log("Got new footstep for " + (LolaComms.Foot)(step.stance) + " @ [" + step.start_x + ", " + step.start_y + ", " + step.start_z + "]");
+            Debug.Log("Got new footstep for " + (LolaComms.Foot)(step.stance) + "{" + step.stamp_gen + "} @ [" + step.start_x + ", " + step.start_y + ", " + step.start_z + "], start_phi_z: " + step.start_phi_z +
+                ", phi0: " + step.phiO);
             var newstep = Instantiate(Footprint, transform);
             newstep.transform.localPosition = new Vector3(step.start_x, step.start_y, step.start_z);
-            /// TODO: Fix rotation according to step.start_phi_z
+            newstep.transform.localRotation = Quaternion.AngleAxis(step.start_phi_z, new Vector3(0, 0, 1)) * newstep.transform.localRotation; /// TODO: Fix rotation according to step.start_phi_z
+            footsteps.Enqueue(newstep);
+
+            if (footsteps.Count > 16)
+            {
+                Destroy(footsteps.Dequeue());
+            }
         };
         fl.Listen();
 
@@ -47,7 +54,7 @@ public class dlltest : MonoBehaviour {
         Debug.Log("Setting up PoseListener...");
         LolaComms.PoseListener pl = new LolaComms.PoseListener(53249);
         pl.onError += (errstr) => Debug.LogError("[Pose] " + errstr);
-        pl.onNewPose += (pose) => Debug.Log("Got new pose: " + pose);
+        pl.onNewPose += (pose) => Debug.Log("[Pose] New pose: S: " + pose.stamp + " T: " + pose.t_wr_cl + ", R: " + pose.R_wr_cl);
         pl.Listen();
 
         Debug.Log("PoseListener: " + (pl.Listening ? "is listening" : "is NOT listening"));
@@ -66,6 +73,7 @@ public class dlltest : MonoBehaviour {
             return null;
         }
 
+        Debug.Log("Setting up VisionListener...");
         LolaComms.VisionListener vl = new LolaComms.VisionListener(9090);
         vl.onError += (errstr) => Debug.Log(errstr);
         vl.onConnect += (host) => Debug.Log("Connected to: " + host);
@@ -338,7 +346,7 @@ public class dlltest : MonoBehaviour {
         };
 
         vl.Listen();
-        Debug.Log("Listener is listening: " + vl.Listening);
+        Debug.Log("VisionListener is listening: " + vl.Listening);
         return vl;
 
     }
