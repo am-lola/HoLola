@@ -62,77 +62,77 @@ namespace LolaComms
         //////////////////////////////////////////////////
         //// 1 -- header
         //!data struct version
-        UInt32 version;
+        public UInt32 version;
         //! tick counter
-        UInt64 tick_counter;
+        public UInt64 tick_counter;
         //!<stance leg (RIGHT/LEFT)
-        byte stance;
+        public byte stance;
         //!<padding
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 3)]
-        byte[] zero;
+        public byte[] zero;
 
-        UInt64 stamp;
+        public UInt64 stamp;
 
 
         //////////////////////////////////////////////////
         //// 2 -- simplified /abstract robot model (feet, cameras, upper body)
         //!vector from world frame to left leg in world frame
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 3)]
-        float[] t_wr_fr;
+        public float[] t_wr_fr;
         //!vector from world frame to right leg in world frame
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 3)]
-        float[] t_wr_fl;
+        public float[] t_wr_fl;
         //!vector from world frame to left camera in world frame
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 3)]
-        float[] t_wr_cl;
+        public float[] t_wr_cl;
         //!vector from world frame to right camera in world frame
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 3)]
-        float[] t_wr_cr;
+        public float[] t_wr_cr;
 
         //!transformation matrix from left leg to world frame
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 9)]
-        float[] R_wr_fr;
+        public float[] R_wr_fr;
         //!transformation matrix from right leg to world frame
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 9)]
-        float[] R_wr_fl;
+        public float[] R_wr_fl;
         //!transformation matrix from left camera to world frame
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 9)]
-        float[] R_wr_cl;
+        public float[] R_wr_cl;
         //!transformation matrix from right camera to world frame
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 9)]
-        float[] R_wr_cr;
+        public float[] R_wr_cr;
         /*!
           transformation matrix from upper body coordinate frame
           to inertial frame measured by IMU (world frame)
           (identity matrix, if robot is standing upright)
         */
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 9)]
-        float[] R_wr_ub;
+        public float[] R_wr_ub;
         //!vector from world frame to upper body frame in world frame
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 9)]
-        float[] t_wr_ub;
+        public float[] t_wr_ub;
 
         //////////////////////////////////////////////////
         //// 3 -- full robot pose 
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 25)]
-        SegmentPose[] seg_pose;
+        public SegmentPose[] seg_pose;
 
         //////////////////////////////////////////////////
         //// 4 -- "drift pose" (odometry)
         //!stance leg in drift frame
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 3)]
-        float[] t_stance_odo;
+        public float[] t_stance_odo;
         //!stance foot rotation in drift frame
-        float phi_z_odo;
+        public float phi_z_odo;
 
         //////////////////////////////////////////////////
         //// 5 -- "drift pose" (odometry)
         //!<currently active velocity in x-direction [m/s]
-        float vx_act;
+        public float vx_act;
         //!<currently active velocity in y-direction [m/s]
-        float vy_act;
+        public float vy_act;
         //!<currently active angular velocity [rad/s]
-        float om_act;
+        public float om_act;
     }
 
     /*!
@@ -156,29 +156,29 @@ namespace LolaComms
         //////////////////////////////////////////////////
         //// 1 -- header
         //!data struct version
-        UInt32 version;
+        public UInt32 version;
         //! tick counter
-        UInt64 tick_counter;
+        public UInt64 tick_counter;
         //!<stance leg (RIGHT/LEFT)
-        byte stance;
+        public byte stance;
 
-        UInt64 stamp;
+        public UInt64 stamp;
 
         //////////////////////////////////////////////////
         //// 2 -- simplified /abstract robot model (feet, cameras, upper body)
         //!vector from world frame to left camera in world frame
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 3)]
-        float[] t_wr_cl;
+        public float[] t_wr_cl;
         //!transformation matrix from left camera to world frame
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 9)]
-        float[] R_wr_cl;
+        public float[] R_wr_cl;
 
         //////////////////////////////////////////////////
         //// 4 -- "drift pose" (odometry)
         //!stance leg in drift frame
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 3)]
-        float[] t_stance_odo;
+        public float[] t_stance_odo;
         //!stance foot rotation in drift frame
-        float phi_z_odo;
+        public float phi_z_odo;
     };
 }
