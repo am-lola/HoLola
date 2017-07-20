@@ -146,6 +146,7 @@ namespace LolaComms
         /// <param name="fl">Existing FootstepListener instance</param>
         /// <returns></returns>
         [DllImport("LolaCommsNative")]
+        [return:MarshalAs(UnmanagedType.I1)]
         private static extern bool FootstepListener_IsListening(IntPtr fl);
 
         /// <summary>

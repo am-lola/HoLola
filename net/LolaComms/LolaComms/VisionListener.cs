@@ -175,6 +175,7 @@ namespace LolaComms
         /// <param name="vl">Pointer to existing VisionListener interface</param>
         /// <returns></returns>
         [DllImport("LolaCommsNative")]
+        [return: MarshalAs(UnmanagedType.I1)]
         private static extern bool VisionListener_IsListening(IntPtr vl);
 
         /// <summary>

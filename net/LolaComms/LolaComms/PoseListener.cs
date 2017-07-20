@@ -121,6 +121,7 @@ namespace LolaComms
         /// <param name="pl">Pointer to existing PoseListener instance</param>
         /// <returns></returns>
         [DllImport("LolaCommsNative")]
+        [return: MarshalAs(UnmanagedType.I1)]
         private static extern bool PoseListener_IsListening(IntPtr pl);
 
         /// <summary>
