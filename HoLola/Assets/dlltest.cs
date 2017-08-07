@@ -195,6 +195,19 @@ public class dlltest : MonoBehaviour {
                     else
                     {
                         Debug.LogWarning("Got MODIFY_SSV msg for non-existent object: " + msg.IdString());
+                        if (msg.type == LolaComms.ObstacleType.Sphere)
+                        {
+                            obstacle_map.Add(msg.IdString(), CreateSphere(msg.radius, new Vector3(msg.coeffs[0], msg.coeffs[1], msg.coeffs[2]), transform));
+                        }
+                        else if (msg.type == LolaComms.ObstacleType.Capsule)
+                        {
+                            obstacle_map.Add(msg.IdString(),
+                                CreateCapsule(msg.radius,
+                                  new Vector3(msg.coeffs[0], msg.coeffs[1], msg.coeffs[2]),
+                                  new Vector3(msg.coeffs[3], msg.coeffs[4], msg.coeffs[5]),
+                                  transform)
+                            );
+                        }
                     }
                     break;
                 }
