@@ -129,6 +129,7 @@
     <ClInclude Include="Logging.h" />
     <ClInclude Include="LolaCommsNativeETW.h" />
     <ClInclude Include="FootstepListener.h" />
+    <ClInclude Include="PoseListener.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="iface\include\README.txt">

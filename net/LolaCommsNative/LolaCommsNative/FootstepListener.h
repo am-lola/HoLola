@@ -7,8 +7,9 @@
 // communication to receive footstep data
 // from Lola
 ///////////////////////////////////////////
-
+#include <sstream>
 #include <functional>
+#include <algorithm>
 #include <thread>
 
 #include <iface_ps.hpp>
@@ -211,10 +212,26 @@ private:
                 break;
 
             am2b_iface::MsgHeader* header = (am2b_iface::MsgHeader*)buf.data();
+            if (_verbose)
+            {
+                std::wstringstream ss;
+                ss << L"[foosteps] MsgHeader: id = 0x";
+                ss << std::hex << header->id << std::dec << ", len = " << header->len;
+                LogInfo(ss.str());
+            }
+
             while (total_received < header_size + header->len)
             {
                 int recvd = 0;
-                recvd = recv(_socket, &buf[total_received], _buflen - total_received, 0);
+                // fill buffer with messages we want
+                if (header->id == am2b_iface::STEPSEQ_AR_VIZUALIZATION || header->id == am2b_iface::COM_EOK)
+                {
+                    recvd = recv(_socket, &buf[total_received], _buflen - total_received, 0);
+                }
+                else // all other messages: overwrite data portion of buf until we consume the whole message
+                {
+                    recvd = recv(_socket, buf.data() + header_size, std::min(_buflen-header_size, header->len - (total_received - header_size)), 0);
+                }
 
                 if (recvd == 0) // connection died
                     break;
@@ -243,7 +260,7 @@ private:
                     EventWriteFootsteps_OnOtherMessageReceived(std::to_wstring(header->id).c_str());
                     std::cout << "[footsteps] Skipping message (type: 0x"
                         << std::hex << header->id << std::dec
-                        << ", expecting: 0x" << std::hex << am2b_iface::STEPSEQ_AR_VIZUALIZATION << std::dec
+                        << ", (len: " << header->len << ") expecting: 0x" << std::hex << am2b_iface::STEPSEQ_AR_VIZUALIZATION << std::dec
                         << ")" << std::endl;;
                 }
                 continue;
