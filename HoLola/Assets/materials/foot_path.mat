@@ -6,16 +6,15 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: footprint
-  m_Shader: {fileID: 4800000, guid: b41b88257b4affd458eb5ec647d29517, type: 3}
-  m_ShaderKeywords: _ALPHAPREMULTIPLY_ON _SPECULARHIGHLIGHTS_OFF _USEAMBIENT_ON _USEDIFFUSE_ON
-    _USEMAINCOLOR_ON _USEMAINTEX_ON _USEVERTEXCOLOR_ON
+  m_Name: foot_path
+  m_Shader: {fileID: 4800000, guid: 30a212a88e1063a428c85e50b1e427f2, type: 3}
+  m_ShaderKeywords: _GLOSSYREFLECTIONS_OFF _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A _SPECULARHIGHLIGHTS_OFF
+    _USEVERTEXCOLOR_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 3000
-  stringTagMap:
-    RenderType: Transparent
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
   disabledShaderPasses: []
   m_SavedProperties:
     serializedVersion: 3
@@ -49,7 +48,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 75f201efe4d45e242a21bb8b17d5221c, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -77,31 +76,31 @@ Material:
     - _Cull: 2
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
-    - _DstBlend: 10
+    - _DstBlend: 0
     - _ForcePerPixel: 0
     - _Gloss: 1
-    - _GlossMapScale: 1
-    - _Glossiness: 0.5
-    - _GlossyReflections: 1
+    - _GlossMapScale: 0
+    - _Glossiness: 0
+    - _GlossyReflections: 0
     - _Metallic: 0
-    - _Mode: 2
+    - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
     - _ReflectionScale: 2
-    - _RimPower: 0.785
+    - _RimPower: 0.7
     - _Shade4: 0
-    - _SmoothnessTextureChannel: 0
+    - _SmoothnessTextureChannel: 1
     - _Specular: 10
     - _SpecularHighlights: 0
-    - _SrcBlend: 5
+    - _SrcBlend: 1
     - _UVSec: 0
-    - _UseAmbient: 1
+    - _UseAmbient: 0
     - _UseBumpMap: 0
-    - _UseDiffuse: 1
+    - _UseDiffuse: 0
     - _UseEmissionColor: 0
     - _UseEmissionMap: 0
     - _UseGlossMap: 0
-    - _UseMainColor: 1
+    - _UseMainColor: 0
     - _UseMainTex: 0
     - _UseOcclusionMap: 0
     - _UseReflections: 0
@@ -111,7 +110,7 @@ Material:
     - _ZTest: 4
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 0.71323526, g: 0.71323526, b: 0.71323526, a: 0.541}
+    - _Color: {r: 0.1235943, g: 0.9338235, b: 0.36386916, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _RimColor: {r: 1, g: 1, b: 1, a: 1}
     - _SpecColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}

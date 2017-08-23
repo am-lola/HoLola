@@ -14,6 +14,8 @@ public class RobotData : MonoBehaviour {
     public GameObject Capsule;
     public GameObject Plane;
     public GameObject Footprint;
+    public Material foot_left;
+    public Material foot_right;
     [Space]
     public int VisionPort    = 9090;
     public int FootstepPort  = 61448;
@@ -84,6 +86,59 @@ public class RobotData : MonoBehaviour {
 
         return success;
     }
+
+    private void AddFootstep(List<FootData> collection, LolaComms.Footstep step)
+    {
+        var stepobj = Instantiate(Footprint, transform);
+        stepobj.transform.localPosition = new Vector3(step.start_x, step.start_y, step.start_z);
+
+        var foot = (LolaComms.Foot)step.stance;
+        switch (foot)
+        {
+            case LolaComms.Foot.Left:
+            {
+                stepobj.transform.localRotation = Quaternion.AngleAxis(left_foot_angle, new Vector3(0, 0, 1)) * stepobj.transform.localRotation;
+                stepobj.GetComponentInChildren<MeshRenderer>().material = foot_left;
+            }
+            break;
+            case LolaComms.Foot.Right:
+            {
+                stepobj.transform.localRotation = Quaternion.AngleAxis(right_foot_angle, new Vector3(0, 0, 1)) * stepobj.transform.localRotation;
+                stepobj.GetComponentInChildren<MeshRenderer>().material = foot_right;
+            }
+            break;
+            default:
+            {
+                Debug.LogError("Unknown foot stance: " + step.stance);
+            }
+            break;
+        }
+
+        // generate path between current and previous step
+        if (collection.Count > 0)
+        {
+            var line = stepobj.GetComponent<LineRenderer>();
+            var start_pos = collection[collection.Count - 1].go.transform.position;
+            var end_pos = stepobj.transform.position;
+            var mid_pos = start_pos + new Vector3(start_pos.x + (end_pos.x - start_pos.x) / 2,
+                                                  start_pos.y + step.dy,
+                                                  start_pos.z + step.dz_step);
+            line.positionCount = 10;
+            for (int i = 0; i < line.positionCount/2; i++)
+            {
+                line.SetPosition(i, Vector3.Slerp(start_pos, mid_pos, (float)i / (float)(line.positionCount / 2)));
+            }
+            for (int i = line.positionCount/2; i < line.positionCount; i++)
+            {
+                line.SetPosition(i, Vector3.Slerp(mid_pos, end_pos, (float)i / (float)(line.positionCount / 2)));
+            }
+            line.positionCount = line.positionCount + 1;
+            line.SetPosition(line.positionCount - 1, end_pos);
+        }
+
+        collection.Add(new FootData(stepobj, step));
+    }
+
     private LolaComms.FootstepListener SetupFL()
     {
         Debug.Log("Setting up FootstepListener...");
@@ -118,10 +173,7 @@ public class RobotData : MonoBehaviour {
                         footsteps_L[0].step.stamp_gen == step.stamp_gen))
                     {
                         left_foot_angle += step.phi_leg_rel;
-                        var stepobj = Instantiate(Footprint, transform);
-                        stepobj.transform.localPosition = new Vector3(step.start_x, step.start_y, step.start_z);
-                        stepobj.transform.localRotation = Quaternion.AngleAxis(left_foot_angle, new Vector3(0, 0, 1)) * stepobj.transform.localRotation;
-                        footsteps_L.Add(new FootData(stepobj, step));
+                        AddFootstep(footsteps_L, step);
                     }
                     else // new timestamp
                     {
@@ -139,10 +191,7 @@ public class RobotData : MonoBehaviour {
 
                         // add new footstep as normal
                         left_foot_angle += step.phi_leg_rel;
-                        var stepobj = Instantiate(Footprint, transform);
-                        stepobj.transform.localPosition = new Vector3(step.start_x, step.start_y, step.start_z);
-                        stepobj.transform.localRotation = Quaternion.AngleAxis(left_foot_angle, new Vector3(0, 0, 1)) * stepobj.transform.localRotation;
-                        footsteps_L.Add(new FootData(stepobj, step));
+                        AddFootstep(footsteps_L, step);
                     }
                 }
                 break;
@@ -153,10 +202,7 @@ public class RobotData : MonoBehaviour {
                         footsteps_R[0].step.stamp_gen == step.stamp_gen))
                     {
                         right_foot_angle += step.phi_leg_rel;
-                        var stepobj = Instantiate(Footprint, transform);
-                        stepobj.transform.localPosition = new Vector3(step.start_x, step.start_y, step.start_z);
-                        stepobj.transform.localRotation = Quaternion.AngleAxis(right_foot_angle, new Vector3(0, 0, 1)) * stepobj.transform.localRotation; /// TODO: Fix rotation according to step.start_phi_z
-                        footsteps_R.Add(new FootData(stepobj, step));
+                        AddFootstep(footsteps_R, step);
                     }
                     else // new timestamp
                     {
@@ -174,10 +220,7 @@ public class RobotData : MonoBehaviour {
 
                         // add new footstep as normal
                         right_foot_angle += step.phi_leg_rel;
-                        var stepobj = Instantiate(Footprint, transform);
-                        stepobj.transform.localPosition = new Vector3(step.start_x, step.start_y, step.start_z);
-                        stepobj.transform.localRotation = Quaternion.AngleAxis(right_foot_angle, new Vector3(0, 0, 1)) * stepobj.transform.localRotation;
-                        footsteps_R.Add(new FootData(stepobj, step));
+                        AddFootstep(footsteps_R, step);
                     }
                 }
                 break;

@@ -6,10 +6,9 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: footprint
+  m_Name: footprint_right_planned
   m_Shader: {fileID: 4800000, guid: b41b88257b4affd458eb5ec647d29517, type: 3}
-  m_ShaderKeywords: _ALPHAPREMULTIPLY_ON _SPECULARHIGHLIGHTS_OFF _USEAMBIENT_ON _USEDIFFUSE_ON
-    _USEMAINCOLOR_ON _USEMAINTEX_ON _USEVERTEXCOLOR_ON
+  m_ShaderKeywords: _USEAMBIENT_ON _USEDIFFUSE_ON _USEMAINCOLOR_ON _USEMAINTEX_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -74,7 +73,6 @@ Material:
     - _BumpScale: 1
     - _CalibrationSpaceReflections: 0
     - _ColorWriteMask: 15
-    - _Cull: 2
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DstBlend: 10
@@ -84,7 +82,7 @@ Material:
     - _Glossiness: 0.5
     - _GlossyReflections: 1
     - _Metallic: 0
-    - _Mode: 2
+    - _Mode: 3
     - _OcclusionStrength: 1
     - _Parallax: 0.02
     - _ReflectionScale: 2
@@ -107,11 +105,11 @@ Material:
     - _UseReflections: 0
     - _UseRimLighting: 0
     - _UseSpecularMap: 0
-    - _UseVertexColor: 1
+    - _UseVertexColor: 0
     - _ZTest: 4
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 0.71323526, g: 0.71323526, b: 0.71323526, a: 0.541}
+    - _Color: {r: 0.99264705, g: 0.6087765, b: 0.31385165, a: 0.541}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _RimColor: {r: 1, g: 1, b: 1, a: 1}
     - _SpecColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
