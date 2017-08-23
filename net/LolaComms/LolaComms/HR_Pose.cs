@@ -109,7 +109,7 @@ namespace LolaComms
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 9)]
         public float[] R_wr_ub;
         //!vector from world frame to upper body frame in world frame
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 9)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 3)]
         public float[] t_wr_ub;
 
         //////////////////////////////////////////////////
@@ -180,5 +180,16 @@ namespace LolaComms
         public float[] t_stance_odo;
         //!stance foot rotation in drift frame
         public float phi_z_odo;
+
+        /*!
+          transformation matrix from upper body coordinate frame
+          to inertial frame measured by IMU (world frame)
+          (identity matrix, if robot is standing upright)
+        */
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 9)]
+        public float[] R_wr_ub;
+        //!vector from world frame to upper body frame in world frame
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 3)]
+        public float[] t_wr_ub;
     };
 }
