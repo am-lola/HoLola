@@ -192,7 +192,7 @@ private:
             while (total_received < header_size)
             {
                 int recvd = 0;
-                recvd = recv(_socket, &buf[total_received], _buflen - total_received, 0);
+                recvd = recv(_socket, &buf[total_received], header_size - total_received, 0);
 
                 if (recvd == 0) // connection died
                     break;
@@ -203,7 +203,7 @@ private:
 
                 if (_verbose)
                 {
-                    LogInfo(L"[footsteps] footstep header) Received " +
+                    LogInfo(L"[footsteps] (footstep header) Received " +
                         std::to_wstring(total_received) +
                         L" total bytes from " + _hostname);
                 }
@@ -230,6 +230,7 @@ private:
                 }
                 else // all other messages: overwrite data portion of buf until we consume the whole message
                 {
+                    LogInfo(L"[footsteps] Unexpected header id, reading " + std::to_wstring(recvd) + L" / " + std::to_wstring(header->len) + L" bytes...");
                     recvd = recv(_socket, buf.data() + header_size, std::min(_buflen-header_size, header->len - (total_received - header_size)), 0);
                 }
 
