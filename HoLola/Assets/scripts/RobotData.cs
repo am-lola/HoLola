@@ -48,7 +48,27 @@ public class RobotData : MonoBehaviour {
     private LolaComms.FootstepListener fl;
     private Dictionary<string, GameObject> obstacle_map = new Dictionary<string, GameObject>();
     private Dictionary<uint, GameObject> surface_map  = new Dictionary<uint, GameObject>();
-    private Queue<GameObject> footsteps = new Queue<GameObject>();
+
+    struct FootData
+    {
+        public GameObject go;
+        public LolaComms.Footstep step;
+        public FootData(GameObject g, LolaComms.Footstep s)
+        {
+            go = g;
+            step = s;
+        }
+    }
+
+    int max_steps = 8; // max # of footsteps to accept for a given foot in one time step
+    private List<FootData> footsteps_L = new List<FootData>(); // footsteps planned for current time step
+    private List<FootData> footsteps_L_real = new List<FootData>(); // previously-taken actual footsteps
+    private float left_foot_angle = 0;
+    private float left_foot_angle_real = 0;
+    private List<FootData> footsteps_R = new List<FootData>();
+    private List<FootData> footsteps_R_real = new List<FootData>();
+    private float right_foot_angle = 0; // current angle of last received footstep
+    private float right_foot_angle_real = 0; // current angle of last *actually-taken* footstep
 
     private bool InitComms()
     {
@@ -87,15 +107,87 @@ public class RobotData : MonoBehaviour {
         {
             Debug.Log("Got new footstep for " + (LolaComms.Foot)(step.stance) + "{" + step.stamp_gen + "} @ [" + step.start_x + ", " + step.start_y + ", " + step.start_z + "], start_phi_z: " + step.start_phi_z +
                 ", phi0: " + step.phiO);
-            var newstep = Instantiate(Footprint, transform);
-            newstep.transform.localPosition = new Vector3(step.start_x, step.start_y, step.start_z);
-            newstep.transform.localRotation = Quaternion.AngleAxis(step.start_phi_z, new Vector3(0, 0, 1)) * newstep.transform.localRotation; /// TODO: Fix rotation according to step.start_phi_z
-            footsteps.Enqueue(newstep);
 
-            if (footsteps.Count > 16)
+            var foot = (LolaComms.Foot)step.stance;
+            switch (foot)
             {
-                Destroy(footsteps.Dequeue());
+                case LolaComms.Foot.Left:
+                {
+                    if (footsteps_L.Count == 0 ||
+                       (footsteps_L.Count > 0 && footsteps_L.Count < max_steps &&
+                        footsteps_L[0].step.stamp_gen == step.stamp_gen))
+                    {
+                        left_foot_angle += step.phi_leg_rel;
+                        var stepobj = Instantiate(Footprint, transform);
+                        stepobj.transform.localPosition = new Vector3(step.start_x, step.start_y, step.start_z);
+                        stepobj.transform.localRotation = Quaternion.AngleAxis(left_foot_angle, new Vector3(0, 0, 1)) * stepobj.transform.localRotation;
+                        footsteps_L.Add(new FootData(stepobj, step));
+                    }
+                    else // new timestamp
+                    {
+                        footsteps_L_real.Add(footsteps_L[0]); // first footstep from each stamp is robot's actual standing pose
+                        left_foot_angle_real += footsteps_L[0].step.phi_leg_rel;
+                        left_foot_angle = left_foot_angle_real;
+
+                        // delete all other steps
+                        footsteps_L.RemoveAt(0);
+                        foreach (var footstep in footsteps_L)
+                        {
+                            Destroy(footstep.go);
+                        }
+                        footsteps_L.Clear();
+
+                        // add new footstep as normal
+                        left_foot_angle += step.phi_leg_rel;
+                        var stepobj = Instantiate(Footprint, transform);
+                        stepobj.transform.localPosition = new Vector3(step.start_x, step.start_y, step.start_z);
+                        stepobj.transform.localRotation = Quaternion.AngleAxis(left_foot_angle, new Vector3(0, 0, 1)) * stepobj.transform.localRotation;
+                        footsteps_L.Add(new FootData(stepobj, step));
+                    }
+                }
+                break;
+                case LolaComms.Foot.Right:
+                {
+                    if (footsteps_R.Count == 0 ||
+                       (footsteps_R.Count > 0 && footsteps_R.Count < max_steps &&
+                        footsteps_R[0].step.stamp_gen == step.stamp_gen))
+                    {
+                        right_foot_angle += step.phi_leg_rel;
+                        var stepobj = Instantiate(Footprint, transform);
+                        stepobj.transform.localPosition = new Vector3(step.start_x, step.start_y, step.start_z);
+                        stepobj.transform.localRotation = Quaternion.AngleAxis(right_foot_angle, new Vector3(0, 0, 1)) * stepobj.transform.localRotation; /// TODO: Fix rotation according to step.start_phi_z
+                        footsteps_R.Add(new FootData(stepobj, step));
+                    }
+                    else // new timestamp
+                    {
+                        footsteps_R_real.Add(footsteps_R[0]); // first footstep from each stamp is robot's actual standing pose
+                        right_foot_angle_real += footsteps_R[0].step.phi_leg_rel;
+                        right_foot_angle = right_foot_angle_real;
+
+                        // delete all other steps
+                        footsteps_R.RemoveAt(0);
+                        foreach (var footstep in footsteps_R)
+                        {
+                            Destroy(footstep.go);
+                        }
+                        footsteps_R.Clear();
+
+                        // add new footstep as normal
+                        right_foot_angle += step.phi_leg_rel;
+                        var stepobj = Instantiate(Footprint, transform);
+                        stepobj.transform.localPosition = new Vector3(step.start_x, step.start_y, step.start_z);
+                        stepobj.transform.localRotation = Quaternion.AngleAxis(right_foot_angle, new Vector3(0, 0, 1)) * stepobj.transform.localRotation;
+                        footsteps_R.Add(new FootData(stepobj, step));
+                    }
+                }
+                break;
+                default:
+                {
+                    Debug.LogError("Unknown foot stance value: " + step.stance);
+                }
+                break;
             }
+
         };
         fl.Listen();
 
