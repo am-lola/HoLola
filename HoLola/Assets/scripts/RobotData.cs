@@ -9,7 +9,7 @@ using UnityEngine;
 /// Just a quick & dirty test to verify PInvokes are working correctly.
 /// </summary>
 
-public class dlltest : MonoBehaviour {
+public class RobotData : MonoBehaviour {
     public Material obstacleMaterial;
     public GameObject Capsule;
     public GameObject Plane;
