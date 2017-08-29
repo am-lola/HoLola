@@ -64,6 +64,7 @@ public:
             start_z     = stepseq_ssv_log->start_z;
             phi_leg_rel = stepseq_ssv_log->phi_leg_rel;
             stance      = stepseq_ssv_log->stance;
+            std::cout << "foot [dy, dz] in constructor: [" << dy << ", " << dz_clear << "]" << std::endl;
         }
 
         Footstep(am2b_iface::struct_data_stepseq_ssv_log stepseq_ssv_log) : Footstep(&stepseq_ssv_log)
@@ -126,7 +127,7 @@ private:
     bool         _verbose   = false;
     bool         _listening = false;
     std::thread  _listener;
-    size_t       _buflen    = 2048;
+    size_t       _buflen    = 4096;
 
     OnNewStep    _onNewStep;
     OnError      _onError;
@@ -215,7 +216,7 @@ private:
             if (_verbose)
             {
                 std::wstringstream ss;
-                ss << L"[foosteps] MsgHeader: id = 0x";
+                ss << L"[footsteps] MsgHeader: id = 0x";
                 ss << std::hex << header->id << std::dec << ", len = " << header->len;
                 LogInfo(ss.str());
             }
@@ -226,11 +227,11 @@ private:
                 // fill buffer with messages we want
                 if (header->id == am2b_iface::STEPSEQ_AR_VIZUALIZATION || header->id == am2b_iface::COM_EOK)
                 {
-                    recvd = recv(_socket, &buf[total_received], _buflen - total_received, 0);
+                    recvd = recv(_socket, &buf[total_received], header->len - (total_received - header_size), 0);
                 }
                 else // all other messages: overwrite data portion of buf until we consume the whole message
                 {
-                    LogInfo(L"[footsteps] Unexpected header id, reading " + std::to_wstring(recvd) + L" / " + std::to_wstring(header->len) + L" bytes...");
+                    LogInfo(L"[footsteps] Unexpected header id, reading " + std::to_wstring(total_received) + L" / " + std::to_wstring(header->len + header_size) + L" bytes...");
                     recvd = recv(_socket, buf.data() + header_size, std::min(_buflen-header_size, header->len - (total_received - header_size)), 0);
                 }
 
@@ -266,8 +267,14 @@ private:
                 }
                 continue;
             }
+            else
+            {
+                LogInfo(L"[footsteps] Got valid footstep (" + std::to_wstring(header->len) + L" bytes)");
+                
+            }
 
             am2b_iface::struct_data_stepseq_ssv_log* message = (am2b_iface::struct_data_stepseq_ssv_log*)(buf.data() + header_size);
+            std::cout << "[footsteps] New step's offset: [dy, dz] = [" << message->dy << ", " << message->dz_clear << "]" << std::endl;
 
             EventWriteFootsteps_OnFootstepMessageReceived(std::to_wstring(message->stamp_gen).c_str());
             cb(_onNewStep, Footstep(message));
