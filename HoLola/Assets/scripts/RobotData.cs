@@ -71,7 +71,7 @@ public class RobotData : MonoBehaviour {
     private List<FootData> footsteps_R_real = new List<FootData>();
     private float right_foot_angle = 0; // current angle of last received footstep
     private float right_foot_angle_real = 0; // current angle of last *actually-taken* footstep
-
+    private Vector3 default_step_midpoint = new Vector3(0.0f, 0.0f, 0.03f);
     private bool InitComms()
     {
         Debug.Log("Setting LolaComms info callback...");
@@ -97,13 +97,13 @@ public class RobotData : MonoBehaviour {
         {
             case LolaComms.Foot.Left:
             {
-                stepobj.transform.localRotation = Quaternion.AngleAxis(left_foot_angle, new Vector3(0, 0, 1)) * stepobj.transform.localRotation;
+                stepobj.transform.localRotation = Quaternion.AngleAxis(Mathf.Rad2Deg * left_foot_angle, new Vector3(0, 0, 1)) * stepobj.transform.localRotation;
                 stepobj.GetComponentInChildren<MeshRenderer>().material = foot_left;
             }
             break;
             case LolaComms.Foot.Right:
             {
-                stepobj.transform.localRotation = Quaternion.AngleAxis(right_foot_angle, new Vector3(0, 0, 1)) * stepobj.transform.localRotation;
+                stepobj.transform.localRotation = Quaternion.AngleAxis(Mathf.Rad2Deg * right_foot_angle, new Vector3(0, 0, 1)) * stepobj.transform.localRotation;
                 stepobj.GetComponentInChildren<MeshRenderer>().material = foot_right;
             }
             break;
@@ -117,7 +117,13 @@ public class RobotData : MonoBehaviour {
         // generate path between current and previous step
         if (collection.Count > 0)
         {
+            Debug.Log("Plotting path between current step and prev (" + collection.Count + ")");
             var line = stepobj.GetComponent<LineRenderer>();
+            if (line == null)
+            {
+                Debug.LogWarning("LineRenderer was null!");
+                return;
+            }
             var start_pos = collection[collection.Count - 1].go.transform.position;
             var end_pos = stepobj.transform.position;
             var mid_pos = start_pos + new Vector3(start_pos.x + (end_pos.x - start_pos.x) / 2,
@@ -161,7 +167,7 @@ public class RobotData : MonoBehaviour {
         fl.onNewStep += (step) =>
         {
             Debug.Log("Got new footstep for " + (LolaComms.Foot)(step.stance) + "{" + step.stamp_gen + "} @ [" + step.start_x + ", " + step.start_y + ", " + step.start_z + "], start_phi_z: " + step.start_phi_z +
-                ", phi0: " + step.phiO);
+                ", phi0: " + step.phiO + ", phi_leg_rel: " + step.phi_leg_rel + ", [dy, dz]: [" + step.dy + ", " + step.dz_step + "]");
 
             var foot = (LolaComms.Foot)step.stance;
             switch (foot)
@@ -172,13 +178,15 @@ public class RobotData : MonoBehaviour {
                        (footsteps_L.Count > 0 && footsteps_L.Count < max_steps &&
                         footsteps_L[0].step.stamp_gen == step.stamp_gen))
                     {
-                        left_foot_angle += step.phi_leg_rel;
+                        Debug.Log("Appending step " + footsteps_L.Count + " for stamp " + step.stamp_gen);
+                        left_foot_angle += step.phiO;
                         AddFootstep(footsteps_L, step);
                     }
                     else // new timestamp
                     {
+                        Debug.Log("Starting new step sequence for left foot @ stamp " + step.stamp_gen);
                         footsteps_L_real.Add(footsteps_L[0]); // first footstep from each stamp is robot's actual standing pose
-                        left_foot_angle_real += footsteps_L[0].step.phi_leg_rel;
+                        left_foot_angle_real += footsteps_L[0].step.phiO;
                         left_foot_angle = left_foot_angle_real;
 
                         // delete all other steps
@@ -190,7 +198,7 @@ public class RobotData : MonoBehaviour {
                         footsteps_L.Clear();
 
                         // add new footstep as normal
-                        left_foot_angle += step.phi_leg_rel;
+                        left_foot_angle += step.phiO;
                         AddFootstep(footsteps_L, step);
                     }
                 }
@@ -201,13 +209,15 @@ public class RobotData : MonoBehaviour {
                        (footsteps_R.Count > 0 && footsteps_R.Count < max_steps &&
                         footsteps_R[0].step.stamp_gen == step.stamp_gen))
                     {
-                        right_foot_angle += step.phi_leg_rel;
+                        Debug.Log("Appending step " + footsteps_R.Count + " for stamp " + step.stamp_gen);
+                        right_foot_angle += step.phiO;
                         AddFootstep(footsteps_R, step);
                     }
                     else // new timestamp
                     {
+                        Debug.Log("Starting new step sequence for left foot @ stamp " + step.stamp_gen);
                         footsteps_R_real.Add(footsteps_R[0]); // first footstep from each stamp is robot's actual standing pose
-                        right_foot_angle_real += footsteps_R[0].step.phi_leg_rel;
+                        right_foot_angle_real += footsteps_R[0].step.phiO;
                         right_foot_angle = right_foot_angle_real;
 
                         // delete all other steps
@@ -219,7 +229,7 @@ public class RobotData : MonoBehaviour {
                         footsteps_R.Clear();
 
                         // add new footstep as normal
-                        right_foot_angle += step.phi_leg_rel;
+                        right_foot_angle += step.phiO;
                         AddFootstep(footsteps_R, step);
                     }
                 }
@@ -230,6 +240,9 @@ public class RobotData : MonoBehaviour {
                 }
                 break;
             }
+
+            Debug.Log("Left foot rotations: curr == " + left_foot_angle + ", total real == " + left_foot_angle_real);
+            Debug.Log("Right foot rotations: curr == " + right_foot_angle + ", total real == " + right_foot_angle_real);
 
         };
         fl.Listen();
@@ -618,7 +631,7 @@ public class RobotData : MonoBehaviour {
         if (InitComms())
         {
             vl = SetupVL();
-            pl = SetupPL();
+          //  pl = SetupPL();
             fl = SetupFL();
         }
 	}

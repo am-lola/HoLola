@@ -37,7 +37,6 @@ GameObject:
   - component: {fileID: 4936924030282052}
   - component: {fileID: 33515369772230258}
   - component: {fileID: 23315944175561854}
-  - component: {fileID: 114456940973027128}
   m_Layer: 0
   m_Name: Footprint
   m_TagString: Untagged
@@ -111,17 +110,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1669115202947264}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &114456940973027128
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1669115202947264}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1b91902d44a562e419b1ca7e91cf9daf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!120 &120815705324099076
 LineRenderer:
   m_ObjectHideFlags: 1
