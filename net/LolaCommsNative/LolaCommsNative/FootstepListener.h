@@ -238,7 +238,10 @@ private:
                 if (recvd == 0) // connection died
                     break;
                 if (recvd == -1) // failed to read from socket
+                {
                     cb(_onError, L"read() failed!");
+                    break;
+                }
 
                 total_received += recvd;
 

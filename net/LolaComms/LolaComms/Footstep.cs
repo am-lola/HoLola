@@ -9,7 +9,7 @@ namespace LolaComms
         Right
     }
 
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    [StructLayout(LayoutKind.Sequential)]
     public struct Footstep
     {    // a subset of the data from am2b_iface::struct_data_stepseq_ssv_log
         public UInt64 stamp_gen;
