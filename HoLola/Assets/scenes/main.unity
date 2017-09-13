@@ -904,6 +904,7 @@ GameObject:
   m_Component:
   - component: {fileID: 289864012}
   - component: {fileID: 289864013}
+  - component: {fileID: 289864009}
   m_Layer: 0
   m_Name: origin_transform
   m_TagString: Untagged
@@ -911,6 +912,26 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &289864009
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 289864008}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37870ab7a81bfb74b9fa277cf45b06d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SetStabilizationPlane: 1
+  UseUnscaledTime: 1
+  LerpStabilizationPlanePowerCloser: 4
+  LerpStabilizationPlanePowerFarther: 7
+  targetOverride: {fileID: 289864012}
+  trackVelocity: 0
+  UseGazeManager: 0
+  DefaultPlaneDistance: 2
+  DrawGizmos: 1
 --- !u!4 &289864012
 Transform:
   m_ObjectHideFlags: 0
