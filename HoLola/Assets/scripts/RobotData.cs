@@ -36,12 +36,42 @@ public class RobotData : MonoBehaviour {
     {
 #if UNITY_EDITOR
 #else
+        foreach (var obj in obstacle_map)
+        {
+            Destroy(obj.Value);
+        }
         obstacle_map.Clear();
+
+        foreach (var surf in surface_map)
+        {
+            Destroy(surf.Value);
+        }
         surface_map.Clear();
+
+        foreach (var step in footsteps_L)
+        {
+            Destroy(step.go);
+        }
         footsteps_L.Clear();
+
+        foreach (var step in footsteps_L_real)
+        {
+            Destroy(step.go);
+        }
         footsteps_L_real.Clear();
+
+        foreach (var step in footsteps_R)
+        {
+            Destroy(step.go);
+        }
         footsteps_R.Clear();
+
+        foreach (var step in footsteps_R_real)
+        {
+            Destroy(step.go);
+        }
         footsteps_R_real.Clear();
+
         left_foot_angle = 0;
         left_foot_angle_real = 0;
         right_foot_angle = 0;
