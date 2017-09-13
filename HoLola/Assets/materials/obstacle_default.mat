@@ -8,13 +8,14 @@ Material:
   m_PrefabInternal: {fileID: 0}
   m_Name: obstacle_default
   m_Shader: {fileID: 4800000, guid: 30a212a88e1063a428c85e50b1e427f2, type: 3}
-  m_ShaderKeywords: _EMISSION _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A _SPECULARHIGHLIGHTS_OFF
-    _USECOLOR_ON
+  m_ShaderKeywords: _ALPHAPREMULTIPLY_ON _EMISSION _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
+    _SPECULARHIGHLIGHTS_OFF _USECOLOR_ON
   m_LightmapFlags: 2
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
+  m_CustomRenderQueue: 3000
+  stringTagMap:
+    RenderType: Transparent
   disabledShaderPasses: []
   m_SavedProperties:
     serializedVersion: 3
@@ -65,12 +66,12 @@ Material:
     - _Cull: 2
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
-    - _DstBlend: 0
+    - _DstBlend: 10
     - _GlossMapScale: 1
     - _Glossiness: 0.127
     - _GlossyReflections: 1
     - _Metallic: 0
-    - _Mode: 0
+    - _Mode: 3
     - _OcclusionStrength: 1
     - _Parallax: 0.02
     - _SmoothnessTextureChannel: 1
@@ -82,7 +83,7 @@ Material:
     - _UseEmissionTex: 0
     - _UseMainTex: 0
     - _ZTest: 4
-    - _ZWrite: 1
+    - _ZWrite: 0
     m_Colors:
-    - _Color: {r: 0.15473618, g: 0.41753054, b: 0.7794118, a: 1}
-    - _EmissionColor: {r: 0.017301036, g: 0.29411763, b: 0.076482564, a: 1}
+    - _Color: {r: 0.14035468, g: 0.21741433, b: 0.32352942, a: 0.5019608}
+    - _EmissionColor: {r: 0, g: 0.14705884, b: 0.03144019, a: 1}
