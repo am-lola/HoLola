@@ -15,11 +15,13 @@ public class RobotData : MonoBehaviour {
     public GameObject Plane;
     public GameObject Footprint;
     public Material foot_left;
+    public Material foot_left_permanent;
     public Material foot_right;
+    public Material foot_right_permanent;
     [Space]
     public int VisionPort    = 9090;
     public int FootstepPort  = 61448;
-    public string FootstepIP = "169.254.80.80"; //"192.168.0.7";
+    public string FootstepIP = "192.168.0.7";
     public int PosePort      = 53249;
     [Space]
     public UnityEngine.UI.InputField VisionPortField;
@@ -29,6 +31,23 @@ public class RobotData : MonoBehaviour {
     public StatusButton VisionStatus;
     public StatusButton FootstepStatus;
     public StatusButton PoseStatus;
+
+    public void OnClearData()
+    {
+#if UNITY_EDITOR
+#else
+        obstacle_map.Clear();
+        surface_map.Clear();
+        footsteps_L.Clear();
+        footsteps_L_real.Clear();
+        footsteps_R.Clear();
+        footsteps_R_real.Clear();
+        left_foot_angle = 0;
+        left_foot_angle_real = 0;
+        right_foot_angle = 0;
+        right_foot_angle_real = 0;
+#endif
+    }
 
     public void OnVisionPortChanged()
     {
@@ -93,7 +112,7 @@ public class RobotData : MonoBehaviour {
     }
     public static Vector3 Hermite(Vector3 start, Vector3 end, float value)
     {
-        return new Vector3(Hermite(start.x, end.x, value), Hermite(start.y, end.y, value), Hermite(start.z, end.z, value));
+        return new Vector3(Mathf.Lerp(start.x, end.x, value), Hermite(start.y, end.y, value), Hermite(start.z, end.z, value));
     }
 
     private void AddFootstep(List<FootData> collection, LolaComms.Footstep step)
@@ -137,9 +156,9 @@ public class RobotData : MonoBehaviour {
             var delta = stepobj.transform.localPosition - collection[collection.Count - 1].go.transform.localPosition;
             var end_pos = start_pos + delta;
             Debug.Log("Start: " + start_pos + ", End: " + end_pos);
-            var mid_pos = start_pos + new Vector3(delta.x / 2, step.dy, step.dz_step);
+            var mid_pos = start_pos + new Vector3(delta.x / 2, step.dy, step.dz_clear);
 
-            line.positionCount = 100;
+            line.positionCount = 8;
             for (int i = 0; i < line.positionCount/2; i++)
             {
                 line.SetPosition(i, Hermite(start_pos, mid_pos, (float)i / (float)(line.positionCount / 2)));
@@ -147,6 +166,60 @@ public class RobotData : MonoBehaviour {
             for (int i = line.positionCount/2; i < line.positionCount; i++)
             {
                 line.SetPosition(i, Hermite(mid_pos, end_pos, (float)(i-line.positionCount/2) / (float)(line.positionCount / 2)));
+            }
+            line.positionCount = line.positionCount + 1;
+            line.SetPosition(line.positionCount - 1, end_pos);
+        }
+        else if (foot == LolaComms.Foot.Left && footsteps_L_real.Count > 0)
+        {
+            Debug.Log("Plotting path between current step and prev (" + footsteps_L_real.Count + ")");
+            var line = footsteps_L_real[footsteps_L_real.Count - 1].go.GetComponent<LineRenderer>();
+            if (line == null)
+            {
+                Debug.LogWarning("LineRenderer was null!");
+                return;
+            }
+            var start_pos = Vector3.zero;
+            var delta = stepobj.transform.localPosition - footsteps_L_real[footsteps_L_real.Count - 1].go.transform.localPosition;
+            var end_pos = start_pos + delta;
+            Debug.Log("Start: " + start_pos + ", End: " + end_pos);
+            var mid_pos = start_pos + new Vector3(delta.x / 2, step.dy, step.dz_clear);
+
+            line.positionCount = 8;
+            for (int i = 0; i < line.positionCount / 2; i++)
+            {
+                line.SetPosition(i, Hermite(start_pos, mid_pos, (float)i / (float)(line.positionCount / 2)));
+            }
+            for (int i = line.positionCount / 2; i < line.positionCount; i++)
+            {
+                line.SetPosition(i, Hermite(mid_pos, end_pos, (float)(i - line.positionCount / 2) / (float)(line.positionCount / 2)));
+            }
+            line.positionCount = line.positionCount + 1;
+            line.SetPosition(line.positionCount - 1, end_pos);
+        }
+        else if (foot == LolaComms.Foot.Right && footsteps_R_real.Count > 0)
+        {
+            Debug.Log("Plotting path between current step and prev (" + footsteps_R_real.Count + ")");
+            var line = footsteps_R_real[footsteps_R_real.Count - 1].go.GetComponent<LineRenderer>();
+            if (line == null)
+            {
+                Debug.LogWarning("LineRenderer was null!");
+                return;
+            }
+            var start_pos = Vector3.zero;
+            var delta = stepobj.transform.localPosition - footsteps_R_real[footsteps_R_real.Count - 1].go.transform.localPosition;
+            var end_pos = start_pos + delta;
+            Debug.Log("Start: " + start_pos + ", End: " + end_pos);
+            var mid_pos = start_pos + new Vector3(delta.x / 2, step.dy, step.dz_clear);
+
+            line.positionCount = 8;
+            for (int i = 0; i < line.positionCount / 2; i++)
+            {
+                line.SetPosition(i, Hermite(start_pos, mid_pos, (float)i / (float)(line.positionCount / 2)));
+            }
+            for (int i = line.positionCount / 2; i < line.positionCount; i++)
+            {
+                line.SetPosition(i, Hermite(mid_pos, end_pos, (float)(i - line.positionCount / 2) / (float)(line.positionCount / 2)));
             }
             line.positionCount = line.positionCount + 1;
             line.SetPosition(line.positionCount - 1, end_pos);
@@ -162,7 +235,7 @@ public class RobotData : MonoBehaviour {
     private LolaComms.FootstepListener SetupFL()
     {
         Debug.Log("Setting up FootstepListener...");
-        LolaComms.FootstepListener fl = new LolaComms.FootstepListener(FootstepPort, "169.254.80.80");
+        LolaComms.FootstepListener fl = new LolaComms.FootstepListener(FootstepPort, FootstepIP);
         fl.onError += (errstr) =>
         {
             Debug.LogError("[Footsteps] " + errstr);
@@ -199,6 +272,7 @@ public class RobotData : MonoBehaviour {
                     else // new timestamp
                     {
                         Debug.Log("Starting new step sequence for left foot @ stamp " + step.stamp_gen);
+                        footsteps_L[0].go.GetComponent<Renderer>().material = foot_left_permanent;
                         footsteps_L_real.Add(footsteps_L[0]); // first footstep from each stamp is robot's actual standing pose
                         left_foot_angle_real += footsteps_L[0].step.phiO;
                         left_foot_angle = left_foot_angle_real;
@@ -210,6 +284,7 @@ public class RobotData : MonoBehaviour {
                             Destroy(footstep.go);
                         }
                         footsteps_L.Clear();
+                        //footsteps_L.Add(footsteps_L_real[footsteps_L_real.Count - 1]);
 
                         // add new footstep as normal
                         left_foot_angle += step.phiO;
@@ -230,6 +305,7 @@ public class RobotData : MonoBehaviour {
                     else // new timestamp
                     {
                         Debug.Log("Starting new step sequence for left foot @ stamp " + step.stamp_gen);
+                        footsteps_R[0].go.GetComponent<Renderer>().material = foot_right_permanent;
                         footsteps_R_real.Add(footsteps_R[0]); // first footstep from each stamp is robot's actual standing pose
                         right_foot_angle_real += footsteps_R[0].step.phiO;
                         right_foot_angle = right_foot_angle_real;
@@ -683,7 +759,7 @@ public class RobotData : MonoBehaviour {
         if (pl.Listening)
         {
             PoseStatus.status = StatusButton.Status.Good;
-            pl.Process();
+            //pl.Process();
         }
         else
         {
