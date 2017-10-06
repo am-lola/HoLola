@@ -302,7 +302,12 @@ public class RobotData : MonoBehaviour {
                     else // new timestamp
                     {
                         Debug.Log("Starting new step sequence for left foot @ stamp " + step.stamp_gen);
-                        footsteps_L[0].go.GetComponent<Renderer>().material = foot_left_permanent;
+                        var renderers = footsteps_L[0].go.GetComponentsInChildren<Renderer>();
+                        foreach (var r in renderers)
+                        {
+                            r.material = foot_left_permanent;
+                        }
+
                         footsteps_L_real.Add(footsteps_L[0]); // first footstep from each stamp is robot's actual standing pose
                         left_foot_angle_real += footsteps_L[0].step.phiO;
                         left_foot_angle = left_foot_angle_real;
@@ -335,7 +340,12 @@ public class RobotData : MonoBehaviour {
                     else // new timestamp
                     {
                         Debug.Log("Starting new step sequence for left foot @ stamp " + step.stamp_gen);
-                        footsteps_R[0].go.GetComponent<Renderer>().material = foot_right_permanent;
+                        var renderers = footsteps_R[0].go.GetComponentsInChildren<Renderer>();
+                        foreach (var r in renderers)
+                        {
+                            r.material = foot_right_permanent;
+                        }
+
                         footsteps_R_real.Add(footsteps_R[0]); // first footstep from each stamp is robot's actual standing pose
                         right_foot_angle_real += footsteps_R[0].step.phiO;
                         right_foot_angle = right_foot_angle_real;
