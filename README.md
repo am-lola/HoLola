@@ -52,7 +52,9 @@ https://developer.microsoft.com/en-us/windows/mixed-reality/using_the_hololens_e
 
 ### Building & Deploying the External DLLs
 
-NOTE: Recent builds are checked in under the HoLola Unity project, so this should only be necessary if you are making changes to either DLL.
+*NOTE:* Recent builds are checked in under the HoLola Unity project, so this should only be necessary if you are making changes to either DLL.
+
+*NOTE:* Do not mix & match `Debug` and `Release` builds! If you want to deploy a `Release` version of the final Unity project, these DLLs should *also* be built with the `Release` target! For the time being, the checked-in versions are `Debug`.
 
 Both the native and managed DLLs can be build from `LolaComms.sln` under [/net/LolaComms](./net/LolaComms).
 
