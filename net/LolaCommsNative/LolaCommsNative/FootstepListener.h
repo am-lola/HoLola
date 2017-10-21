@@ -197,7 +197,7 @@ private:
 
                 if (recvd == 0) // connection died
                     break;
-                if (recvd == -1) // failed to read from socket
+                if (recvd == SOCKET_ERROR) // failed to read from socket
                     cb(_onError, L"[footsteps] read() failed!");
 
                 total_received += recvd;
@@ -237,7 +237,7 @@ private:
 
                 if (recvd == 0) // connection died
                     break;
-                if (recvd == -1) // failed to read from socket
+                if (recvd == SOCKET_ERROR) // failed to read from socket
                 {
                     cb(_onError, L"read() failed!");
                     break;
