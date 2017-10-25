@@ -31,6 +31,8 @@ public class RobotData : MonoBehaviour {
     public StatusButton VisionStatus;
     public StatusButton FootstepStatus;
     public StatusButton PoseStatus;
+    [Space]
+    public bool drawTrajectories = false;
 
     public void OnClearData()
     {
@@ -77,6 +79,11 @@ public class RobotData : MonoBehaviour {
         right_foot_angle = 0;
         right_foot_angle_real = 0;
 #endif
+    }
+
+    public void OnToggleTrajectories(bool enable)
+    {
+        drawTrajectories = enable;
     }
 
     public void OnVisionPortChanged()
@@ -172,91 +179,94 @@ public class RobotData : MonoBehaviour {
             break;
         }
 
-        // generate path between current and previous step
-        if (collection.Count > 0)
+        if (drawTrajectories)
         {
-            Debug.Log("Plotting path between current step and prev (" + collection.Count + ")");
-            var line = collection[collection.Count - 1].go.GetComponent<LineRenderer>();
-            if (line == null)
+            // generate path between current and previous step
+            if (collection.Count > 0)
             {
-                Debug.LogWarning("LineRenderer was null!");
-                return;
-            }
-            var start_pos = Vector3.zero;
-            var delta = stepobj.transform.localPosition - collection[collection.Count - 1].go.transform.localPosition;
-            var end_pos = start_pos + delta;
-            Debug.Log("Start: " + start_pos + ", End: " + end_pos);
-            var mid_pos = start_pos + new Vector3(delta.x / 2, step.dy, step.dz_clear);
+                Debug.Log("Plotting path between current step and prev (" + collection.Count + ")");
+                var line = collection[collection.Count - 1].go.GetComponent<LineRenderer>();
+                if (line == null)
+                {
+                    Debug.LogWarning("LineRenderer was null!");
+                    return;
+                }
+                var start_pos = Vector3.zero;
+                var delta = stepobj.transform.localPosition - collection[collection.Count - 1].go.transform.localPosition;
+                var end_pos = start_pos + delta;
+                Debug.Log("Start: " + start_pos + ", End: " + end_pos);
+                var mid_pos = start_pos + new Vector3(delta.x / 2, step.dy, step.dz_clear);
 
-            line.positionCount = 8;
-            for (int i = 0; i < line.positionCount/2; i++)
-            {
-                line.SetPosition(i, Hermite(start_pos, mid_pos, (float)i / (float)(line.positionCount / 2)));
+                line.positionCount = 8;
+                for (int i = 0; i < line.positionCount / 2; i++)
+                {
+                    line.SetPosition(i, Hermite(start_pos, mid_pos, (float)i / (float)(line.positionCount / 2)));
+                }
+                for (int i = line.positionCount / 2; i < line.positionCount; i++)
+                {
+                    line.SetPosition(i, Hermite(mid_pos, end_pos, (float)(i - line.positionCount / 2) / (float)(line.positionCount / 2)));
+                }
+                line.positionCount = line.positionCount + 1;
+                line.SetPosition(line.positionCount - 1, end_pos);
             }
-            for (int i = line.positionCount/2; i < line.positionCount; i++)
+            else if (foot == LolaComms.Foot.Left && footsteps_L_real.Count > 0)
             {
-                line.SetPosition(i, Hermite(mid_pos, end_pos, (float)(i-line.positionCount/2) / (float)(line.positionCount / 2)));
-            }
-            line.positionCount = line.positionCount + 1;
-            line.SetPosition(line.positionCount - 1, end_pos);
-        }
-        else if (foot == LolaComms.Foot.Left && footsteps_L_real.Count > 0)
-        {
-            Debug.Log("Plotting path between current step and prev (" + footsteps_L_real.Count + ")");
-            var line = footsteps_L_real[footsteps_L_real.Count - 1].go.GetComponent<LineRenderer>();
-            if (line == null)
-            {
-                Debug.LogWarning("LineRenderer was null!");
-                return;
-            }
-            var start_pos = Vector3.zero;
-            var delta = stepobj.transform.localPosition - footsteps_L_real[footsteps_L_real.Count - 1].go.transform.localPosition;
-            var end_pos = start_pos + delta;
-            Debug.Log("Start: " + start_pos + ", End: " + end_pos);
-            var mid_pos = start_pos + new Vector3(delta.x / 2, step.dy, step.dz_clear);
+                Debug.Log("Plotting path between current step and prev (" + footsteps_L_real.Count + ")");
+                var line = footsteps_L_real[footsteps_L_real.Count - 1].go.GetComponent<LineRenderer>();
+                if (line == null)
+                {
+                    Debug.LogWarning("LineRenderer was null!");
+                    return;
+                }
+                var start_pos = Vector3.zero;
+                var delta = stepobj.transform.localPosition - footsteps_L_real[footsteps_L_real.Count - 1].go.transform.localPosition;
+                var end_pos = start_pos + delta;
+                Debug.Log("Start: " + start_pos + ", End: " + end_pos);
+                var mid_pos = start_pos + new Vector3(delta.x / 2, step.dy, step.dz_clear);
 
-            line.positionCount = 8;
-            for (int i = 0; i < line.positionCount / 2; i++)
-            {
-                line.SetPosition(i, Hermite(start_pos, mid_pos, (float)i / (float)(line.positionCount / 2)));
+                line.positionCount = 8;
+                for (int i = 0; i < line.positionCount / 2; i++)
+                {
+                    line.SetPosition(i, Hermite(start_pos, mid_pos, (float)i / (float)(line.positionCount / 2)));
+                }
+                for (int i = line.positionCount / 2; i < line.positionCount; i++)
+                {
+                    line.SetPosition(i, Hermite(mid_pos, end_pos, (float)(i - line.positionCount / 2) / (float)(line.positionCount / 2)));
+                }
+                line.positionCount = line.positionCount + 1;
+                line.SetPosition(line.positionCount - 1, end_pos);
             }
-            for (int i = line.positionCount / 2; i < line.positionCount; i++)
+            else if (foot == LolaComms.Foot.Right && footsteps_R_real.Count > 0)
             {
-                line.SetPosition(i, Hermite(mid_pos, end_pos, (float)(i - line.positionCount / 2) / (float)(line.positionCount / 2)));
-            }
-            line.positionCount = line.positionCount + 1;
-            line.SetPosition(line.positionCount - 1, end_pos);
-        }
-        else if (foot == LolaComms.Foot.Right && footsteps_R_real.Count > 0)
-        {
-            Debug.Log("Plotting path between current step and prev (" + footsteps_R_real.Count + ")");
-            var line = footsteps_R_real[footsteps_R_real.Count - 1].go.GetComponent<LineRenderer>();
-            if (line == null)
-            {
-                Debug.LogWarning("LineRenderer was null!");
-                return;
-            }
-            var start_pos = Vector3.zero;
-            var delta = stepobj.transform.localPosition - footsteps_R_real[footsteps_R_real.Count - 1].go.transform.localPosition;
-            var end_pos = start_pos + delta;
-            Debug.Log("Start: " + start_pos + ", End: " + end_pos);
-            var mid_pos = start_pos + new Vector3(delta.x / 2, step.dy, step.dz_clear);
+                Debug.Log("Plotting path between current step and prev (" + footsteps_R_real.Count + ")");
+                var line = footsteps_R_real[footsteps_R_real.Count - 1].go.GetComponent<LineRenderer>();
+                if (line == null)
+                {
+                    Debug.LogWarning("LineRenderer was null!");
+                    return;
+                }
+                var start_pos = Vector3.zero;
+                var delta = stepobj.transform.localPosition - footsteps_R_real[footsteps_R_real.Count - 1].go.transform.localPosition;
+                var end_pos = start_pos + delta;
+                Debug.Log("Start: " + start_pos + ", End: " + end_pos);
+                var mid_pos = start_pos + new Vector3(delta.x / 2, step.dy, step.dz_clear);
 
-            line.positionCount = 8;
-            for (int i = 0; i < line.positionCount / 2; i++)
-            {
-                line.SetPosition(i, Hermite(start_pos, mid_pos, (float)i / (float)(line.positionCount / 2)));
+                line.positionCount = 8;
+                for (int i = 0; i < line.positionCount / 2; i++)
+                {
+                    line.SetPosition(i, Hermite(start_pos, mid_pos, (float)i / (float)(line.positionCount / 2)));
+                }
+                for (int i = line.positionCount / 2; i < line.positionCount; i++)
+                {
+                    line.SetPosition(i, Hermite(mid_pos, end_pos, (float)(i - line.positionCount / 2) / (float)(line.positionCount / 2)));
+                }
+                line.positionCount = line.positionCount + 1;
+                line.SetPosition(line.positionCount - 1, end_pos);
             }
-            for (int i = line.positionCount / 2; i < line.positionCount; i++)
+            else
             {
-                line.SetPosition(i, Hermite(mid_pos, end_pos, (float)(i - line.positionCount / 2) / (float)(line.positionCount / 2)));
+                Debug.Log("No previous footsteps to plot a line from...");
             }
-            line.positionCount = line.positionCount + 1;
-            line.SetPosition(line.positionCount - 1, end_pos);
-        }
-        else
-        {
-            Debug.Log("No previous footsteps to plot a line from...");
         }
 
         collection.Add(new FootData(stepobj, step));
