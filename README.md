@@ -26,7 +26,7 @@ If the following steps don't work, please follow the [complete instructions here
 3. Double-check that the **PLatform** is set to **Windows Store** and that at least one scene is listed under **Scenes In Build**
 4. Click the **Build** button. You will be asked to choose a directory to put the binaries in (e.g `.\Build\`).
 5. After the build completes, navigate to the build directory you selected and open `HoLola.sln` in Visual Studio (*NOTE: This is **not** the same `HoLola.sln` as you will find in the Unity project root directory!)
-6. Set your CPU architecture to `x86`, then set the target (next to the green arrow) to either `Device` (if the Hololens is connected via USB) or `Hololens Emulator`. **Note:** [this](#building-deploying-the-external-dlls)
+6. Set your CPU architecture to `x86`, then set the target (next to the green arrow) to either `Device` (if the Hololens is connected via USB) or `Hololens Emulator`. **Note:** check out that the [build type coincides with the one of the dlls](#building-deploying-the-external-dlls), `debug` by default.
 7. Press `F5` to deploy and launch the application.
 
 #### Manual Deployment
@@ -38,7 +38,7 @@ If you do not have sufficient permissions on your build machine, or if you want 
 2. When asked if you want to submit the application to the Windows Store select **No**
 3. Follow the steps in the package creation wizard. If you're testing a lot of builds, it may be useful to check the auto-increment version box to easily distinguish between new and old builds.
 4. When asked about target platforms, the only one you need is `x86`
-5. After the package is created, open a web browser and navigate to the Hololens' IP address (or to `http://127.0.0.1:10080` if the device is connected via USB)
+5. After the package is created, open a web browser and navigate to the Hololens' IP address (`http://192.168.0.100:10080` over WiFi by default or `http://127.0.0.1:10080` if the device is connected via USB)
 6. In the browser select `Apps` on the left
 7. In the App Manager, under *Install app* use the `Choose File` button to select the `.appx` file created after step 5
 8. Click `Add dependency`, and add all of the `.appx` files under `<APPX Dir>/Dependencies/x86'
