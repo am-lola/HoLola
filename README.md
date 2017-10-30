@@ -47,17 +47,6 @@ If you do not have sufficient permissions on your build machine, or if you want 
  
 When distributing the application, simply zip up the directory containing the .appx package. In addition to the application this will also include debugging symbols (*.pdb), the application's dependencies (under the `Dependencies` directory--note that you can safely delete all but the `x86` dependencies if you want to save space), and some scripts which can make deploying the app from the commandline a little easier. The only files which are strictly necessary for the app to work on another device are the .appx and the files under `Dependencies\x86`.
 
-#### Do I have to do all of this every time? D:
-
-##### If you have only changed existing C# Source code
-You only need to rebuild from the final .sln. You do not have to re-export anything from Unity.
-
-##### If you have modified Unity scene components, added or removed C# Source files
-You need to rebuild **from Unity**, then rebuild the final .sln.
-
-##### If you have modified anything in either LolaComms or LolaCommsNative
-You need to rebuild `LolaComms.sln`, then rebuild from Unity, then rebuild the final .sln
-
 #### Using the Hololens Emulator
 
 https://developer.microsoft.com/en-us/windows/mixed-reality/using_the_hololens_emulator
@@ -68,7 +57,7 @@ https://developer.microsoft.com/en-us/windows/mixed-reality/using_the_hololens_e
 
 *NOTE:* Do not mix & match `Debug` and `Release` builds! If you want to deploy a `Release` version of the final Unity project, these DLLs should *also* be built with the `Release` target! For the time being, the checked-in versions are `Debug`.
 
-Both the native and managed DLLs can be build from `LolaComms.sln` under [/net/LolaComms](./net/LolaComms).
+Both the native and managed DLLs can be built from `LolaComms.sln` under [/net/LolaComms](./net/LolaComms).
 
 **For deployment to Hololens or the emulator** you *must* build `x86`, *not* `x64`.
 
@@ -78,6 +67,17 @@ Resulting DLLs should be automatically deployed to the Unity project:
 * Unmanaged (C++) DLLs need to be copied to `<Unity Project Root>/Assets/`
 
 Once the DLLs have been updated in the Unity project, build from Unity and follow the instructions above to deploy to the device or emulator.
+
+#### Do I have to do all of this every time? D:
+
+##### If you have only changed existing C# Source code
+You only need to rebuild from the final .sln. You do not have to re-export anything from Unity.
+
+##### If you have modified Unity scene components, added or removed C# Source files
+You need to rebuild **from Unity**, then rebuild the final .sln.
+
+##### If you have modified anything in either LolaComms or LolaCommsNative
+You need to rebuild `LolaComms.sln`, then rebuild from Unity, then rebuild the final .sln
 
 ## Debugging Tips
 
