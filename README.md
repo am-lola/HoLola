@@ -21,7 +21,7 @@ NOTE: Please use `--recursive` when cloning this repo to pull in submodules.
 
 If the following steps don't work, please follow the [complete instructions here](https://developer.microsoft.com/en-us/windows/mixed-reality/exporting_and_building_a_unity_visual_studio_solution).
 
-1. Open the Unity project in Unity
+1. Open the Unity project in Unity (folder HoLola)
 2. `File->Build Settings...`
 3. Double-check that the **PLatform** is set to **Windows Store** and that at least one scene is listed under **Scenes In Build**
 4. Click the **Build** button. You will be asked to choose a directory to put the binaries in (e.g `.\Build\`).
