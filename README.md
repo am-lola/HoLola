@@ -47,6 +47,17 @@ If you do not have sufficient permissions on your build machine, or if you want 
  
 When distributing the application, simply zip up the directory containing the .appx package. In addition to the application this will also include debugging symbols (*.pdb), the application's dependencies (under the `Dependencies` directory--note that you can safely delete all but the `x86` dependencies if you want to save space), and some scripts which can make deploying the app from the commandline a little easier. The only files which are strictly necessary for the app to work on another device are the .appx and the files under `Dependencies\x86`.
 
+#### Do I have to do all of this every time? D:
+
+##### If you have only changed existing C# Source code
+You only need to rebuild from the final .sln. You do not have to re-export anything from Unity.
+
+##### If you have modified Unity scene components, added or removed C# Source files
+You need to rebuild **from Unity**, then rebuild the final .sln.
+
+##### If you have modified anything in either LolaComms or LolaCommsNative
+You need to rebuild `LolaComms.sln`, then rebuild from Unity, then rebuild the final .sln
+
 #### Using the Hololens Emulator
 
 https://developer.microsoft.com/en-us/windows/mixed-reality/using_the_hololens_emulator
