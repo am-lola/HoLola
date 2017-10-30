@@ -38,7 +38,7 @@ If you do not have sufficient permissions on your build machine, or if you want 
 2. When asked if you want to submit the application to the Windows Store select **No**
 3. Follow the steps in the package creation wizard. If you're testing a lot of builds, it may be useful to check the auto-increment version box to easily distinguish between new and old builds.
 4. When asked about target platforms, the only one you need is `x86`
-5. After the package is created, open a web browser and navigate to the Hololens' IP address (or to `http://127.0.0.1:10000` if the device is connected via USB)
+5. After the package is created, open a web browser and navigate to the Hololens' IP address (or to `http://127.0.0.1:10080` if the device is connected via USB)
 6. In the browser select `Apps` on the left
 7. In the App Manager, under *Install app* use the `Choose File` button to select the `.appx` file created after step 5
 8. Click `Add dependency`, and add all of the `.appx` files under `<APPX Dir>/Dependencies/x86'
