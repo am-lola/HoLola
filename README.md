@@ -1,7 +1,5 @@
 # HoLola - Holographic Data Visualization for Lola
 
-NOTE: Please use `--recursive` when cloning this repo to pull in submodules.
-
 ## Usage
 
 When the application launches for the first time, two objects will be created in front of you: a status window showing the current connection status to external services which provide data for visualization (see `/net/LolaCommsNative/LolaCommsNative/iface/tools` for a small set of tools to send data for testing without a real robot), and a coordinate frame axis which represents the robot's world origin.
@@ -21,7 +19,6 @@ Once the world origin has been changed, it will be anchored in place and this wi
   * Visual Studio Tools for Unity (will be installed by Unity)
   * Windows 10 SDK for UWP: C# and C++
 * [Unity 5.6.2f1](https://store.unity.com/) or greater (earlier versions may build the project, but contain bugs in some APIs!)
-* [am2b-iface]() (included as a submodule-- either clone this repository with `--recursive` or run `git submodule update --init` after cloning to obtain the latest compatible version)
 
 ## Build Instructions
 

@@ -1,3 +1,0 @@
-[submodule "net\\LolaCommsNative\\LolaCommsNative\\iface"]
-	path = net/LolaCommsNative/LolaCommsNative/iface
-	url = https://gitlab.lrz.de/AMCode/am2b-iface.git
