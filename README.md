@@ -10,6 +10,18 @@ By default, all network services are active in the application. On startup, the 
 
 Once the world origin has been changed, it will be anchored in place and this will persist across application sessions. This means the origin only needs to be re-positioned if the robot's world origin changes. Future work will include automatically positioning the origin.
 
+## Publications
+
+The ideas behind this code are published under:
+
+[Wahrmann, Daniel; Hildebrandt, Arne-Christoph; Bates, Tamas; Wittmann, Robert; Sygulla, Felix; Seiwald, Philipp; Rixen, Daniel: Vision-Based 3D Modeling of Unknown Dynamic Environments for Real-Time Humanoid Navigation. International Journal of Humanoid Robotics Vol. 16 No. 01, 2019](http://mediatum.ub.tum.de/node?id=1435457)
+
+## Videos
+
+The results of these algorithms can be seen on:
+
+[Compilation of Autonomous Walking](https://youtu.be/EeDR1UNDpIY)
+
 ## Dependencies
 
 * [Visual Studio 2017](https://developer.microsoft.com/en-us/windows/mixed-reality/install_the_tools), including:
